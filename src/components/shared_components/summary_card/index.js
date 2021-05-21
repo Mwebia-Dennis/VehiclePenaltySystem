@@ -1,0 +1,57 @@
+import { Box, Divider, Grid, Typography } from '@material-ui/core';
+import React from 'react'
+import { Card,IconBox, useStyles,NumberHeader } from './style';
+import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
+import { Link } from 'react-router-dom';
+
+export default (props) => {
+    
+    const classes = useStyles();
+    const { color,title,value,url, icon } = props;
+
+    return (
+
+        <Grid 
+            item md={3} sm={12} xs={12}
+        >
+
+            <Card variant="outlined">
+
+                <Grid
+                    container            
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                >
+
+                    <Grid item xs={12}>
+
+                        <IconBox>
+
+                            <div className={classes.icons} >
+                                {icon}
+                            </div>
+                        </IconBox>
+                        
+                    </Grid>
+                    <Grid item xs={12}>
+                        <NumberHeader variant="h4" style={{color: color}}>
+                            {value}
+                        </NumberHeader>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6"  style={{color: color}} className={classes.title}>
+                            {title}
+                        </Typography>
+                    </Grid>
+
+                </Grid>
+
+                <Divider className={classes.divider} />
+                <Link to={url} className={classes.link}>View More</Link>
+            </Card>
+        </Grid>
+
+    );
+
+}
