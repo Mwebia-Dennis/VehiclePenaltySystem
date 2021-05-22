@@ -13,7 +13,7 @@ export default (props) => {
         
             <Grid container className={classes.container}>
 
-                <Grid xs={4} item >
+                <Grid xs={2} item >
 
                     <Grid 
                         container           
@@ -30,9 +30,9 @@ export default (props) => {
                     </Grid>
                 </Grid>
 
-                <Grid xs={8} item>
+                <Grid xs={8} item className={classes.content}>
                     <Box>
-                        <Typography variant="h6" className={classes.notifHeader}>Dennis added a new vehicle</Typography>
+                        <Typography className={classes.notifHeader} >Dennis added a new vehicle</Typography>
                         <Typography className={classes.notifDescription}>plate number: kav 123f </Typography>
                         <Typography className={classes.notifTime}>114 min ago </Typography>
                     </Box>
