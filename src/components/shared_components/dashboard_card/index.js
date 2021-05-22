@@ -12,15 +12,22 @@ export default (props) => {
         <>
         
             <Paper className={classes.root}>
-
-                <div className={classes.header}>
-
-                    {props.header}
-
+                {
+                    props.header?
                     
-                    <Divider className={classes.divider}/>
-
-                </div>
+                        <div className={classes.header}>
+        
+                            {props.header}
+        
+                            
+                            <Divider className={classes.divider}/>
+        
+                        </div>
+                    
+                    
+                    
+                    :''
+                }
 
                 <div className={classes.body}>
                     

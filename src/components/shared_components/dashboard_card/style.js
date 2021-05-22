@@ -6,10 +6,16 @@ export const useStyles = makeStyles((theme) => ({
     root: {
 
         padding: 0,
+        marginTop: '15px',
         borderTopLeftRadius: '10px',
         borderTopRightRadius: '10px',
-        maxHeight: '500px',
+        height: '530px',
+        width: '100%',
         overflowY: 'auto',
+        [theme.breakpoints.down('sm')]: {
+            height: 'auto',
+            maxHeight: '450px',
+        }
     },
     header: {
         width : '100%',

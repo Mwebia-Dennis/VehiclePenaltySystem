@@ -12,10 +12,11 @@ export default (props) => {
     return (
 
         <Grid 
+            className={classes.root}
             item md={3} sm={12} xs={12}
         >
 
-            <Card variant="outlined">
+            <Card variant="outlined" style={{backgroundColor: color}}>
 
                 <Grid
                     container            
@@ -35,12 +36,12 @@ export default (props) => {
                         
                     </Grid>
                     <Grid item xs={12}>
-                        <NumberHeader variant="h4" style={{color: color}}>
+                        <NumberHeader variant="h4" >
                             {value}
                         </NumberHeader>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h6"  style={{color: color}} className={classes.title}>
+                        <Typography variant="h6"  className={classes.title}>
                             {title}
                         </Typography>
                     </Grid>

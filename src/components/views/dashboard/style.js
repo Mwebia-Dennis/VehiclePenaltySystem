@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme) => ({
     chartCanvas: {
 
         margin: '10px',
-        height: '500px',
+        height: '550px',
         width: '95%',
         padding: '20px',
         
@@ -21,16 +21,19 @@ export const useStyles = makeStyles((theme) => ({
         },
     },
 
-    
+    header: {
+        padding: '10px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+        [theme.breakpoints.down('sm')]: {
+            
+            fontSize: '14px',
+        },
+    },
     notificationCard: {
 
-        width: '90%',
-        marginLeft: '10%',
+        width: '100%',
         
-        [theme.breakpoints.down('sm')]: {
-            width: '100%',
-            marginLeft : '0',
-        },
     },
     calendar: {
 

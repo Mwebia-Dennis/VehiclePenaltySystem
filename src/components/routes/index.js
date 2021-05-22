@@ -1,6 +1,9 @@
 
 import Home from '../views/home';
 import Dashboard from '../views/dashboard/index';
+import Vehicle from '../views/vehicle';
+import Penalty from '../views/penalty';
+import Users from '../views/users';
 
 export const routes = [
 
@@ -11,9 +14,9 @@ export const routes = [
         children: [
 
             {path: '/home', element: <Dashboard />},
-            {path: '/vehicle', element: <Dashboard />},
-            {path: '/penalty', element: <Dashboard />},
-            {path: '/users', element: <Dashboard />},
+            {path: '/vehicle', element: <Vehicle />},
+            {path: '/penalty', element: <Penalty />},
+            {path: '/users', element: <Users />},
             {path: '/invoices', element: <Dashboard />},
         ]
         
