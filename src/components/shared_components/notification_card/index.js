@@ -13,7 +13,7 @@ export default (props) => {
         
             <Grid container className={classes.container}>
 
-                <Grid xs={2} item >
+                <Grid xs={2} md={3} item >
 
                     <Grid 
                         container           
