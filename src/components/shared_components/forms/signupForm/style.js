@@ -49,5 +49,9 @@ export const useStyles = makeStyles((theme) => ({
 
         width: '100%',
     },
+    bottomLinks: {
+        textAlign: 'center',
+        padding: '10px auto',
+    },
 
 }))

@@ -1,5 +1,5 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress, Link } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
 import "react-datepicker/dist/react-datepicker.css";
@@ -59,10 +59,22 @@ export default (props) => {
                         alignItems="center"
                         justify="center"
                 >
-                    <Grid item xs={8}>
+                    <Grid item xs={12}>
                         <Button variant="contained" color="primary" onClick={handleBackdropToggle} className={classes.submitBtn} >
                             Sign Up
                         </Button>
+
+                    </Grid>
+                    
+                    <Grid item xs={12}>
+                        <Typography className={classes.bottomLinks} style={{marginTop: '20px',}}>
+                            Already a member?
+                        </Typography>
+                        <Typography  className={classes.bottomLinks}>
+                            
+                            <Link href="/auth/login">Login</Link>
+
+                        </Typography>
 
                     </Grid>
                 </Grid>

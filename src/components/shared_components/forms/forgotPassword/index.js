@@ -1,8 +1,7 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Link, Divider, Backdrop, CircularProgress } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress } from '@material-ui/core';
 import React from 'react'
-import {useStyles} from './style'
-import "react-datepicker/dist/react-datepicker.css";
+import {useStyles} from '../loginForm/style'
 
 export default (props) => {
 
@@ -20,17 +19,12 @@ export default (props) => {
     const textFields = [
         
         {
+            
             placeholder: "Email",
             name: "email",
             type: "email"
 
-        },
-        {
-            placeholder: "password",
-            name: "password",
-            type: "password"
-
-        },
+        }
     ]
 
     return (
@@ -40,7 +34,7 @@ export default (props) => {
             <Paper className={classes.root} >
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">Login to Continue</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Enter Email To Continue</Typography>
                 <Grid 
                     container 
                     spacing={2}
@@ -75,23 +69,10 @@ export default (props) => {
                         alignItems="center"
                         justify="center"
                 >
-                    <Grid item xs={12}>
+                    <Grid item xs={8}>
                         <Button variant="contained" color="primary" onClick={handleBackdropToggle} className={classes.submitBtn} >
-                            Login
+                            Submit
                         </Button>
-
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography  className={classes.bottomLinks} style={{marginTop: '20px',}}>
-                            <Link href="/auth/forgot-password">Forgot Password</Link>
-
-                        </Typography>
-                        <Typography className={classes.bottomLinks}>Not A member yet?</Typography>
-                        <Typography  className={classes.bottomLinks}>
-                            
-                            <Link href="/auth/signup">Sign Up</Link>
-
-                        </Typography>
 
                     </Grid>
                 </Grid>

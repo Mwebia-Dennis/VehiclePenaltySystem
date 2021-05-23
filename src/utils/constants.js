@@ -8,6 +8,8 @@ export const formTypes = {
     newPenalty: 'NEW_PENALTY',
     login: 'LOGIN',
     signUp: 'SIGN_UP',
+    forgotPassword: 'FORGOT_PASSWORD',
+    newPassword: 'NEW_PASSWORD',
 }
 
 export const pageType = {

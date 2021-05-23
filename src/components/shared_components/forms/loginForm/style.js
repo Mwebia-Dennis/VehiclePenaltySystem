@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
         width: '25%',
         marginLeft: '37%',
         padding: '20px 50px 50px 50px',
-        marginTop: '10%',
+        marginTop: '7%',
         borderRadius: '10px',
         [theme.breakpoints.down('sm')]: {
             width: '93%',
@@ -49,5 +49,9 @@ export const useStyles = makeStyles((theme) => ({
 
         width: '100%',
     },
+    bottomLinks: {
+        textAlign: 'center',
+        padding: '10px auto',
+    }
 
 }))
