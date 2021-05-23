@@ -9,24 +9,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export default function ResponsiveDialog() {
-  const [open, setOpen] = React.useState(false);
+export default (props) => {
+
+  const { open, handleClose} = props;
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open responsive dialog
-      </Button>
       <Dialog
         fullScreen={fullScreen}
         open={open}
