@@ -85,11 +85,11 @@ export default (props) => {
             <Grid container>
                 <Grid item xs={12} md={2}>
                     
-                    <ActionButton variant="outlined" color="primary" onClick={handleModalOpen}><Add />Add New {data.type}</ActionButton>
+                    <ActionButton variant="contained" color="primary" onClick={handleModalOpen}><Add />Add New {data.type}</ActionButton>
                 </Grid>
                 
                 <Grid item xs={12} md={2}>
-                    <ActionButton variant="outlined" color="primary"> <Print />Export to Excel</ActionButton>
+                    <ActionButton variant="contained" color="primary"> <Print />Export to Excel</ActionButton>
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <input type="text" style={{width: '80%', padding: '10px'}} 
