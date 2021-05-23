@@ -10,6 +10,7 @@ export const useStyles = makeStyles((theme) => ({
 
     content: {
 
+      marginLeft: '10px',
       [theme.breakpoints.down('sm')]: {
 
         marginLeft: '25px',
