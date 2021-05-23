@@ -39,6 +39,8 @@ export const routes = [
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },
             {path: 'login', element: <FormContainer formType={ formTypes.login } />},
             {path: 'signup', element: <FormContainer formType={ formTypes.signUp } />},
+            {path: 'forgot-password', element: <FormContainer formType={ formTypes.forgotPassword } />},
+            {path: 'new-password', element: <FormContainer formType={ formTypes.newPassword } />},
             // {path: '/forgot-password', element: <Dashboard />},
         ]
         

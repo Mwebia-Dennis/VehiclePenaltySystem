@@ -7,6 +7,8 @@ import NewUserForm from './new_user'
 import NewPenaltyForm from './new_penalty'
 import LoginForm from './loginForm'
 import SignUpForm from './signupForm'
+import ForgotPasswordForm from './forgotPassword'
+import NewPasswordForm from './forgotPassword/new_password'
 
 
 
@@ -43,6 +45,20 @@ export default (props) => {
         //new User form
 
         return <SignUpForm />
+        
+      }
+      
+      else if(formType == formTypes.forgotPassword) {
+        //new User form
+
+        return <ForgotPasswordForm />
+        
+      }
+      
+      else if(formType == formTypes.newPassword) {
+        //new User form
+
+        return <NewPasswordForm />
         
       }
     }
