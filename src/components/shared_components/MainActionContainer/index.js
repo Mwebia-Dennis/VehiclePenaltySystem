@@ -2,13 +2,15 @@ import { FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Selec
 import { Add, Print, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
-import Modal from '../../shared_components/modal_form'
+import { pageType } from '../../../utils/constants'
+import { useNavigate } from 'react-router';
 
 
 export default (props) => {
 
-    const { data, handleClickOpen } = props;
+    const { data } = props;
     const classes = useStyles();
+    const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const searchOptions = data.searchOptions;
     const limitEntriesData = ["10", "25", "50", "100"];
@@ -17,14 +19,18 @@ export default (props) => {
     const [limitEntries, setLimitEntries] = useState(limitEntriesData["0"]);
     const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
-    const [open, setOpen] = React.useState(false);
 
-    const handleModalOpen = () => {
-        setOpen(true);
-    };
+    const handleFormOpen = () => {
 
-    const handleModalClose = () => {
-        setOpen(false);
+        //data
+
+        if(data == pageType.vehicle ) {
+            navigate('/new-vehicle');
+        }else if(data == pageType.users ) {
+            navigate('/new-user');
+        }else if(data == pageType.penalty ) {
+            navigate('/new-penalty');
+        }
     };
 
     const handleSearchQueryChange = (value) => {
@@ -85,7 +91,7 @@ export default (props) => {
             <Grid container>
                 <Grid item xs={12} md={2}>
                     
-                    <ActionButton variant="contained" color="primary" onClick={handleModalOpen}><Add />Add New {data.type}</ActionButton>
+                    <ActionButton variant="contained" color="primary" onClick={handleFormOpen}><Add />Add New {data.type}</ActionButton>
                 </Grid>
                 
                 <Grid item xs={12} md={2}>
@@ -154,8 +160,7 @@ export default (props) => {
                 </Grid>
             </Grid>
 
-            {renderMenu}
-            <Modal open={open} handleClose={handleModalClose} />    
+            {renderMenu}   
 
         </div>
     );

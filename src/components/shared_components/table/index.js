@@ -15,6 +15,7 @@ export default function CustomizedTables(props) {
   const { rows, tableHeader } = props;
 
   return (
+    
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>

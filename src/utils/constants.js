@@ -1,6 +1,15 @@
 
 export const drawerWidth = 240;
 
+export const formTypes = {
+
+    newVehicle: 'NEW_VEHICLE',
+    newUser: 'NEW_USER',
+    newPenalty: 'NEW_PENALTY',
+    login: 'LOGIN',
+    signUp: 'SIGN_UP',
+}
+
 export const pageType = {
     vehicle: {
         type: 'VEHICLE',
@@ -26,3 +35,5 @@ export const pageType = {
         searchOptions: ["Name"],
     },
 }
+
+export const paymentStatus = ['Pending','Settled',]

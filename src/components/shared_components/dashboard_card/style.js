@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
         marginTop: '15px',
         borderTopLeftRadius: '10px',
         borderTopRightRadius: '10px',
-        height: '530px',
+        height: '450px',
         width: '100%',
         overflowY: 'auto',
         [theme.breakpoints.down('sm')]: {
