@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -14,14 +14,37 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import { useStyles } from './style';
 import Profile from '../../../images/profile.jpeg';
 import { Avatar } from '@material-ui/core';
+import { useNavigate } from 'react-router';
 
 
 export default (props) => {
     
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const isLoggedIn = false;
+  const loggedOutMenu = [
+        {
+            name:"Login",
+            url: "auth/login"
+        },
+        {
+            name:"Sign Up",
+            url: "auth/signup"
+        },
+    ];
+  const loggedInMenu = [
+        {
+            name:"Edit Profile",
+            url: "auth/edit-profile"
+        },
+        {
+            name:"Logout",
+            url: "auth/logout"
+        },
+    ];
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -33,9 +56,10 @@ export default (props) => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (url) => {
     setAnchorEl(null);
     handleMobileMenuClose();
+    navigate(url)
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -52,8 +76,19 @@ export default (props) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Edit Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            {
+                isLoggedIn?
+                    loggedInMenu.map((item, index)=>(
+
+                        <MenuItem key={index} onClick={()=>handleMenuClose(item.url)}>{item.name}</MenuItem>
+                    ))
+                :
+                    loggedOutMenu.map((item, index)=>(
+
+                        <MenuItem key={index} value={item.url} onClick={()=>handleMenuClose(item.url)}>{item.name}</MenuItem>
+                    ))
+
+            }
         </Menu>
     );
 

@@ -1,39 +1,46 @@
 
-import { Button, Divider, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
-import BreadCrumb from '../../BreadCrump';
-import {signUpTextfields} from '../../../../utils/constants';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default (props) => {
 
     const classes = useStyles();
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
-    const links = [
-        {
-            url:"/home", 
-            name: "Home"
-        },
-        {
-            url:"/users", 
-            name: "Users"
-        },
-        {
-            url:"/new-user", 
-            name: "Add-New-User"
-        }
+    const handleBackdropClose = () => {
+        setOpenBackdrop(false);
+      };
+      const handleBackdropToggle = () => {
+        setOpenBackdrop(!openBackdrop);
+      };
+
+
+    const textFields = [
         
-    ]
+        {
+            placeholder: "Email",
+            name: "email",
+            type: "email"
 
+        },
+        {
+            placeholder: "password",
+            name: "password",
+            type: "password"
+
+        },
+    ]
 
     return (
 
         <>
             
-            <BreadCrumb links={links} />
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Add New User</Typography>
+                <Typography className={classes.header}>Vehicle Penalty</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Login to Continue</Typography>
                 <Grid 
                     container 
                     spacing={2}
@@ -41,7 +48,7 @@ export default (props) => {
 
                         
                         {
-                            signUpTextfields.map((item, index)=>(
+                            textFields.map((item, index)=>(
 
                                 <Grid 
                                     item 
@@ -55,12 +62,10 @@ export default (props) => {
                                         name={item.name}
                                         className= {classes.textfield}
                                         fullWidth
-                                        type={item.type}
                                     />
                                 </Grid>
                             ))
-                        }
-                        
+                        }                      
 
                 </Grid>
 
@@ -71,13 +76,16 @@ export default (props) => {
                         justify="center"
                 >
                     <Grid item xs={8}>
-                        <Button variant="contained" color="primary" className={classes.submitBtn} >
-                                Submit
+                        <Button variant="contained" color="primary" onClick={handleBackdropToggle} className={classes.submitBtn} >
+                            Login
                         </Button>
 
                     </Grid>
                 </Grid>
             </Paper>
+            <Backdrop className={classes.backdrop} open={openBackdrop} onClick={handleBackdropClose}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </>
     );
 
