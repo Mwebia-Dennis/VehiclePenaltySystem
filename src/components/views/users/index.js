@@ -8,7 +8,7 @@ import { pageType }  from '../../../utils/constants'
 
 export default (props) => {
     
-        
+    
     const links = [
         {
             url:"/home", 
@@ -22,12 +22,15 @@ export default (props) => {
     ]
     return (
 
-        <div>
-            <BreadCrumb links={links} />
-            <MainActionContainer  data={pageType.users}/>
-            <Table rows= {UsersData} tableHeader ={ UsersTableHeader }/>
-            <Paginator />
-        </div>
+        <>
+            <div>
+                <BreadCrumb links={links} />
+                <MainActionContainer  data={pageType.users}/>
+                <Table rows= {UsersData} tableHeader ={ UsersTableHeader }/>
+                <Paginator />
+            </div>
+
+        </>
 
     );
 

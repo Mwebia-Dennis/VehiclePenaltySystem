@@ -2,11 +2,12 @@ import { FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Selec
 import { Add, Print, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
+import Modal from '../../shared_components/modal_form'
 
 
 export default (props) => {
 
-    const { data } = props;
+    const { data, handleClickOpen } = props;
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const searchOptions = data.searchOptions;
@@ -16,6 +17,15 @@ export default (props) => {
     const [limitEntries, setLimitEntries] = useState(limitEntriesData["0"]);
     const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
+    const [open, setOpen] = React.useState(false);
+
+    const handleModalOpen = () => {
+        setOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setOpen(false);
+    };
 
     const handleSearchQueryChange = (value) => {
         handleMenuClose()
@@ -75,11 +85,11 @@ export default (props) => {
             <Grid container>
                 <Grid item xs={12} md={2}>
                     
-                    <ActionButton className={classes.buttonHover}><Add />Add New {data.type}</ActionButton>
+                    <ActionButton variant="outlined" color="primary" onClick={handleModalOpen}><Add />Add New {data.type}</ActionButton>
                 </Grid>
                 
                 <Grid item xs={12} md={2}>
-                    <ActionButton className={classes.buttonHover}> <Print />Export to Excel</ActionButton>
+                    <ActionButton variant="outlined" color="primary"> <Print />Export to Excel</ActionButton>
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <input type="text" style={{width: '80%', padding: '10px'}} 
@@ -93,6 +103,7 @@ export default (props) => {
                          onClick={handleProfileMenuOpen}
                         color="inherit"
                         className={classes.iconButton}
+                        variant="outlined" color="primary"
                     >
                         <Settings />
                     </IconButton>
@@ -143,7 +154,8 @@ export default (props) => {
                 </Grid>
             </Grid>
 
-            {renderMenu}      
+            {renderMenu}
+            <Modal open={open} handleClose={handleModalClose} />    
 
         </div>
     );

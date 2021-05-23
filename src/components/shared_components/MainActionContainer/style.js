@@ -16,22 +16,9 @@ export const useStyles = makeStyles((theme) => ({
         backgroundColor: '#fff',
         borderRadius: '10px',
     },
-    buttonHover: {
-        '&:hover': {
-            
-            
-            background: 'rgba(0, 136, 204, 0.6)',
-        }
-    },
     iconButton: {
-        background: '#0088cc',
-        color: '#fff',
         padding: '8px',
         margin: '3px',
-        '&:hover': {
-            
-            background: 'rgba(0, 136, 204, 0.6)',
-        }
     },
     entries: {
 
@@ -87,13 +74,10 @@ export const BootstrapInput = withStyles((theme) => ({
 export const ActionButton = styled(Button)`
 
     width: 120px;
-    border: 1px solid #0088cc;
     border-radius: 7px;
     padding: 8px;
     font-size: 10px;
     font-weight: bold;
-    background: #0088cc;
-    color: #fff;
     margin:5px;
 
 `
