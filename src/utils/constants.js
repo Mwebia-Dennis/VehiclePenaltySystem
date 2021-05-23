@@ -37,3 +37,30 @@ export const pageType = {
 }
 
 export const paymentStatus = ['Pending','Settled',]
+
+export const signUpTextfields  = [
+    {
+        placeholder: "Name",
+        name: "name",
+        type: "text"
+
+    },
+    {
+        placeholder: "Surname",
+        name: "surname",
+        type: "text"
+
+    },
+    {
+        placeholder: "Email",
+        name: "email",
+        type: "email"
+
+    },
+    {
+        placeholder: "password",
+        name: "password",
+        type: "password"
+
+    },
+]

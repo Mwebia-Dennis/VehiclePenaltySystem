@@ -5,6 +5,10 @@ import { formTypes } from '../../../utils/constants'
 import NewVehicleForm from './new_vehicle'
 import NewUserForm from './new_user'
 import NewPenaltyForm from './new_penalty'
+import LoginForm from './loginForm'
+import SignUpForm from './signupForm'
+
+
 
 
 export default (props) => {
@@ -27,6 +31,18 @@ export default (props) => {
         //new User form
 
         return <NewPenaltyForm />
+        
+      }
+      else if(formType == formTypes.login) {
+        //new User form
+
+        return <LoginForm />
+        
+      }
+      else if(formType == formTypes.signUp) {
+        //new User form
+
+        return <SignUpForm />
         
       }
     }

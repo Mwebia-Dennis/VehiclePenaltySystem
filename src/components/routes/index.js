@@ -1,11 +1,13 @@
 
 import Home from '../views/home';
+import Auth from '../views/auth';
 import Dashboard from '../views/dashboard/index';
 import Vehicle from '../views/vehicle';
 import Penalty from '../views/penalty';
 import Users from '../views/users';
 import FormContainer from '../views/form_container';
 import { formTypes } from '../../utils/constants'
+import { Navigate } from 'react-router';
 
 export const routes = [
 
@@ -15,6 +17,8 @@ export const routes = [
         element : <Home />,
         children: [
 
+            
+            {path: '/', element: <Navigate to="/home" replace /> },
             {path: '/home', element: <Dashboard />},
             {path: '/vehicle', element: <Vehicle />},
             {path: '/penalty', element: <Penalty />},
@@ -25,6 +29,19 @@ export const routes = [
             {path: '/new-penalty', element: <FormContainer formType={ formTypes.newPenalty } />},
         ]
         
-    }
+    },
+    {
+     
+        path: 'auth',
+        element : <Auth />,
+        children: [
+
+            {path: 'auth', element: <Navigate to="/auth/login" replace /> },
+            {path: 'login', element: <FormContainer formType={ formTypes.login } />},
+            {path: 'signup', element: <FormContainer formType={ formTypes.signUp } />},
+            // {path: '/forgot-password', element: <Dashboard />},
+        ]
+        
+    },
 
 ];
