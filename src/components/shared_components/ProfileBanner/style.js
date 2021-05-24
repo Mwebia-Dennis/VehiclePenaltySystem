@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
 
     root: {
         width: '100%',
-        height: '500px',
+        height: '400px',
         backgroundImage: `url(${Bg})`,
         position : 'relative',
         backgroundAttachment: 'fixed',
@@ -17,6 +17,13 @@ export const useStyles = makeStyles((theme) => ({
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         paddingTop: '70px',
+        [theme.breakpoints.down('sm')]: {
+            height: '480px',
+        },
+    },
+    root2: {
+        width: '100%',
+        marginTop: '10px',
     },
     overlay: {
         position : 'absolute',
@@ -60,14 +67,37 @@ export const useStyles = makeStyles((theme) => ({
     button: {
         zIndex: '10',
         marginTop: '15px',
-    },
-    icon: {
-        margin: '0'
+        marginLeft: '5px'
     },
     btnLink: {
-        fontSize: '25px',
         color: '#fff',
         textDecoration: 'none',
+        textTransform: 'capitalize',
     },
+    icon: {
+        fontSize: '30px',
+    },
+    input: {
+        display: 'none',
+    },
+    editContainer: {
+        padding: '20px'
+    },
+    editTitle: {
+        padding: '5px 0',
+    },
+    editDivider: {
+        marginBottom: '7px',
+    },
+    editContent: {
+        padding: '10px 0'
+    },
+    formControl: {
+        margin: '5px',
+    },
+    editBtn: {
+        marginTop: '10px',
+        marginLeft: '8px',
+    }
 
 }))
