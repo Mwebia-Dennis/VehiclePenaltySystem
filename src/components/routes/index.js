@@ -5,7 +5,7 @@ import Dashboard from '../views/dashboard/index';
 import Vehicle from '../views/vehicle';
 import Penalty from '../views/penalty';
 import Users from '../views/users';
-import EditProfile from '../views/edit_profile';
+import Profile from '../views/profile';
 import FormContainer from '../views/form_container';
 import { formTypes } from '../../utils/constants'
 import { Navigate } from 'react-router';
@@ -25,7 +25,7 @@ export const routes = [
             {path: '/penalty', element: <Penalty />},
             {path: '/users', element: <Users />},
             {path: '/invoices', element: <Dashboard />},
-            {path: '/edit-profile', element: <EditProfile />},
+            {path: '/profile', element: <Profile />},
             {path: '/new-vehicle', element: <FormContainer formType={ formTypes.newVehicle } />},
             {path: '/new-user', element: <FormContainer formType={ formTypes.newUser } />},
             {path: '/new-penalty', element: <FormContainer formType={ formTypes.newPenalty } />},
