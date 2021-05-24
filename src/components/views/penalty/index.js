@@ -8,6 +8,7 @@ import Modal from '../../shared_components/modal';
 import { pageType }  from '../../../utils/constants'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Chip, IconButton } from "@material-ui/core";
+import { Delete, Edit } from '@material-ui/icons';
 
 export default (props) => {
 
@@ -35,7 +36,7 @@ export default (props) => {
 
     const PenaltyTableHeader = [
         '#','pdf','Plate Number','Owner', 'penalty_id', 
-        'receipt number', 'penalty date', 'payment date', 'payment status'
+        'receipt number', 'penalty date', 'payment date', 'payment status', 'action',
     ]
     const PenaltyData = [
     
@@ -48,6 +49,10 @@ export default (props) => {
             penalty_date: '12/02/2021',
             payment_date: '12/02/2021',
             status: <Chip label="pending" color="secondary"/>,
+            action: <>
+                    <IconButton color="primary"> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                </>
         },
         {
             pdf: <IconButton onClick={handleModalOpen}> <Avatar alt="pdf logo" variant="square" src={pdf_logo} /></IconButton>,
@@ -58,6 +63,10 @@ export default (props) => {
             penalty_date: '12/02/2021',
             payment_date: '12/02/2021',
             status: <Chip label="paid"/>,
+            action: <>
+                    <IconButton color="primary"> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                </>
         },
         
     ];
