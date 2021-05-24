@@ -28,7 +28,11 @@ export default (props) => {
             <div>
 
                 <BreadCrumb links={links} />
-                <MainActionContainer  data={pageType.vehicle} />
+                <MainActionContainer 
+                    data={pageType.vehicle} 
+                    dataSet={VehicleData} 
+                    dataSetHeaders={VehicleTableHeader} 
+                />
                 <Table rows= {VehicleData} tableHeader ={ VehicleTableHeader }/>
                 <Paginator />
 
