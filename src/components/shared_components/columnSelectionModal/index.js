@@ -83,7 +83,7 @@ export default function AlertDialogSlide(props) {
                     {
                         selectedData.split(',').map((item, index) => (
 
-                            <ExcelColumn label={item} value={selectedData[index]} key={index} />
+                            <ExcelColumn label={item} value={item} key={index} />
                         ))
                     }
                 </ExcelSheet>

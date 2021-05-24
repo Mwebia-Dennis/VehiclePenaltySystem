@@ -9,6 +9,7 @@ import Profile from '../views/profile';
 import FormContainer from '../views/form_container';
 import { formTypes } from '../../utils/constants'
 import { Navigate } from 'react-router';
+import PageNotFound from '../views/page_not_found';
 
 export const routes = [
 
@@ -29,6 +30,7 @@ export const routes = [
             {path: '/new-vehicle', element: <FormContainer formType={ formTypes.newVehicle } />},
             {path: '/new-user', element: <FormContainer formType={ formTypes.newUser } />},
             {path: '/new-penalty', element: <FormContainer formType={ formTypes.newPenalty } />},
+            { path: '*', element: <Navigate to="404" replace /> },
         ]
         
     },
@@ -44,8 +46,17 @@ export const routes = [
             {path: 'forgot-password', element: <FormContainer formType={ formTypes.forgotPassword } />},
             {path: 'new-password', element: <FormContainer formType={ formTypes.newPassword } />},
             // {path: '/forgot-password', element: <Dashboard />},
+            { path: '*', element: <Navigate to="/404" replace /> },
         ]
         
     },
+    {
+        path: '404',
+        element : <PageNotFound />,
+        children: [ 
+            { path: '*', element: <Navigate to="/404" replace /> },
+        ]
+    },
+    { path: '*', element: <Navigate to="404" replace /> },
 
 ];
