@@ -4,20 +4,17 @@ import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
 import { useNavigate } from 'react-router';
-import ReactExport from "react-export-excel";
+import ColumnSelectionModal from '../columnSelectionModal';
 
 
 
 export default (props) => {
 
     const { data, dataSet, dataSetHeaders } = props;
-    const dataSetHeadersIds = [];
     const classes = useStyles();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
-    const ExcelFile = ReactExport.ExcelFile;
-    const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-    const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+    const [columnSelectionOpen, setColumnSelectionOpen] = useState(false);
     const searchOptions = data.searchOptions;
     const limitEntriesData = ["10", "25", "50", "100"];
     const sortByData = data.sortByOptions;
@@ -26,11 +23,7 @@ export default (props) => {
     const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
 
-    for (const __data in dataSet["0"]) {
-        dataSetHeadersIds.push(__data);
-    }
 
-    console.log(dataSetHeadersIds);
 
     const handleFormOpen = () => {
 
@@ -67,6 +60,16 @@ export default (props) => {
         setAnchorEl(null);
     };
 
+    
+
+    const handleColumnSelectionOpen = () => {
+        setColumnSelectionOpen(true);
+    };
+
+    const handleColumnSelectionClose = () => {
+        setColumnSelectionOpen(false);
+    };
+
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -95,28 +98,6 @@ export default (props) => {
         </Menu>
     );
 
-    const ExportToExcelBtn = () => {
-        
-        return (
-            <ExcelFile
-                filename={"report"}
-                element={
-                    <ActionButton variant="contained" color="primary"> 
-                        <Print />Export to Excel</ActionButton>
-                    }
-                >
-                <ExcelSheet data={dataSet} name="Employees">
-
-                    {
-                        dataSetHeaders.map((item, index) => (
-
-                            <ExcelColumn label={item} value={dataSetHeadersIds[index]} key={index} />
-                        ))
-                    }
-                </ExcelSheet>
-            </ExcelFile>
-        );
-    }
 
     return (
 
@@ -130,7 +111,11 @@ export default (props) => {
                 </Grid>
                 
                 <Grid item xs={12} md={2}>
-                    <ExportToExcelBtn />
+                      
+                    <ActionButton variant="contained" color="primary" onClick={handleColumnSelectionOpen}>
+                        <Print />Export to Excel
+                    </ActionButton>
+                
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <input type="text" style={{width: '80%', padding: '10px'}} 
@@ -194,6 +179,14 @@ export default (props) => {
                     
                 </Grid>
             </Grid>
+
+            <ColumnSelectionModal 
+                open={columnSelectionOpen} 
+                handleClose={handleColumnSelectionClose} 
+                dataType={data} 
+                dataSet={dataSet} 
+                dataSetHeaders={dataSetHeaders}
+            />
 
             {renderMenu}   
 
