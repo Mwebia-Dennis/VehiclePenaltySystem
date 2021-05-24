@@ -25,7 +25,11 @@ export default (props) => {
         <>
             <div>
                 <BreadCrumb links={links} />
-                <MainActionContainer  data={pageType.users}/>
+                <MainActionContainer 
+                    data={pageType.users} 
+                    dataSet={UsersData} 
+                    dataSetHeaders={UsersTableHeader} 
+                />
                 <Table rows= {UsersData} tableHeader ={ UsersTableHeader }/>
                 <Paginator />
             </div>
