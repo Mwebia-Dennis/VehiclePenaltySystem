@@ -18,8 +18,8 @@ export const useStyles = makeStyles((theme) => ({
     },
     
     smallAvatar: {
-        width: theme.spacing(7),
-        height: theme.spacing(7),
+        width: theme.spacing(6),
+        height: theme.spacing(6),
     },
     content: {
         fontSize: '13px',

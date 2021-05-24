@@ -1,4 +1,4 @@
-import { Avatar, Grid, Paper, Typography } from '@material-ui/core';
+import { Avatar, Grid, IconButton, Link, Paper, Typography } from '@material-ui/core';
 import React from 'react';
 import Profile from '../../../../images/profile.jpeg';
 import { useStyles, ProfileHeader } from './style';
@@ -7,6 +7,7 @@ export default (props) => {
     
     const {open} = props;
     const classes = useStyles();
+
     return (
 
         <Paper className={classes.root}>
@@ -21,7 +22,9 @@ export default (props) => {
                 
                 <Grid item xs={12}>
                     
-                    <Avatar alt="Dennis Gitonga" src={Profile} className={open?classes.largeAvatar:classes.smallAvatar} />
+                    <Link  href='/profile'>
+                        <Avatar alt="Dennis Gitonga" src={Profile} className={open?classes.largeAvatar:classes.smallAvatar} />
+                    </Link>
                 
                 </Grid>
 
