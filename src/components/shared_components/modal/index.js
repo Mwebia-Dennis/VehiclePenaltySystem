@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { useTheme, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -10,6 +10,7 @@ import { styles, DialogContent,DialogActions } from './style'
 import { Document, Page, pdfjs } from "react-pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import PDFFile from '../../../images/demo.pdf'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 // pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js";
@@ -36,6 +37,8 @@ export default function CustomizedDialogs(props) {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
+  const theme = useTheme();
+  // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   console.log(PDFFile)
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -45,10 +48,13 @@ export default function CustomizedDialogs(props) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      <Dialog 
+        // fullScreen={fullScreen} 
+        onClose={handleClose}
+        fullWidth="lg"
+        aria-labelledby="customized-dialog-title" 
+        open={open}
+      >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Report PDF
         </DialogTitle>

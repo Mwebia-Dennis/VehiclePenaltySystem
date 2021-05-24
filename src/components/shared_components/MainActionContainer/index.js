@@ -26,9 +26,11 @@ export default (props) => {
     const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
 
-    for (const __data in dataSet) {
+    for (const __data in dataSet["0"]) {
         dataSetHeadersIds.push(__data);
     }
+
+    console.log(dataSetHeadersIds);
 
     const handleFormOpen = () => {
 
