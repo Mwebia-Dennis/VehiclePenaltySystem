@@ -3,7 +3,7 @@ import CommuteIcon from '@material-ui/icons/Commute';
 import GavelIcon from '@material-ui/icons/Gavel';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import GroupIcon from '@material-ui/icons/Group';
-import { AccountCircle } from '@material-ui/icons';
+import { AccountCircle, LibraryAdd } from '@material-ui/icons';
 
 export const SideMenuItems = [
     {
@@ -30,5 +30,10 @@ export const SideMenuItems = [
         item: 'Edit Profile',
         url: '/profile',
         icon: <AccountCircle />
-    }
+    },
+    {
+        item: 'Add Menu',
+        url: '/category/data',
+        icon: <LibraryAdd />
+    },
 ]

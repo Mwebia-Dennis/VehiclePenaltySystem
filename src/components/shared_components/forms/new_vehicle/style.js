@@ -27,6 +27,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     submitBtn: {
         marginTop: '35px',
+        marginRight: '5px',
     },
 
 }))
