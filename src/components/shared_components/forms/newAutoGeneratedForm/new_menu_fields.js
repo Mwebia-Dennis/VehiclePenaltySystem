@@ -85,7 +85,6 @@ export default (props) => {
       };
 
     const fieldsToBeDisplayed = (fields != null)?fields.split(','):[];
-    console.log(fieldsToBeDisplayed)
     return (
 
         <>
