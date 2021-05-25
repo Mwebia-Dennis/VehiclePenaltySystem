@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import ReactExport from "react-export-excel";
 import { pageType } from '../../../utils/constants'
-import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
+import { Checkbox, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -75,7 +75,10 @@ export default function AlertDialogSlide(props) {
             <ExcelFile
                 filename={"report"}
                 element={
-                    <Button variant="contained" color="primary" onClick={handleClose}> Export to Excel</Button>
+                    <Button variant="contained" color="primary" 
+                        disabled={(selectedData.length <= 0)}
+                        onClick={handleClose}
+                    > Export to Excel</Button>
                     }
                 >
                 <ExcelSheet data={dataSet} name="Employees">
@@ -107,13 +110,16 @@ export default function AlertDialogSlide(props) {
 
             <FormGroup>
                 {
-                    dataSetHeadersIds.map((item,index)=>(
-
-                        <FormControlLabel
-                            control={<Checkbox onChange={handleChange} checked={selectedData.includes(item)} name={"checked"+index} value={item} />}
-                            label={item}
-                        />
-                    ))
+                    (dataSetHeadersIds.length > 0)?
+                        dataSetHeadersIds.map((item,index)=>(
+    
+                            <FormControlLabel
+                                control={<Checkbox onChange={handleChange} checked={selectedData.includes(item)} name={"checked"+index} value={item} />}
+                                label={item}
+                            />
+                        ))
+                    :
+                    <Typography variant="small">0 results found</Typography>
                 }
             </FormGroup>
 
