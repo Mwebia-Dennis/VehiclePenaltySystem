@@ -22,6 +22,7 @@ export default (props) => {
     const [limitEntries, setLimitEntries] = useState(limitEntriesData["0"]);
     const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
+    console.log(data)
 
 
 
@@ -35,6 +36,8 @@ export default (props) => {
             navigate('/new-user');
         }else if(data == pageType.penalty ) {
             navigate('/new-penalty');
+        }else {
+            navigate('/auto/form/'+data.type.toLowerCase())
         }
     };
 

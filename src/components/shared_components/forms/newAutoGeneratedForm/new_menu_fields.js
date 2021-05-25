@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import {useStyles} from '../new_vehicle/style';
 import BreadCrumb from '../../BreadCrump';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 
 export default (props) => {
 
@@ -12,6 +13,7 @@ export default (props) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [fields, setFields] = useState(null);
     const [textFieldValue, setTextFieldValue] = useState('')
+    const navigate =  useNavigate()
     const links = [
         {
             url:"/home", 
@@ -26,7 +28,14 @@ export default (props) => {
 
 
     const handleSaveBtnClick = () => {
+        const new_menu = {
+            menu: menu,
+            fields: fields
+        }
+        localStorage.setItem("new_menu", JSON.stringify(new_menu) );
         showSnackBar('Your menu is: '+menu+ ' and fields are: '+fields, 'success');
+        navigate('/auto/data/'+menu)
+        
     }
 
     const showSnackBar = (msg, variant = 'info') => {
