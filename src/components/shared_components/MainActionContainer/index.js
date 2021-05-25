@@ -3,7 +3,7 @@ import { Add, Print, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import ColumnSelectionModal from '../columnSelectionModal';
 
 
