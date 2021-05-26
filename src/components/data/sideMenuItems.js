@@ -22,6 +22,11 @@ export const SideMenuItems = [
         icon: <GavelIcon />
     },
     {
+        item: 'Add Menu',
+        url: '/category/data',
+        icon: <LibraryAdd />
+    },
+    {
         item: 'Users',
         url: '/users',
         icon: <GroupIcon />
@@ -30,10 +35,5 @@ export const SideMenuItems = [
         item: 'Edit Profile',
         url: '/profile',
         icon: <AccountCircle />
-    },
-    {
-        item: 'Add Menu',
-        url: '/category/data',
-        icon: <LibraryAdd />
     },
 ]

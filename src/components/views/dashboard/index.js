@@ -20,7 +20,7 @@ export default (props) => {
     const classes = useStyles();
     return (
         <div>
-            <Grid container spacing={3}>
+            <Grid container spacing={1}>
                 {
                     SummaryCardItems.map((item, index)=> 
                         <SummaryCards 

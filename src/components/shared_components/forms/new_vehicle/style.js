@@ -6,8 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles((theme) => ({
 
     root: {
-        width: '60%',
-        marginLeft: '20%',
+        width: '40%',
+        marginLeft: '30%',
         padding: '20px 50px 50px 50px',
         [theme.breakpoints.down('sm')]: {
             width: '100%',

@@ -1,5 +1,5 @@
 
-import Home from '../views/home';
+import Home from '../views/Home';
 import Auth from '../views/auth';
 import Dashboard from '../views/dashboard/index';
 import Vehicle from '../views/vehicle';

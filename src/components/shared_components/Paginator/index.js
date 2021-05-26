@@ -20,7 +20,7 @@ export default (props) => {
                 className={classes.paginator}
             >
 
-                <Grid item xs={12} md={8} >
+                <Grid item xs={12} md={8} style={{padding: '7px 0'}} >
 
                     <Typography variant="small">Page: {page}/{paginationCount} </Typography>
 

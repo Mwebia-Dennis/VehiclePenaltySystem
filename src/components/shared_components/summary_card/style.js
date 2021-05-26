@@ -7,10 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles((theme) => ({
 
     root: {
-        
-        [theme.breakpoints.down('sm')]: {
-            margin: '10px 20px',
-        }
     },
     title: {
         fontSize: '15px',
@@ -36,6 +32,11 @@ export const useStyles = makeStyles((theme) => ({
     divider: {
         marginTop: '15px',
     },
+    icons: {
+        color: '#fff',
+        fontSize: '50px',
+        textAlign: 'center',
+    }
 
 }));
 
@@ -43,7 +44,7 @@ export const Card = styled(Paper)`
 
     border-radius: 20px;
     padding: 20px;
-    width: 100%;
+    width: 85%;
 
 `
 export const IconBox = styled(Box)`
@@ -51,7 +52,7 @@ export const IconBox = styled(Box)`
     width: 70px;
     height: 70px;
     border: 1px solid #000;
-    color: #d9d9d9;
+    color: #000;
     padding: 15px;
     border-radius: 30%;
 
