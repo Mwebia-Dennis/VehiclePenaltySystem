@@ -1,20 +1,71 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Link, Divider, Backdrop, CircularProgress } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Link, Divider, Backdrop, CircularProgress, IconButton } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
 import "react-datepicker/dist/react-datepicker.css";
+import { useDispatch,useSelector } from 'react-redux';
+import { useForm } from "react-hook-form";
+import { loginUser } from '../../../../store/reducers/auth/auth.actions';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { Close } from '@material-ui/icons';
+import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 
 export default (props) => {
 
     const classes = useStyles();
     const [openBackdrop, setOpenBackdrop] = React.useState(false);
+    const dispatch = useDispatch()
+    const { register, handleSubmit, formState:{ errors } } = useForm()
+    const navigate = useNavigate()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const authState = useSelector((state) => state.authReducer)
 
+
+
+    
     const handleBackdropClose = () => {
         setOpenBackdrop(false);
       };
       const handleBackdropToggle = () => {
         setOpenBackdrop(!openBackdrop);
       };
+    const onSubmit = (data)=> {
+        //handleBackdropToggle()
+        dispatch(loginUser(data, navigate))
+    }
+    
+
+    
+    if(authState.message) {
+        showSnackBar(authState.message, 'success');
+        dispatch({ type: CLEAR_MESSAGE})
+    }
+
+    if(authState.error) {
+        if("errors" in authState.error) {
+            for (const key in authState.error.errors) {
+
+                showSnackBar(authState.error.errors[key]["0"], 'error');
+                
+            }
+        }else if("error" in authState.error) {
+
+            showSnackBar(authState.error.error, 'error');
+        }
+        dispatch({ type: CLEAR_ERROR})
+    }
+
+      function showSnackBar(msg, variant = 'info'){
+        enqueueSnackbar(msg, {
+            variant: variant,            
+            action: (key) => (
+                <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                    <Close />
+                </IconButton>
+            ),
+        })
+    }
 
 
     const textFields = [
@@ -41,60 +92,72 @@ export default (props) => {
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">Login to Continue</Typography>
-                <Grid 
-                    container 
-                    spacing={2}
-                >
 
-                        
-                        {
-                            textFields.map((item, index)=>(
+                <form  onSubmit={handleSubmit(onSubmit)}>
 
-                                <Grid 
-                                    item 
-                                    xs={12}
-                                    key={index}                                
-                                >
-                                    <TextField 
-                                        required 
-                                        label={item.placeholder} 
-                                        placeholder={item.placeholder}
-                                        name={item.name}
-                                        className= {classes.textfield}
-                                        fullWidth
-                                    />
-                                </Grid>
-                            ))
-                        }                      
+                    <Grid 
+                        container 
+                        spacing={2}
+                    >
 
-                </Grid>
-
-                <Grid
-                        container            
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                >
-                    <Grid item xs={12}>
-                        <Button variant="contained" color="primary" onClick={handleBackdropToggle} className={classes.submitBtn} >
-                            Login
-                        </Button>
-
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography  className={classes.bottomLinks} style={{marginTop: '20px',}}>
-                            <Link href="/auth/forgot-password">Forgot Password</Link>
-
-                        </Typography>
-                        <Typography className={classes.bottomLinks}>Not A member yet?</Typography>
-                        <Typography  className={classes.bottomLinks}>
                             
-                            <Link href="/auth/signup">Sign Up</Link>
+                            {
+                                textFields.map((item, index)=>{
+                                    
+                                    const name = item.name
+                                    return (
 
-                        </Typography>
+                                        <Grid 
+                                            item 
+                                            xs={12}
+                                            key={index}                                
+                                        >
+                                            <TextField 
+                                                required 
+                                                label={item.placeholder} 
+                                                placeholder={item.placeholder}
+                                                type={item.type}
+                                                name={name}
+                                                className= {classes.textfield}
+                                                fullWidth 
+                                                {...register(name, { required: true })}
+                                            />
+                                            {errors[name] && <span>This field is required</span>}
+                                        </Grid>
+                                    )
+                                })
+                            }                      
 
                     </Grid>
-                </Grid>
+
+                    <Grid
+                            container            
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                    >
+                        <Grid item xs={12}>
+                            <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
+                                Login
+                            </Button>
+
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography  className={classes.bottomLinks} style={{marginTop: '20px',}}>
+                                <Link href="/auth/forgot-password">Forgot Password</Link>
+
+                            </Typography>
+                            <Typography className={classes.bottomLinks}>Not A member yet?</Typography>
+                            <Typography  className={classes.bottomLinks}>
+                                
+                                <Link href="/auth/signup">Sign Up</Link>
+
+                            </Typography>
+
+                        </Grid>
+                    </Grid>
+
+                </form>
             </Paper>
             <Backdrop className={classes.backdrop} open={openBackdrop} onClick={handleBackdropClose}>
                 <CircularProgress color="inherit" />

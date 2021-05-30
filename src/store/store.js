@@ -1,14 +1,17 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware,compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducer from './reducers/combinedReducer';
 
 
-export default function store() {
-
+export default function store(){
+    
     const initialState = {}
     return createStore(
         reducer,
-        initialState,
-        applyMiddleware(thunk)
+      initialState,
+      compose(
+        applyMiddleware(thunk),
+        window.devToolsExtension ? window.devToolsExtension() : f => f
+      )
     );
-}
+  }
