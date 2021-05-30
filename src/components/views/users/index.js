@@ -1,14 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Table from '../../shared_components/table';
-import { UsersData, UsersTableHeader } from '../../data/usersData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
+import { useDispatch,useSelector } from 'react-redux';
+import { getUserData } from '../../../store/reducers/users/user.actions';
+import { Avatar, IconButton } from '@material-ui/core';
+import { Delete, Edit } from '@material-ui/icons';
 
 export default (props) => {
     
     
+    const dispatch = useDispatch()
+    const userReducer = useSelector((state) => state.userReducer)
+    const tableData = formatData(userReducer.data.data)
+    const tableHeaders = getTableHeaders(tableData)
+
+    
+
+    useEffect(() => {
+        
+        dispatch(getUserData())
+
+    }, [])
+
     const links = [
         {
             url:"/home", 
@@ -20,6 +36,53 @@ export default (props) => {
         }
         
     ]
+
+    function formatData(data){
+        const allData = []
+        let formattedData = {}
+        for(const key in data) {
+
+            for (const header in data[key]) {
+
+                
+
+                if(header != 'id' && header != 'email_verified_at') {
+                    if(header.trim().toLowerCase() == 'profile_img') {
+                        formattedData['profile_img'] = <Avatar alt={data[key]['name']} src={data[key][header]} />
+                    }else {
+                        formattedData[header] = data[key][header]
+                    }
+                }
+
+                
+            }
+            
+            formattedData["action"] = <>
+                    <IconButton color="primary"> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                </>
+            allData.push(formattedData)
+            formattedData = {}
+
+        }
+
+        return allData
+    }
+
+    function getTableHeaders(data){
+        const tableHeaders = ["#"]
+        for(const key in data) {
+            
+            for (const header in data[key]) {
+                tableHeaders.push(header)
+            }
+            break
+
+        }
+
+        return tableHeaders
+    }
+
     return (
 
         <>
@@ -27,10 +90,10 @@ export default (props) => {
                 <BreadCrumb links={links} />
                 <MainActionContainer 
                     data={pageType.users} 
-                    dataSet={UsersData} 
-                    dataSetHeaders={UsersTableHeader} 
+                    dataSet={tableData} 
+                    dataSetHeaders={tableHeaders} 
                 />
-                <Table rows= {UsersData} tableHeader ={ UsersTableHeader }/>
+                <Table rows= {tableData} tableHeader ={ tableHeaders }/>
                 <Paginator />
             </div>
 
