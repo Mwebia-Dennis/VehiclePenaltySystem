@@ -17,11 +17,14 @@ const setAuthorizationHeader = () => {
 
     }
 };
+
 export const loginUser = (userData, navigate) => (dispatch) => {
 
     dispatch({ type: LOADING_USER })
     axios.post('auth/login', userData)
     .then((res)=>{
+
+        
         localStorage.setItem('access_token', `Bearer ${res.data.access_token}`);
         setAuthorizationHeader()
         dispatch({ type: CLEAR_ERROR})
@@ -93,6 +96,55 @@ export const getUserDetails = () => (dispatch) => {
     })
     .catch((error)=> {
         
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+export const updateProfileImage = (userData) => (dispatch) => {
+    
+    dispatch({ type: LOADING_USER })
+    setAuthorizationHeader()
+    axios.post('auth/update-profile', userData)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({ type: SET_AUTHENTICATED})
+        dispatch({
+            type: SET_MESSAGE,
+            payload: res.data.message
+        })
+
+    })
+    .catch((error)=> {
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+export const editProfile = (userData, user_id) => (dispatch) => {
+    
+    dispatch({ type: LOADING_USER })
+    setAuthorizationHeader()
+    axios.put('users/'+user_id, userData)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_MESSAGE,
+            payload: res.data['message']
+        })
+
+    })
+    .catch((error)=> {
         dispatch({
             type: SET_ERROR,
             payload: error.response.data

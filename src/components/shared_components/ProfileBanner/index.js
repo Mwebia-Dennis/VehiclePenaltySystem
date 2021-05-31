@@ -1,23 +1,78 @@
-import { Avatar, Button, Divider, FormControl, Grid, InputLabel, Link, OutlinedInput, Paper, Typography } from '@material-ui/core';
+import { Avatar, Button, Divider, FormControl, Grid, InputLabel, Link, OutlinedInput, Paper, Typography, IconButton } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { useStyles } from './style'
-import Profile from '../../../images/profile.jpeg';
 import MailIcon from '@material-ui/icons/Mail';
 import { PhotoCamera } from '@material-ui/icons';
-import { signUpTextfields } from '../../../utils/constants'
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserDetails } from '../../../store/reducers/auth/auth.actions';
+import { editProfile, getUserDetails, updateProfileImage } from '../../../store/reducers/auth/auth.actions';
 import { getUserData } from '../../../store/reducers/users/user.actions';
 import ProgressSpinner from '../ProgressBarSpinner';
+import { useSnackbar } from 'notistack';
+import { Close } from '@material-ui/icons';
+import { useForm } from "react-hook-form";
+import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../store/reducers/auth/auth.types';
+
 
 export default (props) => {
     
     const classes = useStyles();
     const { id } = props;
     const dispatch = useDispatch()
+    const { register, handleSubmit, formState:{ errors } } = useForm()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const authState = useSelector((state) => state.authReducer)
     const reducer = (id.trim().toLowerCase() == 'current-user')?useSelector((state) => state.authReducer):
             useSelector((state) => state.userReducer);
 
+            
+      const onSubmit = (data)=> {
+        //handleBackdropToggle()
+        dispatch(editProfile(data, reducer.data.id))
+    }
+
+    const onChange = (event)=> {
+        const file = event.target.files['0']
+        const formData = new FormData()
+        formData.append(
+            "profile_picture",
+            file,
+            file.name
+          );
+        dispatch(updateProfileImage(formData))
+    }
+
+    if(reducer.message) {
+      showSnackBar(reducer.message, 'success');
+      dispatch({ type: CLEAR_MESSAGE})
+  }
+
+  if(reducer.error) {
+
+      if("errors" in authState.error) {
+          for (const key in authState.error.errors) {
+
+              showSnackBar(authState.error.errors[key]["0"], 'error');
+              
+          }
+      }else if("error" in authState.error) {
+
+          showSnackBar(authState.error.error, 'error');
+      }
+
+      
+      dispatch({ type: CLEAR_ERROR})
+  }
+
+    function showSnackBar(msg, variant = 'info'){
+      enqueueSnackbar(msg, {
+          variant: variant,            
+          action: (key) => (
+              <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                  <Close />
+              </IconButton>
+          ),
+      })
+  }
     const editTextField =  [
         {
             placeholder: "Name",
@@ -102,6 +157,7 @@ export default (props) => {
                                     id="profile_image"
                                     multiple
                                     type="file"
+                                    onChange={onChange}
                                 />
                                 <label htmlFor="profile_image">
                                     <Button 
@@ -134,29 +190,34 @@ export default (props) => {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
+
+                                    <form  onSubmit={handleSubmit(onSubmit)}>
                                     
-                                    {
-                                        editTextField.map((item, index)=>(
+                                        {
+                                            editTextField.map((item, index)=>(
 
-                                            <FormControl key={index} fullWidth className={classes.formControl} variant="outlined">
-                                                <InputLabel htmlFor="outlined-adornment-amount">{item.placeholder}</InputLabel>
-                                                <OutlinedInput
-                                                    id="outlined-adornment-amount"
-                                                    placeholder={item.placeholder}
-                                                    labelWidth={60}
-                                                    type={item.type}
-                                                    name={item.name}
-                                                    defaultValue={item.defaultValue}
-                                                />
-                                            </FormControl>
+                                                <FormControl key={index} fullWidth className={classes.formControl} variant="outlined">
+                                                    <InputLabel htmlFor="outlined-adornment-amount">{item.placeholder}</InputLabel>
+                                                    <OutlinedInput
+                                                        id="outlined-adornment-amount"
+                                                        placeholder={item.placeholder}
+                                                        labelWidth={60}
+                                                        type={item.type}
+                                                        name={item.name}
+                                                        defaultValue={item.defaultValue}
+                                                        {...register(item.name, { required: true })}
+                                                    />
+                                                    {errors[item.name] && <span>This field is required</span>}
+                                                </FormControl>
 
-                                        ))
-                                    }
+                                            ))
+                                        }
 
                                     
-                                    <Button color="primary" variant="contained" className={classes.editBtn}>
-                                        Submit
-                                    </Button>
+                                        <Button type="submit" color="primary" variant="contained" className={classes.editBtn}>
+                                            Submit
+                                        </Button>
+                                    </form>
                                 </Grid>
                             </Grid>
                         </Paper>

@@ -44,7 +44,7 @@ export default function PrimarySearchAppBar() {
   const loggedInMenu = [
     {
         name:"Edit Profile",
-        url: "/profile"
+        url: "/profile/current-user"
     },
     {
         name:"Logout",
