@@ -1,6 +1,7 @@
 
 import {
     SET_AUTHENTICATED,
+    SET_USER_DETAILS,
     CLEAR_ERROR,
     CLEAR_MESSAGE,
     LOADING_USER,
@@ -13,7 +14,7 @@ import {
 const initialState = {
     authenticated: false,
     loading: false,
-    credentials: {},
+    data: {},
     errors: null,
     message: null,
   };
@@ -27,7 +28,13 @@ export const authReducer = (state = initialState, action)=> {
                 loading: false,
             };
         
-        
+        case SET_USER_DETAILS: 
+            return {
+                ...state,
+                data: action.payload,
+                authenticated: true,
+                loading: false,
+            };
         case CLEAR_ERROR:
             return {
                 ...state,

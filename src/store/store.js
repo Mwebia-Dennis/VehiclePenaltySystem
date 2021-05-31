@@ -11,7 +11,7 @@ export default function store(){
       initialState,
       compose(
         applyMiddleware(thunk),
-        window.devToolsExtension ? window.devToolsExtension() : f => f
+        window.__REDUX_DEVTOOLS_EXTENSION__ ? window.devToolsExtension() : f => f
       )
     );
   }

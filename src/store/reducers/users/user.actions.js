@@ -16,17 +16,17 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getUserData = () => (dispatch) => {
+export const getUserData = (id) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER_DATA })
-    axios.get('users')
+    axios.get('users/'+parseInt(id))
     .then((res)=>{
         
         dispatch({ type: CLEAR_ERROR})
         dispatch({
             type: SET_DATA,
-            payload: res
+            payload: res.data
         })
 
 
@@ -40,3 +40,6 @@ export const getUserData = () => (dispatch) => {
     })
 
 }
+
+
+
