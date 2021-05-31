@@ -28,7 +28,7 @@ export const routes = [
             {path: '/penalty', element: <Penalty />},
             {path: '/users', element: <Users />},
             {path: '/invoices', element: <Dashboard />},
-            {path: '/profile', element: <Profile />},
+            {path: '/profile/:id', element: <Profile />},
             {path: '/new-vehicle', element: <FormContainer isForm={true} formType={ formTypes.newVehicle } />},
             {path: '/new-user', element: <FormContainer isForm={true} formType={ formTypes.newUser } />},
             {path: '/new-penalty', element: <FormContainer  formType={ formTypes.newPenalty } />},

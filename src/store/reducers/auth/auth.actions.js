@@ -3,19 +3,20 @@ import axios from 'axios'
 import {
     SET_AUTHENTICATED,
     CLEAR_ERROR,
-    CLEAR_MESSAGE,
+    SET_USER_DETAILS,
     LOADING_USER,
     SET_ERROR,
-    SET_MESSAGE,
-    SET_UNAUTHENTICATED
+    SET_MESSAGE
 } from './auth.types'
 
 
 
 const setAuthorizationHeader = () => {
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
-};
+    if(localStorage.getItem('access_token') && localStorage.getItem('access_token') != '') {
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
 
+    }
+};
 export const loginUser = (userData, navigate) => (dispatch) => {
 
     dispatch({ type: LOADING_USER })
@@ -29,7 +30,7 @@ export const loginUser = (userData, navigate) => (dispatch) => {
             type: SET_MESSAGE,
             payload: "successful login"
         })
-
+        
         navigate('/home')
 
     })
@@ -44,7 +45,7 @@ export const loginUser = (userData, navigate) => (dispatch) => {
 }
 
 
-export const signUpUser = (userData, navigate) => (dispatch) => {
+export const signUpUser = (userData, navigate, isSignUp = true) => (dispatch) => {
 
     dispatch({ type: LOADING_USER })
     axios.post('auth/signup', userData)
@@ -54,13 +55,44 @@ export const signUpUser = (userData, navigate) => (dispatch) => {
         dispatch({ type: SET_AUTHENTICATED})
         dispatch({
             type: SET_MESSAGE,
-            payload: res
+            payload: res.data.message
         })
 
-        navigate('/auth/login')
+        if(isSignUp) {
+            navigate('/auth/login')
+        }else {
+            
+            navigate('/users')
+        }
 
     })
     .catch((error)=> {
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+export const getUserDetails = () => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER })
+    axios.get('auth/user-details')
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_USER_DETAILS,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
         dispatch({
             type: SET_ERROR,
             payload: error.response.data

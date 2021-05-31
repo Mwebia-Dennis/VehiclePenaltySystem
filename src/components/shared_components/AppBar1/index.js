@@ -19,6 +19,7 @@ import { SideMenuItems } from '../../data/sideMenuItems';
 import { useNavigate } from 'react-router-dom';
 import { Close } from '@material-ui/icons';
 import DropDownMenu from './drop_down_menu'
+import { useSelector } from 'react-redux';
 
 
 export default function PrimarySearchAppBar() {
@@ -27,8 +28,9 @@ export default function PrimarySearchAppBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
+  const authState = useSelector((state) => state.authReducer)
   
-  const isLoggedIn = false;
+  const isLoggedIn = authState.authenticated;
   const loggedOutMenu = [
     {
         name:"Login",
@@ -42,7 +44,7 @@ export default function PrimarySearchAppBar() {
   const loggedInMenu = [
     {
         name:"Edit Profile",
-        url: "auth/edit-profile"
+        url: "/profile"
     },
     {
         name:"Logout",
@@ -194,12 +196,12 @@ export default function PrimarySearchAppBar() {
                 </Badge>
                 </IconButton>
                 <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
                 >
                 <AccountCircle />
                 </IconButton>
