@@ -33,7 +33,7 @@ export const SideMenuItems = [
     },
     {
         item: 'Edit Profile',
-        url: '/profile',
+        url: '/profile/current-user',
         icon: <AccountCircle />
     },
 ]
