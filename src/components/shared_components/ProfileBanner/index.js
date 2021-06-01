@@ -150,78 +150,99 @@ export default (props) => {
                                     </Link>
                                 </Button>
                                 
+                                {
+
+                                    (id.trim().toLowerCase() == 'current-user')?
+
+                                        <>
+                                            <input
+                                                accept="image/*"
+                                                className={classes.input}
+                                                id="profile_image"
+                                                multiple
+                                                type="file"
+                                                onChange={onChange}
+                                            />
+                                            <label htmlFor="profile_image">
+                                                <Button 
+                                                    className={classes.button} 
+                                                    variant="contained" 
+                                                    color="secondary"
+                                                    component="span"
+                                                    startIcon={<PhotoCamera className={classes.icon} />}
+                                                >
+                                                    Upload New Image
+                                                </Button>
+                                            </label>
+                                        </>
+
+
+
+                                    :
+                                    <div></div>
+                                }
                                 
-                                <input
-                                    accept="image/*"
-                                    className={classes.input}
-                                    id="profile_image"
-                                    multiple
-                                    type="file"
-                                    onChange={onChange}
-                                />
-                                <label htmlFor="profile_image">
-                                    <Button 
-                                        className={classes.button} 
-                                        variant="contained" 
-                                        color="secondary"
-                                        component="span"
-                                        startIcon={<PhotoCamera className={classes.icon} />}
-                                    >
-                                        Upload New Image
-                                    </Button>
-                                </label>
                             </Grid>
                         </Grid>
 
                     </div>
 
-                    <div className={classes.root2}>
-                        <Paper className={classes.editContainer}>
+                    {
+                        
+                        (id.trim().toLowerCase() == 'current-user')?
 
-                            <Typography variant="h6"  className={classes.editTitle}>
-                                Edit Account
-                            </Typography>
-                            <Divider  className={classes.editDivider} />
-                            
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography className={classes.editContent}>
-                                        Enter your account info.Your username and email will be viewed publicly.
+                            <div className={classes.root2}>
+                                <Paper className={classes.editContainer}>
+
+                                    <Typography variant="h6"  className={classes.editTitle}>
+                                        Edit Account
                                     </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-
-                                    <form  onSubmit={handleSubmit(onSubmit)}>
+                                    <Divider  className={classes.editDivider} />
                                     
-                                        {
-                                            editTextField.map((item, index)=>(
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12} md={4}>
+                                            <Typography className={classes.editContent}>
+                                                Enter your account info.Your username and email will be viewed publicly.
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} md={6}>
 
-                                                <FormControl key={index} fullWidth className={classes.formControl} variant="outlined">
-                                                    <InputLabel htmlFor="outlined-adornment-amount">{item.placeholder}</InputLabel>
-                                                    <OutlinedInput
-                                                        id="outlined-adornment-amount"
-                                                        placeholder={item.placeholder}
-                                                        labelWidth={60}
-                                                        type={item.type}
-                                                        name={item.name}
-                                                        defaultValue={item.defaultValue}
-                                                        {...register(item.name, { required: true })}
-                                                    />
-                                                    {errors[item.name] && <span>This field is required</span>}
-                                                </FormControl>
+                                            <form  onSubmit={handleSubmit(onSubmit)}>
+                                            
+                                                {
+                                                    editTextField.map((item, index)=>(
 
-                                            ))
-                                        }
+                                                        <FormControl key={index} fullWidth className={classes.formControl} variant="outlined">
+                                                            <InputLabel htmlFor="outlined-adornment-amount">{item.placeholder}</InputLabel>
+                                                            <OutlinedInput
+                                                                id="outlined-adornment-amount"
+                                                                placeholder={item.placeholder}
+                                                                labelWidth={60}
+                                                                type={item.type}
+                                                                name={item.name}
+                                                                defaultValue={item.defaultValue}
+                                                                {...register(item.name, { required: true })}
+                                                            />
+                                                            {errors[item.name] && <span>This field is required</span>}
+                                                        </FormControl>
 
-                                    
-                                        <Button type="submit" color="primary" variant="contained" className={classes.editBtn}>
-                                            Submit
-                                        </Button>
-                                    </form>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                    </div>
+                                                    ))
+                                                }
+                                                <Button type="submit" color="primary" variant="contained" className={classes.editBtn}>
+                                                    Edit Profile
+                                                </Button>
+                                            
+                                                
+                                            </form>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+                            </div>
+                            
+
+                        :
+                        <></>
+                    }
 
                 </>
             }

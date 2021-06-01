@@ -41,5 +41,30 @@ export const getUserData = (id) => (dispatch) => {
 
 }
 
+export const getAllUsersData = () => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER_DATA })
+    axios.get('users')
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
 
 

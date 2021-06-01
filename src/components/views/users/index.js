@@ -5,23 +5,24 @@ import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
-import { getUserData } from '../../../store/reducers/users/user.actions';
+import { getAllUsersData } from '../../../store/reducers/users/user.actions';
 import { Avatar, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
+import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 
 export default (props) => {
     
     
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
-    const tableData = formatData(userReducer.data.data)
+    const tableData = formatData(userReducer.data)
     const tableHeaders = getTableHeaders(tableData)
 
     
 
     useEffect(() => {
         
-        dispatch(getUserData())
+        dispatch(getAllUsersData())
 
     }, [])
 
@@ -93,8 +94,16 @@ export default (props) => {
                     dataSet={tableData} 
                     dataSetHeaders={tableHeaders} 
                 />
-                <Table rows= {tableData} tableHeader ={ tableHeaders }/>
-                <Paginator />
+
+                {
+                    userReducer.loading?
+                        <ProgressBarSpinner />
+                    :
+                    <>
+                        <Table rows= {tableData} tableHeader ={ tableHeaders }/>
+                        <Paginator />
+                    </>
+                }
             </div>
 
         </>
