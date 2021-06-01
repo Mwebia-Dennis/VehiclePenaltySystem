@@ -12,7 +12,7 @@ export default () => {
         >
 
             <Grid item xs={3}>
-                <CircularProgress />
+                <CircularProgress color="secondary"/>
             </Grid>
 
         </Grid>
