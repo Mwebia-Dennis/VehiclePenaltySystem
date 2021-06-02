@@ -10,6 +10,7 @@ import { getAllVehicles } from '../../../store/reducers/vehicle/vehicle.actions'
 import { Delete, Edit } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
+import Alert from '@material-ui/lab/Alert';
 
 export default (props) => { 
     
@@ -96,10 +97,14 @@ export default (props) => {
                     vehicleReducer.loading?
                         <ProgressBarSpinner />
                     :
+                    (tableData.length > 0)?
                     <>
                         <Table rows= {tableData} tableHeader ={ tableHeaders }/>
                         <Paginator />
+
                     </>
+                    :
+                    <Alert severity="info">0 results found</Alert>
                 }
 
             </div>

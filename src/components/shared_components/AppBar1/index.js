@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +19,9 @@ import { SideMenuItems } from '../../data/sideMenuItems';
 import { useNavigate } from 'react-router-dom';
 import { Close } from '@material-ui/icons';
 import DropDownMenu from './drop_down_menu'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllMenus } from '../../../store/reducers/menu/menu.actions';
+import CategoryIcon from '@material-ui/icons/Category';
 
 
 export default function PrimarySearchAppBar() {
@@ -29,6 +31,8 @@ export default function PrimarySearchAppBar() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const navigate = useNavigate()
   const authState = useSelector((state) => state.authReducer)
+  const menuReducer = useSelector(state => state.menuReducer)
+  const dispatch = useDispatch()
   
   const isLoggedIn = authState.authenticated;
   const loggedOutMenu = [
@@ -51,6 +55,31 @@ export default function PrimarySearchAppBar() {
         url: "auth/logout"
     },
   ];
+
+
+  //adding menus from api
+
+  if(Array.isArray(menuReducer.data)) {
+    menuReducer.data.map((item)=>{
+
+        const menu = {
+          item: item.name,
+          url: '/auto/data/'+item.id,
+          icon: <CategoryIcon />
+        }
+        if(!containsMenu(menu, SideMenuItems)) {
+          SideMenuItems.push(menu)
+        }
+      }
+    )    
+  }
+
+
+  useEffect(() => {
+    
+    dispatch(getAllMenus())
+  }, [''])
+
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -79,6 +108,17 @@ export default function PrimarySearchAppBar() {
 
   const handleSideMenuNav = (url) => {
     navigate(url)
+  }
+
+  function containsMenu(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].item.trim().toLowerCase() === obj.item.trim().toLowerCase()) {
+            return true;
+        }
+    }
+
+    return false;
   }
 
 

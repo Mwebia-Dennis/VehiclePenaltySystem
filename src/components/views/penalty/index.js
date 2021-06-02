@@ -11,6 +11,7 @@ import { Avatar, Chip, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllPenalties } from '../../../store/reducers/penalty/penalty.actions';
+import Alert from '@material-ui/lab/Alert';
 
 export default (props) => {
 
@@ -108,8 +109,17 @@ export default (props) => {
                 dataSet={tableData} 
                 dataSetHeaders={tableHeaders} 
             />
-            <Table rows= {tableData} tableHeader ={ tableHeaders }/>
-            <Paginator />
+
+            {
+                (tableData.length > 0)?
+                <>
+                    <Table rows= {tableData} tableHeader ={ tableHeaders }/>
+                    <Paginator />
+
+                </>
+                :
+                <Alert severity="info">0 results found</Alert>
+            }
 
             <Modal handleClose={handleModalClose} open={open} />
         </div>

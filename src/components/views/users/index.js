@@ -9,6 +9,7 @@ import { getAllUsersData } from '../../../store/reducers/users/user.actions';
 import { Avatar, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
+import Alert from '@material-ui/lab/Alert';
 
 export default (props) => {
     
@@ -99,10 +100,14 @@ export default (props) => {
                     userReducer.loading?
                         <ProgressBarSpinner />
                     :
+                    (tableData.length > 0)?
                     <>
                         <Table rows= {tableData} tableHeader ={ tableHeaders }/>
                         <Paginator />
+
                     </>
+                    :
+                    <Alert severity="info">0 results found</Alert>
                 }
             </div>
 

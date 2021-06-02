@@ -30,13 +30,18 @@ export default (props) => {
 
         //data
 
-        if(data == pageType.vehicle ) {
+        console.log("data")
+        console.log(data)
+
+        if(data === pageType.vehicle ) {
             navigate('/new-vehicle');
-        }else if(data == pageType.users ) {
+        }else if(data === pageType.users ) {
             navigate('/new-user');
-        }else if(data == pageType.penalty ) {
+        }else if(data === pageType.penalty ) {
             navigate('/new-penalty');
         }else {
+
+            localStorage.setItem("menu_id", data.menu_id)
             navigate('/auto/form/'+data.type.toLowerCase())
         }
     };

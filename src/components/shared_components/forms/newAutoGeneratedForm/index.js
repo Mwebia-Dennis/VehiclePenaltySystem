@@ -21,7 +21,7 @@ export default (props) => {
         if(pageType.pageType == 'new_menu') { 
             return (<NewMenu handlePageType={addPageType}/>)
         }else if(pageType.pageType == 'new_menu_fields') {
-            return (<NewMenuFields handlePageType={addPageType} menu={pageType.menu} />)
+            return (<NewMenuFields handlePageType={addPageType} menu={pageType.menu} menu_id={pageType.menu_id} />)
         }else {
             navigate('/404')
         }

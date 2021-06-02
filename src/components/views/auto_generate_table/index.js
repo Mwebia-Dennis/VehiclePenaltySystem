@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Table from '../../shared_components/table';
 // import { PenaltyTableHeader, PenaltyData } from '../../data/PenaltyData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
@@ -6,16 +6,42 @@ import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
 import pdf_logo from '../../../images/pdf_logo.jpg'
-import { Avatar, Chip, IconButton } from "@material-ui/core";
+import { useNavigate, useParams } from 'react-router';
+import { useDispatch,useSelector } from 'react-redux';
+import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
+import { getMenuInfo } from '../../../store/reducers/menu/menu.actions';
+import { getMenuData } from '../../../store/reducers/menu_data/menu_data.actions';
+import { Avatar, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
-import { useParams } from 'react-router';
+import Alert from '@material-ui/lab/Alert';
 
 export default (props) => {
 
     
-    const { page_type } = useParams();
+    const { menu_id } = useParams();
     const [open, setOpen] = React.useState(false);
-    const handleModalOpen = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const menuReducer = useSelector((state) => state.menuReducer)
+    const menuDataReducer = useSelector((state) => state.menuDataReducer)
+    const tableData = formatData(menuDataReducer.data)
+    const tableHeaders = getTableHeaders(tableData)
+
+    //checking if menu id is available in db
+
+    if(!Array.isArray(menuReducer.singleMenuData) && Object.keys(menuReducer.singleMenuData).length === 0) {
+        //menu is not in db
+        navigate('/404')
+    }
+
+    useEffect(() => {
+        
+        dispatch(getMenuInfo(menu_id))
+        dispatch(getMenuData(menu_id))
+
+    }, [''])
+
+    function handleModalOpen(){
         console.log('clicked')
       setOpen(true);
     };
@@ -28,44 +54,119 @@ export default (props) => {
         'receipt number', 'penalty date', 'payment date', 'payment status', 'action',
     ]
     
-    const pageType = {
-        type: page_type.toUpperCase(),
-        sortByOptions: [
-            "Name",
-            "creation date"
-        ],
-        searchOptions: ["Name"],
-    };
-    const Data = [
-    
-        
-    ];
 
     const links = [
         {
             url:"/home", 
             name: "Home"
-        },
-        {
-            url:"/auto/data/"+page_type, 
-            name: page_type
         }
         
     ]
+
+    if(menuReducer.singleMenuData.name) {
+        links.push(
+            {
+                url:"/auto/data/"+menuReducer.singleMenuData.name, 
+                name: menuReducer.singleMenuData.name
+            }
+        )
+    }
+
+
+    function formatData(data){
+        const allData = []
+        let formattedData = {}
+        for(const key in data) {
+
+            const __data = JSON.parse(data[key].data)
+            for (const header in __data) {
+
+                
+                if(header.trim() == 'pdf') {
+                    
+                    formattedData['pdf'] = <IconButton onClick={handleModalOpen}> 
+                            <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
+                        </IconButton>
+                }else {
+                    formattedData[header] = __data[header]
+                }
+
+                
+            }
+            
+            formattedData["action"] = <>
+                    <IconButton color="primary"> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                </>
+            allData.push(formattedData)
+            formattedData = {}
+
+        }
+
+        return allData
+    }
+
+    function getTableHeaders(data){
+        const tableHeaders = ["#"]
+        for(const key in data) {
+            
+            for (const header in data[key]) {
+                tableHeaders.push(header)
+            }
+            break
+
+        }
+
+        return tableHeaders
+    }
 
     return (
 
         <div>
             <BreadCrumb links={links} />
-            <MainActionContainer 
-                data={pageType} 
-                dataSet={Data} 
-                dataSetHeaders={TableHeader} 
-            />
-            <Table rows= {Data} tableHeader ={ TableHeader }/>
-            <Paginator />
 
-            <Modal handleClose={handleModalClose} open={open} />
+            {
+                menuReducer.loading?
+                    <ProgressBarSpinner />
+                :
+
+                (!Array.isArray(menuReducer.singleMenuData))?
+                    <>
+
+                        <MainActionContainer 
+                            // data={menuReducer.singleMenuData.name} 
+                            data={{
+                                type: menuReducer.singleMenuData.name,
+                                menu_id: menuReducer.singleMenuData.id,
+                                sortByOptions: [
+                                    "Name",
+                                    "creation date"
+                                ],
+                                searchOptions: ["Name"],
+                            }}
+                            dataSet={tableData} 
+                            dataSetHeaders={tableHeaders} 
+                        />
+
+                        {
+                            (tableData.length > 0)?
+                            <>
+                                <Table rows= {tableData} tableHeader ={ tableHeaders }/>
+                                <Paginator />
+
+                            </>
+                            :
+                            <Alert severity="info">0 results found</Alert>
+                        }
+                        <Modal handleClose={handleModalClose} open={open} />
+
+                    </>
+                :
+                <></>
+
+            }
+
+            
         </div>
 
     );
