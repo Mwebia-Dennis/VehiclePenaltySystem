@@ -1,15 +1,29 @@
-import { Backdrop, Button, CircularProgress, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Backdrop, Button, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
 import React, { useState } from 'react'
 import {useStyles} from '../new_vehicle/style';
 import BreadCrumb from '../../BreadCrump';
+import { useSnackbar } from 'notistack';
+import { Close } from '@material-ui/icons';
+import { useDispatch,useSelector } from 'react-redux';
+import { useForm } from "react-hook-form";
+import ProgressSpinner from '../../ProgressBarSpinner'
+import { CLEAR_MENU_ERROR, CLEAR_MENU_MESSAGE } from '../../../../store/reducers/menu/menu.types';
+import { setNewMenu } from '../../../../store/reducers/menu/menu.actions';
 
 
 export default (props) => {
 
     const classes = useStyles();
     const { handlePageType } = props
+    const [menuName, setMenuName] = useState('')
     const [openBackdrop, setOpenBackdrop] = useState(false);
-    const [menuInput, setMenuInput] = useState('')
+    const dispatch = useDispatch()
+    const { register, handleSubmit, formState:{ errors } } = useForm()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const authReducer = useSelector((state) => state.authReducer)
+    const menuReducer = useSelector((state) => state.menuReducer)
+
+
     const links = [
         {
             url:"/home", 
@@ -25,22 +39,61 @@ export default (props) => {
     const handleBackdropClose = () => {
         setOpenBackdrop(false);
       };
-      const handleSubmit = () => {
+      const onSubmit = (data) => {
 
-        if(menuInput.trim() != ''){
+        console.log(data)
+        setMenuName(data.name)
+        if('id' in authReducer.data) {
+
+            dispatch(setNewMenu(data, authReducer.data.id))
+        }
+        
+      };
+
+
+    if(menuReducer.message) {
+        showSnackBar(menuReducer.message.message, 'success');
+        dispatch({ type: CLEAR_MENU_MESSAGE})
+        if(menuName.trim() != ''){
             handlePageType(
                 {
                     pageType: 'new_menu_fields',
-                    menu: menuInput,
+                    menu: menuName,
+                    menu_id: menuReducer.message.menu_id
                 }
                 
             )
 
         }
-      };
-      const handleOnchange = (event) => {
-        setMenuInput(event.target.value)
-      }
+    }
+
+    if(menuReducer.error) {
+
+        if("errors" in menuReducer.error) {
+            for (const key in menuReducer.error.errors) {
+
+                showSnackBar(menuReducer.error.errors[key]["0"], 'error');
+                
+            }
+        }else if("error" in menuReducer.error) {
+
+            showSnackBar(menuReducer.error.error, 'error');
+        }
+
+        
+        dispatch({ type: CLEAR_MENU_ERROR})
+    }
+
+    function showSnackBar(msg, variant = 'info'){
+        enqueueSnackbar(msg, {
+            variant: variant,            
+            action: (key) => (
+                <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                    <Close />
+                </IconButton>
+            ),
+        })
+    }
 
     return (
 
@@ -51,44 +104,52 @@ export default (props) => {
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">Add Menu</Typography>
-                <Grid
-                    container 
-                    spacing={2}
-                >
 
-                        
-                    <Grid 
-                        item 
-                        xs={12}                                
+                <form  onSubmit={handleSubmit(onSubmit)}>
+                    <Grid
+                        container 
+                        spacing={2}
                     >
-                        <TextField
-                            required 
-                            label={"new_menu"} 
-                            placeholder={"new_menu"}
-                            name="new_menu"
-                            className= {classes.textfield}
-                            fullWidth
-                            value={menuInput}
-                            onChange={handleOnchange}
-                        />
-                    </Grid>                      
 
-                </Grid>
+                            
+                        <Grid 
+                            item 
+                            xs={12}                                
+                        >
+                            <TextField
+                                required 
+                                label={"new_menu"} 
+                                placeholder={"new_menu"}
+                                name="name"
+                                className= {classes.textfield}
+                                fullWidth
+                                {...register("name", { required: true })}
+                            />
+                            {errors["name"] && <span>This field is required</span>}
+                        </Grid>                      
 
-                <Grid
+                    </Grid>
+
+                    <Grid
                         container            
                         direction="column"
                         alignItems="center"
                         justify="center"
-                >
-                    <Grid item xs={12}>
-                        
-                        <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.submitBtn} >
-                            Submit
-                        </Button>
+                    >
+                        <Grid item xs={12}>
+                            
+                            <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
+                                {
+                                    menuReducer.loading?
+                                        <ProgressSpinner />
+                                    :"Submit"
+                                }
+                            </Button>
 
+                        </Grid>
                     </Grid>
-                </Grid>
+
+                </form>
             </Paper>
             <Backdrop className={classes.backdrop} open={openBackdrop} onClick={handleBackdropClose}>
                 <CircularProgress color="inherit" />

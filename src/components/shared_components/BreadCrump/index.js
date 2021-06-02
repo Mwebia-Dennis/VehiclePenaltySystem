@@ -29,13 +29,14 @@ export default function Breadcrumb(props) {
                 href={item.url}
                 onClick={handleClick}
                 aria-current="page"
+                key={index}
               >
                 {item.name}
               </Link>
             )
           }
           return (
-            <Link color="inherit" href={item.url}>
+            <Link color="inherit" href={item.url} key={index}>
               {item.name}
             </Link>
           )

@@ -5,15 +5,24 @@ import {useStyles} from '../new_vehicle/style';
 import BreadCrumb from '../../BreadCrump';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch,useSelector } from 'react-redux';
+import ProgressSpinner from '../../ProgressBarSpinner'
+import { CLEAR_MENU_ERROR, CLEAR_MENU_MESSAGE } from '../../../../store/reducers/menu/menu.types';
+import { setNewMenuEntries } from '../../../../store/reducers/menu/menu.actions';
 
 export default (props) => {
 
-    const { menu, handlePageType } = props
+    const { menu, handlePageType, menu_id } = props
     const classes = useStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [fields, setFields] = useState(null);
     const [textFieldValue, setTextFieldValue] = useState('')
     const navigate =  useNavigate()
+    const dispatch = useDispatch()
+    const authReducer = useSelector((state) => state.authReducer)
+    const menuReducer = useSelector((state) => state.menuReducer)
+
+
     const links = [
         {
             url:"/home", 
@@ -28,13 +37,16 @@ export default (props) => {
 
 
     const handleSaveBtnClick = () => {
-        const new_menu = {
-            menu: menu,
-            fields: fields
+
+        console.log(fields)
+        const data = {
+            menu_id: menu_id,
+            name: fields
         }
-        localStorage.setItem("new_menu", JSON.stringify(new_menu) );
-        showSnackBar('Your menu is: '+menu+ ' and fields are: '+fields, 'success');
-        navigate('/auto/data/'+menu)
+        if('id' in authReducer.data) {
+
+            dispatch(setNewMenuEntries(data, authReducer.data.id, navigate))
+        }
         
     }
 
@@ -55,14 +67,6 @@ export default (props) => {
         setTextFieldValue(event.target.value)
     }
 
-    const handleBackBtnClick = () => {
-        handlePageType(
-            {
-                pageType: 'new_menu',
-                menu: '',
-            }
-        )
-    }
 
     const handleRemoveField = (value) => {
         
@@ -83,6 +87,28 @@ export default (props) => {
         setFields(_fields.join());
 
       };
+
+      if(menuReducer.message) {
+        showSnackBar(menuReducer.message, 'success');
+        dispatch({ type: CLEAR_MENU_MESSAGE})
+    }
+
+    if(menuReducer.error) {
+
+        if("errors" in menuReducer.error) {
+            for (const key in menuReducer.error.errors) {
+
+                showSnackBar(menuReducer.error.errors[key]["0"], 'error');
+                
+            }
+        }else if("error" in menuReducer.error) {
+
+            showSnackBar(menuReducer.error.error, 'error');
+        }
+
+        
+        dispatch({ type: CLEAR_MENU_ERROR})
+    }
 
     const fieldsToBeDisplayed = (fields != null)?fields.split(','):[];
     return (
@@ -120,19 +146,22 @@ export default (props) => {
                     <Grid item xs={12}>
 
                         {
-                            fieldsToBeDisplayed.map((item, index)=>(
+                            (fieldsToBeDisplayed.length > 0)?
+                                fieldsToBeDisplayed.map((item, index)=>(
 
 
-                                <Chip
-                                    label={item}
-                                    onDelete={()=>{handleRemoveField(item)}}
-                                    color="primary"
-                                    key={index}
-                                    style={{margin: '3px'}}
-                                />
+                                    <Chip
+                                        label={item}
+                                        onDelete={()=>{handleRemoveField(item)}}
+                                        color="primary"
+                                        key={index}
+                                        style={{margin: '3px'}}
+                                    />
 
 
-                            ))
+                                ))
+                            :
+                            <></>
                         }
                            
                         
@@ -148,9 +177,6 @@ export default (props) => {
                 >
                     <Grid item xs={12} md={12}>
                         
-                        <Button startIcon={<ArrowBack />} variant="contained" className={classes.submitBtn} onClick={handleBackBtnClick} >
-                            Back
-                        </Button>
                         <Button startIcon={<Add />} variant="contained" color="secondary" 
                             onClick={()=>{handleAddField()}} className={classes.submitBtn} 
                         >
@@ -160,7 +186,11 @@ export default (props) => {
                         <Button startIcon={<CloudUpload />} 
                             onClick={handleSaveBtnClick}
                             variant="contained" color="primary" className={classes.submitBtn} >
-                            Save
+
+                                {
+                                    menuReducer.loading?<ProgressSpinner />:"Save"
+                                }
+                            
                         </Button>
 
                     </Grid>

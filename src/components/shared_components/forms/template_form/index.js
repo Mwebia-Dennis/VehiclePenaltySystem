@@ -1,24 +1,101 @@
 
 import { Button,  Paper, Grid, TextField, Typography, IconButton, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {useStyles} from '../new_vehicle/style'
 import "react-datepicker/dist/react-datepicker.css";
 import { Close } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
 import {DropzoneArea} from 'material-ui-dropzone'
 import BreadCrumb from '../../BreadCrump';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch,useSelector } from 'react-redux';
+import { useForm } from "react-hook-form";
+import ProgressSpinner from '../../ProgressBarSpinner'
+import { getAllVehicles } from '../../../../store/reducers/vehicle/vehicle.actions';
+import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions';
+import { setNewMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
+import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
 
 export default (props) => {
 
     const { title } = props;
     const classes = useStyles();
+    const [uploadedPdf, setUploadedPdf] = useState(null)
+    const [fileError, setFileError] = useState('')
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const plate_numbers = ["sdsdsdsd 12312", "sdwe2323", "432ewds", "wer2342", "34sdfasd"];
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const { register,handleSubmit, formState:{ errors } } = useForm()
+    const authReducer = useSelector((state) => state.authReducer)
+    const menuReducer = useSelector((state) => state.menuReducer)
+    const vehicleReducer = useSelector((state) => state.vehicleReducer)
+    const menuDataReducer = useSelector((state) => state.menuDataReducer)
+    const menu_id = localStorage.getItem("menu_id")
+
+    useEffect(() => {
+        
+        dispatch(getAllVehicles())
+        dispatch(getAllMenuEntries(menu_id))
+    }, [''])
+
+
+    useEffect(() => {
+        if(!menu_id) {
+            console.log("sfdsdfsd")
+            showSnackBar('Sorry invalid data provided, contact admin for more info', 'error')
+            navigate('/home')
+        }
+    }, [''])
+    
+
+    const handleFileChange = (files) => {
+        setUploadedPdf(files["0"])
+    }
+
+    const onSubmit = (data) =>{
+        
+        console.log(data)
+        if(("name" in uploadedPdf) && uploadedPdf != null) {
+
+            
+            const formData = new FormData()
+            formData.append('pdf', uploadedPdf,uploadedPdf.name)
+            formData.append('data', JSON.stringify(data) )
+            formData.append('menu_id', menu_id)
+
+            if('id' in authReducer.data) {
+
+                dispatch(setNewMenuData(formData, authReducer.data.id, navigate))
+            }
+        }else {
+
+            setFileError('This field is required')
+        }
+    }
+
 
     
-    const handleSubmit = () =>{
+    if(menuDataReducer.message) {
+        showSnackBar(menuDataReducer.message.message, 'success');
+        dispatch({ type: CLEAR_MENU_DATA_MESSAGE})
+    }
+
+    if(menuDataReducer.error) {
+
+        if("errors" in menuDataReducer.error) {
+            
+            for (const key in menuDataReducer.error.errors) {
+
+                showSnackBar(menuDataReducer.error.errors[key]["0"], 'error');
+                
+            }
+        }else if("error" in menuDataReducer.error) {
+
+            showSnackBar(menuDataReducer.error.error, 'error');
+        }
+
         
-        showSnackBar('System Under Construction', 'error');
+        dispatch({ type: CLEAR_MENU_DATA_ERROR})
     }
 
       function showSnackBar(msg, variant = 'info'){
@@ -33,20 +110,6 @@ export default (props) => {
         
         setTimeout(closeSnackbar, 5000)
     }
-
-
-    const data = JSON.parse(localStorage.getItem("new_menu"));
-
-
-    const textFields = data.fields.split(',').map((item)=>(
-        {
-            placeholder: item,
-            name: item,
-            type: "text"
-
-        }
-    ))
-
     const links = [
         {
             url:"/home", 
@@ -73,87 +136,121 @@ export default (props) => {
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">add new {title}</Typography>
-                <Grid 
-                    container 
-                    spacing={2}
-                    style={{marginTop: '10px'}}
-                >
 
-                    <Grid
-                        item
-                        xs={12}
-                        >
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Plate Number</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-
-                                    {
-                                        plate_numbers.map((item,index)=>(
-                                            <MenuItem key={index} value={item}>{item}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </FormControl>
-                    </Grid>
-
-                        
-                    {
-                        textFields.map((item, index)=>(
-
-                            <Grid 
-                                item 
-                                xs={12}
-                                key={index}                                
-                            >
-                                <TextField 
-                                    required 
-                                    label={item.placeholder} 
-                                    placeholder={item.placeholder}
-                                    name={item.name}
-                                    className= {classes.textfield}
-                                    fullWidth
-                                />
-                            </Grid>
-                        ))
-                    }    
-
-
-                    <Grid
-                        item 
-                        xs={12}
+                
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Grid 
+                        container 
+                        spacing={2}
+                        style={{marginTop: '10px'}}
                     >
+                        
 
-                        <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
-                        <DropzoneArea
-                            acceptedFiles={['application/pdf']}
-                            showPreviews={true}
-                            useChipsForPreview
-                            showPreviewsInDropzone={false}
-                            maxFileSize={5000000}
-                            filesLimit={1}
-                            dropzoneText="Drag And Drop PDF document here"
-                        />
+                        <Grid
+                            item
+                            xs={12}
+                            >
+                                {
 
-                    </Grid>                  
+                                    vehicleReducer.loading?
 
-                </Grid>
+                                        <ProgressSpinner />
 
-                <Grid
-                        container            
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
-                >
-                    <Grid item xs={12}>
-                        <Button variant="contained" color="primary" onClick={handleSubmit} className={classes.submitBtn} >
-                            Submit
-                        </Button>
+                                    :
+
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Plate Number</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                {...register('plate_number',{ required: true })}
+                                            >
+
+                                                {
+                                                    (Array.isArray(vehicleReducer.data))?
+                                                        vehicleReducer.data.map((item)=>(
+                                                            <MenuItem key={item.id} value={item.plate_number}>{item.plate_number}</MenuItem>
+                                                        ))
+                                                    :
+                                                    <MenuItem disabled >0 results found</MenuItem>
+                                                }
+                                            </Select>
+                                            {errors["plate_number"] && <span>This field is required</span>}
+                                        </FormControl>
+
+
+
+                                }
+                        </Grid>
+
+                            
+                        {
+                            menuReducer.loading?<ProgressSpinner />
+                            :
+                            menuReducer.menuEntries.map((item)=>{
+                            
+                                if(item.name != "plate_number" && item.name != "pdf") {
+                                    return (
+
+                                        <Grid 
+                                            item 
+                                            xs={12}
+                                            key={item.id}                                
+                                        >
+                                            <TextField 
+                                                required 
+                                                label={item.name} 
+                                                placeholder={item.name}
+                                                name={item.name}
+                                                className= {classes.textfield}
+                                                fullWidth
+                                                {...register(item.name.trim(),{ required: true })}
+                                            />
+                                            {errors[item.name] && <span>This field is required</span>}
+                                        </Grid>
+                                    )
+                                }
+
+                            })
+                        }    
+
+
+                        <Grid
+                            item 
+                            xs={12}
+                        >
+
+                            <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+                            <DropzoneArea
+                                acceptedFiles={['application/pdf']}
+                                showPreviews={true}
+                                useChipsForPreview
+                                showPreviewsInDropzone={false}
+                                maxFileSize={5000000}
+                                filesLimit={1}
+                                dropzoneText="Drag And Drop PDF document here"
+                                onChange={handleFileChange}
+                            />
+                            <span>{fileError}</span>
+
+                        </Grid>                  
 
                     </Grid>
-                </Grid>
+
+                    <Grid
+                            container            
+                            direction="column"
+                            alignItems="center"
+                            justify="center"
+                    >
+                        <Grid item xs={12}>
+                            <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
+                                {menuDataReducer.loading ?<ProgressSpinner /> :"Submit"}
+                            </Button>
+
+                        </Grid>
+                    </Grid>
+                </form>
             </Paper>
         </>
     );

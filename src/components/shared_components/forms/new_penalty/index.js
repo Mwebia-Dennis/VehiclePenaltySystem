@@ -302,7 +302,7 @@ export default (props) => {
                                             dropzoneText="Drag And Drop PDF document here"
                                             onChange={handleFileChange}
                                         />
-                                        {<span>{fileError}</span>}
+                                        <span>{fileError}</span>
                                     
 
                                 </Grid>
