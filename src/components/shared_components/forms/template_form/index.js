@@ -54,13 +54,12 @@ export default (props) => {
 
     const onSubmit = (data) =>{
         
-        console.log(data)
         if(("name" in uploadedPdf) && uploadedPdf != null) {
 
             
             const formData = new FormData()
             formData.append('pdf', uploadedPdf,uploadedPdf.name)
-            formData.append('data', JSON.stringify(data) )
+            formData.append('data', JSON.stringify(formatDataHeaders(data)) )
             formData.append('menu_id', menu_id)
 
             if('id' in authReducer.data) {
@@ -92,10 +91,13 @@ export default (props) => {
         }else if("error" in menuDataReducer.error) {
 
             showSnackBar(menuDataReducer.error.error, 'error');
+        }else if("message" in menuDataReducer.error) {
+
+            showSnackBar(menuDataReducer.error.message, 'error');
         }
 
         
-        dispatch({ type: CLEAR_MENU_DATA_ERROR})
+        // dispatch({ type: CLEAR_MENU_DATA_ERROR})
     }
 
       function showSnackBar(msg, variant = 'info'){
@@ -135,6 +137,32 @@ export default (props) => {
         }
         return name
 
+    }
+
+    function formatInputName(name) {
+
+        //some turkish words have dots, so remove dots to avoid javasript error
+        const nameParts = name.split(".")
+        if(nameParts.length > 0) {
+            return nameParts.join('___')
+        }
+        return name
+
+    }
+
+    function formatDataHeaders(data) {
+        const newData = {}
+        for (const key in data) {
+            const keyParts = key.split("___")
+            if(keyParts.length > 0) {
+                newData[keyParts.join('.')] = data[key]
+            }else {
+                newData[key] = data[key]
+            }
+        }
+
+
+        return newData
     }
     
 
@@ -212,10 +240,10 @@ export default (props) => {
                                                 required 
                                                 label={item.name} 
                                                 placeholder={item.name}
-                                                name={item.name}
+                                                name={item.name}ty  
                                                 className= {classes.textfield}
                                                 fullWidth
-                                                {...register(item.name.trim(),{ required: true })}
+                                                {...register(formatInputName(item.name),{ required: true })}
                                             />
                                             {errors[item.name] && <span>This field is required</span>}
                                         </Grid>

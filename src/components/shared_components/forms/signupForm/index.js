@@ -11,6 +11,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 import { signUpUser } from '../../../../store/reducers/auth/auth.actions';
+import ProgressLoader from '../../ProgressBarSpinner'
 
 export default (props) => {
 
@@ -115,7 +116,7 @@ export default (props) => {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary"  className={classes.submitBtn} >
-                                Sign Up
+                                {authState.loading ? <ProgressLoader />: "Sign Up"}
                             </Button>
 
                         </Grid>
