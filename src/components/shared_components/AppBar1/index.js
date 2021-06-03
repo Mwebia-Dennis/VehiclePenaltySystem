@@ -60,7 +60,8 @@ export default function PrimarySearchAppBar() {
   //adding menus from api
 
   if(Array.isArray(menuReducer.data)) {
-    menuReducer.data.map((item)=>{
+
+    menuReducer.data.forEach((item)=>{
 
         const menu = {
           item: item.name,
@@ -95,7 +96,9 @@ export default function PrimarySearchAppBar() {
   const handleMenuClose = (url) => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    navigate(url)
+    if(url != ''){
+      navigate(url)
+    }
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -131,6 +134,7 @@ export default function PrimarySearchAppBar() {
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
+      onClose={()=>handleMenuClose('')}
     >
       {
           isLoggedIn?

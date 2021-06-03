@@ -39,7 +39,7 @@ export default (props) => {
         dispatch(getMenuInfo(menu_id))
         dispatch(getMenuData(menu_id))
 
-    }, [''])
+    }, [menu_id])
 
     function handleModalOpen(){
         console.log('clicked')
