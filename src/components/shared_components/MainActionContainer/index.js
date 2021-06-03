@@ -42,9 +42,9 @@ export default (props) => {
         }else {
 
             localStorage.setItem("menu_id", data.menu_id)
-            navigate('/auto/form/'+data.type.toLowerCase())
+            navigate('/auto/form/'+formatUrlName(data.type.toLowerCase()))
         }
-    };
+    }
 
     const handleSearchQueryChange = (value) => {
         handleMenuClose()
@@ -78,6 +78,17 @@ export default (props) => {
         setColumnSelectionOpen(false);
     };
 
+
+    function formatUrlName(name) {
+
+        //used to remove slashes ( '/' ) incase menu name has a slash character eg(debit/receipt)
+        const nameParts = name.split("/")
+        if(nameParts.length > 0) {
+            return nameParts.join('___')
+        }
+        return name
+
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (

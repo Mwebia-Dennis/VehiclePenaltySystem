@@ -16,7 +16,7 @@ import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions'
 import { setNewMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
 import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
 
-export default (props) => {
+export default (props) => { 
 
     const { title } = props;
     const classes = useStyles();
@@ -116,15 +116,26 @@ export default (props) => {
             name: "Home"
         },
         {
-            url:"/auto/data/"+title, 
-            name: title
+            url:"/auto/data/"+menu_id, 
+            name: reverseUrlName(title)
         },
         {
             url:"/auto/form/"+title, 
-            name: "add new "+ title
+            name: "add new "+ reverseUrlName(title)
         }
         
     ]
+
+    function reverseUrlName(name) {
+
+        //used to add back slashes ( '/' ) incase menu name has a underscores character eg(debit___receipt)
+        const nameParts = name.split("___")
+        if(nameParts.length > 0) {
+            return nameParts.join('/')
+        }
+        return name
+
+    }
     
 
     return (
@@ -135,7 +146,7 @@ export default (props) => {
             <Paper className={classes.root} >
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">add new {title}</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">add new {reverseUrlName(title)}</Typography>
 
                 
                 <form onSubmit={handleSubmit(onSubmit)}>

@@ -7,6 +7,7 @@ export default (props) => {
     
     const { page_type } = useParams();
     const { formType } = props;
+    
 
     const title = (page_type)?page_type:''
     return (<Form formType={formType} title={title}/>);
