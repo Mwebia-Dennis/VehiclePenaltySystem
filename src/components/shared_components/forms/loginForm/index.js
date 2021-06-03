@@ -1,5 +1,5 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Link, Divider, Backdrop, CircularProgress, IconButton } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Link, IconButton } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,11 +10,11 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Close } from '@material-ui/icons';
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
+import ProgressLoader from '../../ProgressBarSpinner'
 
 export default (props) => {
 
     const classes = useStyles();
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const dispatch = useDispatch()
     const { register, handleSubmit, formState:{ errors } } = useForm()
     const navigate = useNavigate()
@@ -24,12 +24,6 @@ export default (props) => {
 
 
     
-    const handleBackdropClose = () => {
-        setOpenBackdrop(false);
-      };
-      const handleBackdropToggle = () => {
-        setOpenBackdrop(!openBackdrop);
-      };
     const onSubmit = (data)=> {
         //handleBackdropToggle()
         dispatch(loginUser(data, navigate))
@@ -138,7 +132,7 @@ export default (props) => {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                Login
+                                {authState.loading ? <ProgressLoader />: "Login"}
                             </Button>
 
                         </Grid>
@@ -159,9 +153,6 @@ export default (props) => {
 
                 </form>
             </Paper>
-            <Backdrop className={classes.backdrop} open={openBackdrop} onClick={handleBackdropClose}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </>
     );
 
