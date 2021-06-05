@@ -66,5 +66,31 @@ export const getAllUsersData = () => (dispatch) => {
 
 }
 
+export const searchUsersData = (data) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER_DATA })
+    axios.post('users-search', data)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 
 

@@ -21,14 +21,14 @@ export const pageType = {
             "Plate Number",
             "creation date"
         ],
-        searchOptions: ["Plate Number", "Owner Name"]
+        searchOptions: []
     },
     penalty: {
         type: 'PENALTY',
         sortByOptions: [
             "Plate Number", "receipt no", "owner name", "penalty date"
         ],
-        searchOptions: ["Plate Number", "Owner Name", "Receipt No"],
+        searchOptions: [],
     },
     users: {
         type: 'USERS',
@@ -36,7 +36,7 @@ export const pageType = {
             "Name",
             "creation date"
         ],
-        searchOptions: ["Name"],
+        searchOptions: [],
     },
 }
 

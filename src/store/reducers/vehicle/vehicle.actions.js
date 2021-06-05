@@ -68,4 +68,30 @@ export const setNewVehicle = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
+export const searchVehiclesData = (data) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_VEHICLE_DATA })
+    axios.post('vehicles-search', data)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_VEHICLE_ERROR})
+        dispatch({
+            type: SET_VEHICLE_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_VEHICLE_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 
