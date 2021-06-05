@@ -68,4 +68,30 @@ export const setNewPenalty = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
+export const searchPenaltiesData = (data) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_PENALTY_DATA })
+    axios.post('penalty-search', data)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_PENALTY_ERROR})
+        dispatch({
+            type: SET_PENALTY_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_PENALTY_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 

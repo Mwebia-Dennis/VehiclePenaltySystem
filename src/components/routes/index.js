@@ -13,12 +13,12 @@ import { formTypes } from '../../utils/constants'
 import { Navigate } from 'react-router';
 import PageNotFound from '../views/page_not_found';
 
-export const routes = [
+export const routes = (isLoggedIn) => [
 
     {
      
         path: '/',
-        element : <Home />,
+        element : isLoggedIn?<Home />:<Navigate to="/auth/login" />,
         children: [
 
             
@@ -42,7 +42,7 @@ export const routes = [
     {
      
         path: 'auth',
-        element : <Auth />,
+        element : isLoggedIn?<Navigate to="/home" />:<Auth />,
         children: [
 
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },

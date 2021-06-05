@@ -1,37 +1,41 @@
-import { FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Typography } from '@material-ui/core'
-import { Add, Print, Settings } from '@material-ui/icons';
+import { Button, FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Typography } from '@material-ui/core'
+import { Add, Print, Refresh, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
 import { useNavigate } from 'react-router-dom';
 import ColumnSelectionModal from '../columnSelectionModal';
+import SearchBar from "material-ui-search-bar";
+import { useDispatch } from 'react-redux';
+import { getUserData, searchUsersData } from '../../../store/reducers/users/user.actions';
+import SearchIcon from '@material-ui/icons/Search';
 
 
 
 export default (props) => {
 
-    const { data, dataSet, dataSetHeaders } = props;
+    const { data, dataSet, dataSetHeaders, handleSearching, handleRefreshPage } = props;
     const classes = useStyles();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const [columnSelectionOpen, setColumnSelectionOpen] = useState(false);
+    const [searchQueryValue, setSearchQueryValue] = useState('')
     const searchOptions = data.searchOptions;
     const limitEntriesData = ["10", "25", "50", "100"];
     const sortByData = data.sortByOptions;
     const isMenuOpen = Boolean(anchorEl);
     const [limitEntries, setLimitEntries] = useState(limitEntriesData["0"]);
     const [sortBy, setSortBy] = useState(sortByData["0"]);
-    const [searchQuery, setSearchQuery] = useState(searchOptions["0"]);
-    console.log(data)
+    const [searchQuery, setSearchQuery] = useState('');
 
 
-
+    if(searchQuery == '' && data.searchOptions.length > 0) {
+        setSearchQuery(data.searchOptions["0"])
+    }
     const handleFormOpen = () => {
 
         //data
-
-        console.log("data")
-        console.log(data)
 
         if(data === pageType.vehicle ) {
             navigate('/new-vehicle');
@@ -46,11 +50,20 @@ export default (props) => {
         }
     }
 
+    const handleSearchBarChange = (value)=> {
+        setSearchQueryValue(value)
+    }
+
+    const handleSearchButtonClick = ()=> {
+        handleSearching({column: searchQuery, query: searchQueryValue})
+    }
+
     const handleSearchQueryChange = (value) => {
         handleMenuClose()
         setSearchQuery(value);
         
     };
+
 
     const handleLimitEntriesChange = (event) => {
         setLimitEntries(event.target.value);
@@ -123,35 +136,92 @@ export default (props) => {
         <div className={classes.root}>
 
 
-            <Grid container>
-                <Grid item xs={12} md={2}>
+            <Grid container spacing={1}>
+                <Grid item xs={12} md={1}>
                     
-                    <ActionButton variant="contained" color="primary" onClick={handleFormOpen}><Add />Add New {data.type}</ActionButton>
+                    <IconButton 
+                        variant="contained" 
+                        color="primary"
+                        onClick={handleFormOpen}
+                    ><Add /> {/*data.type*/}</IconButton>
                 </Grid>
                 
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1}>
                       
-                    <ActionButton variant="contained" color="primary" onClick={handleColumnSelectionOpen}>
-                        <Print />Export to Excel
-                    </ActionButton>
+                    <IconButton variant="contained" 
+                        color="primary" 
+                        onClick={handleColumnSelectionOpen}
+                    >
+                       <Print />
+                    </IconButton>
                 
-                </Grid>
-                <Grid item xs={12} md={3}>
-                    <input type="text" style={{width: '80%', padding: '10px'}} 
-                        placeholder={"Search by "+searchQuery}/>
+                </Grid><Grid item xs={12} md={1}>
+                      
+                      <IconButton variant="contained" 
+                          color="primary" 
+                          onClick={handleRefreshPage}
+                      >
+                         <Refresh />
+                      </IconButton>
+                  
+                  </Grid>
+                <Grid item xs={12} md={4}>
+                    {/* <input type="text" style={{width: '80%', padding: '10px'}} 
+                        placeholder={"Search by "+searchQuery}
+                        onChange={handleSearchBarChange}
+                        value={searchQueryValue}
+                        /> */}
+
+
+                        <Grid container>
+
+                            <Grid item xs={9}>
+                                <SearchBar
+                                    value={searchQueryValue}
+                                    onChange={(newValue) => handleSearchBarChange(newValue)}
+                                    onRequestSearch={handleSearchButtonClick}
+                                    placeholder={"Search by "+searchQuery}
+                                />
+                            </Grid>
+                            
+                            {
+
+                                searchQueryValue != ''?
+                                    <Grid item xs={1}>
+    
+                                        <IconButton
+                                            aria-label="show more"
+                                            // aria-controls={mobileMenuId}
+                                            aria-haspopup="true"
+                                            onClick={handleSearchButtonClick}
+                                            color="inherit"
+                                            className={classes.iconButton}
+                                            variant="contained" color="primary"
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </Grid>
+                                :<></>    
+                            }
+
+                            <Grid item xs={2}>
+ 
+                                <IconButton
+                                    aria-label="show more"
+                                    // aria-controls={mobileMenuId}
+                                    aria-haspopup="true"
+                                    onClick={handleProfileMenuOpen}
+                                    color="inherit"
+                                    className={classes.iconButton}
+                                    variant="outlined" color="primary"
+                                >
+                                    <Settings />
+                                </IconButton>
+                            </Grid>
+
+                        </Grid>
 
                     
-                    <IconButton
-                        aria-label="show more"
-                        // aria-controls={mobileMenuId}
-                        aria-haspopup="true"
-                         onClick={handleProfileMenuOpen}
-                        color="inherit"
-                        className={classes.iconButton}
-                        variant="outlined" color="primary"
-                    >
-                        <Settings />
-                    </IconButton>
                 </Grid>
                 <Grid item xs={12} md={2}>
                     <div className={classes.entries}>

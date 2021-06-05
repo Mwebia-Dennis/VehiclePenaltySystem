@@ -10,7 +10,8 @@ import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Chip, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllPenalties } from '../../../store/reducers/penalty/penalty.actions';
+import { getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
+import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 
 export default (props) => {
@@ -48,6 +49,23 @@ export default (props) => {
         }
         
     ]
+
+    const handleRefreshPage = ()=> {
+
+        dispatch(getAllPenalties())
+    }
+    const handleSearching = (data)=> {
+
+        if(data.query != '') {
+            const formData = new FormData()
+            formData.append('column', data.column.toLowerCase())
+            formData.append('value', data.query.toLowerCase())
+
+            dispatch(searchPenaltiesData(formData))
+        }else {
+            handleRefreshPage()
+        }
+    }
         
     function formatData(data){
         const allData = []
@@ -100,25 +118,83 @@ export default (props) => {
         return tableHeaders
     }
 
+    const formatMainActionData = (data) => {
+
+        const headers = getTableHeaders(formatData( penaltyReducer.data))
+        // removing unwanted cols
+        if(headers.includes('#')) {
+            const index = headers.indexOf('#');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('pdf')) {
+            const index = headers.indexOf('pdf');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('penalty_date')) {
+            const index = headers.indexOf('penalty_date');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('payment_date')) {
+            const index = headers.indexOf('payment_date');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('action')) {
+            const index = headers.indexOf('action');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('created_at')) {
+            const index = headers.indexOf('created_at');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('updated_at')) {
+            const index = headers.indexOf('updated_at');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        
+        data.searchOptions = headers;
+
+        return data;
+    }
+
     return (
 
         <div>
             <BreadCrumb links={links} />
             <MainActionContainer 
-                data={pageType.penalty} 
-                dataSet={tableData} 
-                dataSetHeaders={tableHeaders} 
+                data={formatMainActionData(pageType.penalty)}
+                dataSet={formatData( penaltyReducer.data)} 
+                dataSetHeaders={getTableHeaders(formatData( penaltyReducer.data))}
+                handleSearching = {handleSearching}
+                handleRefreshPage={handleRefreshPage}
             />
 
             {
-                (tableData.length > 0)?
-                <>
-                    <Table rows= {tableData} tableHeader ={ tableHeaders }/>
-                    <Paginator />
-
-                </>
+                penaltyReducer.loading?
+                    <ProgressBarSpinner />
                 :
-                <Alert severity="info">0 results found</Alert>
+                    (penaltyReducer.data.length > 0)?
+                    <>
+                        <Table rows= {formatData( penaltyReducer.data)} 
+                            tableHeader ={ getTableHeaders(formatData( penaltyReducer.data)) }/>
+                        <Paginator />
+
+                    </>
+                    :
+                    <Alert severity="info">0 results found</Alert>
             }
 
             <Modal handleClose={handleModalClose} open={open} />

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Table from '../../shared_components/table';
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllUsersData } from '../../../store/reducers/users/user.actions';
+import { getAllUsersData, searchUsersData } from '../../../store/reducers/users/user.actions';
 import { Avatar, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
@@ -16,13 +16,9 @@ export default (props) => {
     
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
-    const tableData = formatData(userReducer.data)
-    const tableHeaders = getTableHeaders(tableData)
-
-    
 
     useEffect(() => {
-        
+
         dispatch(getAllUsersData())
 
     }, [''])
@@ -85,24 +81,91 @@ export default (props) => {
         return tableHeaders
     }
 
+    const handleRefreshPage = ()=> {
+
+        dispatch(getAllUsersData())
+    }
+    const handleSearching = (data)=> {
+
+        if(data.query != '') {
+            const formData = new FormData()
+            formData.append('column', data.column.toLowerCase())
+            formData.append('value', data.query.toLowerCase())
+
+            dispatch(searchUsersData(formData))
+        }else {
+            handleRefreshPage()
+        }
+    }
+
+    const formatMainActionData = (data) => {
+
+        const headers = getTableHeaders(formatData( userReducer.data))
+        // removing unwanted cols
+        if(headers.includes('#')) {
+            const index = headers.indexOf('#');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('pdf')) {
+            const index = headers.indexOf('pdf');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('profile_img')) {
+            const index = headers.indexOf('profile_img');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('action')) {
+            const index = headers.indexOf('action');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('created_at')) {
+            const index = headers.indexOf('created_at');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('updated_at')) {
+            const index = headers.indexOf('updated_at');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        
+        data.searchOptions = headers;
+
+        return data;
+    }
+
     return (
 
         <>
             <div>
                 <BreadCrumb links={links} />
                 <MainActionContainer 
-                    data={pageType.users} 
-                    dataSet={tableData} 
-                    dataSetHeaders={tableHeaders} 
+                    data={formatMainActionData(pageType.users)} 
+                    dataSet={formatData( userReducer.data)} 
+                    dataSetHeaders={getTableHeaders(formatData( userReducer.data))}
+                    handleSearching = {handleSearching}
+                    handleRefreshPage={handleRefreshPage}
                 />
 
                 {
                     userReducer.loading?
                         <ProgressBarSpinner />
                     :
-                    (tableData.length > 0)?
+                    (userReducer.data.length > 0)?
                     <>
-                        <Table rows= {tableData} tableHeader ={ tableHeaders }/>
+                        <Table rows= {formatData( userReducer.data)} 
+                            tableHeader ={ getTableHeaders(formatData( userReducer.data)) }
+                        />
                         <Paginator />
 
                     </>
