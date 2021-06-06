@@ -5,6 +5,7 @@ import { vehicleReducer } from './vehicle/vehicle.reducer'
 import { penaltyReducer } from './penalty/penalty.reducer'
 import { menuReducer } from './menu/menu.reducer'
 import { menuDataReducer } from './menu_data/menu_data.reducer'
+import { statisticsReducer } from './statistics/statistics.reducer'
 export default combineReducers({
 
     authReducer: authReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
     penaltyReducer: penaltyReducer,
     menuReducer: menuReducer,
     menuDataReducer: menuDataReducer,
+    statisticsReducer: statisticsReducer,
 });

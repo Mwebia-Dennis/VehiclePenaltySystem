@@ -15,30 +15,34 @@ const SummaryIconsStyle = {
 export const SummaryCardItems = [
 
     {
+        id: 'vehicle',
         color: '#0066ff',
         title: 'New Vehicles',
-        value: '1000',
+        value: '0',
         url: '/vehicle', 
         icon: <CommuteOutlinedIcon style={SummaryIconsStyle} />
     },
     {
+        id: 'penalties',
         color: '#ff0000',
         title: 'New Penalties',
-        value: '200',
+        value: '0',
         url: '/penalty', 
         icon: <GavelIcon style={SummaryIconsStyle}/>
     },
     {
+        id: 'users',
         color: '#009933',
         title: 'New Users',
-        value: '1668',
+        value: '0',
         url: '/users', 
         icon: <GroupIcon style={SummaryIconsStyle} />
     },
     {
+        id: 'penalties',
         color: '#ffcc00',
         title: 'Total Penalties',
-        value: '100',
+        value: '0',
         url: '/penalty', 
         icon: <ReceiptIcon style={SummaryIconsStyle} />
     }

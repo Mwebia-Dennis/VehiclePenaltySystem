@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Divider, Grid, Paper, Typography } from '@material-ui/core';
 import SummaryCards from '../../shared_components/summary_card';
 import { SummaryCardItems } from '../../data/summaryCardItems';
@@ -12,19 +12,72 @@ import Calendar from 'react-calendar';
 import DashboardCard from '../../shared_components/dashboard_card';
 import 'react-calendar/dist/Calendar.css';
 import DataProgressRateCard from '../../shared_components/DataProgressRateCard'
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllStatistics } from '../../../store/reducers/statistics/statistics.actions';
 
 export default (props) => {
     
     
     const [calendarDate, setCalendarDate] = useState(new Date());
     const classes = useStyles();
+    const dispatch = useDispatch()
+    const statisticsReducer = useSelector((state) => state.statisticsReducer)
+    console.log(statisticsReducer)
+    
+    const summaryCardItems = SummaryCardItems.map((item)=>{
+
+        if(item.id === 'vehicle') {
+            const total = statisticsReducer.todayTotalVehicles
+            item.value = total?total:0
+            return item
+        }else if(item.id === 'penalties') {
+            const total = statisticsReducer.todayTotalPenalties
+            item.value = total?total:0
+            return item
+        }else if(item.id === 'users') {
+            const total = statisticsReducer.users
+            item.value = total?total:0
+            return item
+        }
+        return item
+
+    })
+
+    const getGraphData = (data) => {
+
+        const labels = []
+        const vehicleData = []
+        const penaltyData = []
+
+        const allData = statisticsReducer.data.vehicleWeeklydata
+        for(let i=allData.length-1; i>=0; i--) {
+            for (const key in allData[i]) {
+                labels.push( key )
+                vehicleData.push( allData[i][key] )
+                penaltyData.push( statisticsReducer.data.penaltyWeeklydata[i][key] )
+            }
+        }
+        data.labels = labels
+        data.datasets["0"].data = vehicleData
+        data.datasets["1"].data = penaltyData
+
+        return data
+    }
+
+    useEffect(() => {
+        
+        dispatch(getAllStatistics())
+
+    }, [])
+
+
     return (
         <div>
             <Grid container spacing={1}>
                 {
-                    SummaryCardItems.map((item, index)=> 
+                    summaryCardItems.map((item, index)=> 
                         <SummaryCards 
-                            key={item}
+                            key={index}
                             color = {item.color} 
                             title = {item.title}
                             value = {item.value} 
@@ -42,7 +95,7 @@ export default (props) => {
                 <Divider style={{margin: '15px 0',}}/>
                 <div  className={classes.chartCanvas}>
                     <Line
-                        data={State}
+                        data={getGraphData(State)}
                         options={{
                             
                             responsive:true,
@@ -65,13 +118,13 @@ export default (props) => {
 
             <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={66} color="#00cc66" dataType="Users"/>
+                    <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)} color="#00cc66" dataType="Users"/>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={60} color="#36a2eb" dataType="Penalties" />
+                    <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} color="#36a2eb" dataType="Penalties" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={79} color="#ffcc00" dataType="Vehicles"/>
+                    <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)} color="#ffcc00" dataType="Vehicles"/>
                 </Grid>
             </Grid>
 
@@ -85,7 +138,13 @@ export default (props) => {
                         <Doughnut 
 
                             
-                            data={PaymentData}
+                            data={()=>{
+                                PaymentData.datasets["0"].data = [
+                                    Math.round(statisticsReducer.data.paidPayment),
+                                    Math.round(statisticsReducer.data.pendingPayment)
+                                ]
+                                return PaymentData
+                            }}
                             options={{
                                 
                                 responsive:true,
