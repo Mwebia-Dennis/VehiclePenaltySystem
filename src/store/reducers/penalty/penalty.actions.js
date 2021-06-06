@@ -18,11 +18,11 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getAllPenalties = () => (dispatch) => {
+export const getAllPenalties = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PENALTY_DATA })
-    axios.get('penalty')
+    axios.get('penalty?per_page='+perPage+'&page='+page+'&sort_by='+sort_by)
     .then((res)=>{
         
         dispatch({ type: CLEAR_PENALTY_ERROR})
@@ -68,11 +68,11 @@ export const setNewPenalty = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
-export const searchPenaltiesData = (data) => (dispatch) => {
+export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PENALTY_DATA })
-    axios.post('penalty-search', data)
+    axios.post('penalty-search?per_page='+perPage+'&page='+page+'&sort_by='+sort_by, data)
     .then((res)=>{
         
         dispatch({ type: CLEAR_PENALTY_ERROR})

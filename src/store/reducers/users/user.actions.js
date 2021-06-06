@@ -41,11 +41,11 @@ export const getUserData = (id) => (dispatch) => {
 
 }
 
-export const getAllUsersData = () => (dispatch) => {
+export const getAllUsersData = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER_DATA })
-    axios.get('users')
+    axios.get('users?per_page='+perPage+'&page='+page+'&sort_by='+sort_by)
     .then((res)=>{
         
         dispatch({ type: CLEAR_ERROR})
@@ -66,11 +66,11 @@ export const getAllUsersData = () => (dispatch) => {
 
 }
 
-export const searchUsersData = (data) => (dispatch) => {
+export const searchUsersData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER_DATA })
-    axios.post('users-search', data)
+    axios.post('users-search?per_page='+perPage+'&page='+page+'&sort_by='+sort_by, data)
     .then((res)=>{
         
         dispatch({ type: CLEAR_ERROR})

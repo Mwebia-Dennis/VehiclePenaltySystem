@@ -24,7 +24,8 @@ export default (props) => {
     const navigate = useNavigate()
     const menuReducer = useSelector((state) => state.menuReducer)
     const menuDataReducer = useSelector((state) => state.menuDataReducer)
-    const tableData = formatData(menuDataReducer.data)
+    const menuData = useSelector((state) => state.menuDataReducer.data)
+    const tableData = formatData(menuData.data)
     const tableHeaders = getTableHeaders(tableData)
 
     //checking if menu id is available in db
@@ -40,6 +41,11 @@ export default (props) => {
         dispatch(getMenuData(menu_id))
 
     }, [menu_id])
+
+    const handlePagination = (page) => {
+
+        dispatch(getMenuData(menu_id,'created_at', page, 25))
+    }
 
     function handleModalOpen(){
         console.log('clicked')
@@ -149,10 +155,14 @@ export default (props) => {
                         />
 
                         {
-                            (tableData.length > 0)?
+                            ("data" in menuData)?
                             <>
-                                <Table rows= {tableData} tableHeader ={ tableHeaders }/>
-                                <Paginator />
+                                <Table rows= {formatData( menuData.data)} 
+                                    tableHeader ={ getTableHeaders(formatData( menuData.data)) }/>
+                                <Paginator paginationCount={menuData.last_page} 
+                                    handlePagination={handlePagination} 
+                                    page={ menuData.current_page }
+                                />
 
                             </>
                             :

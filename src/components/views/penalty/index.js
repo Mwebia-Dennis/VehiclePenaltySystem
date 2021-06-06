@@ -20,8 +20,7 @@ export default (props) => {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
-    const tableData = formatData(penaltyReducer.data)
-    const tableHeaders = getTableHeaders(tableData)
+    const penaltyData = useSelector((state) => state.penaltyReducer.data)
 
     function handleModalOpen(){
         console.log('clicked')
@@ -37,6 +36,11 @@ export default (props) => {
         dispatch(getAllPenalties())
 
     }, [''])
+
+    const handlePagination = (page) => {
+
+        dispatch(getAllPenalties('created_at', page, 25))
+    }
 
     const links = [
         {
@@ -120,7 +124,7 @@ export default (props) => {
 
     const formatMainActionData = (data) => {
 
-        const headers = getTableHeaders(formatData( penaltyReducer.data))
+        const headers = getTableHeaders(formatData( penaltyData.data))
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');
@@ -176,8 +180,8 @@ export default (props) => {
             <BreadCrumb links={links} />
             <MainActionContainer 
                 data={formatMainActionData(pageType.penalty)}
-                dataSet={formatData( penaltyReducer.data)} 
-                dataSetHeaders={getTableHeaders(formatData( penaltyReducer.data))}
+                dataSet={formatData( penaltyData.data)} 
+                dataSetHeaders={getTableHeaders(formatData( penaltyData.data))}
                 handleSearching = {handleSearching}
                 handleRefreshPage={handleRefreshPage}
             />
@@ -186,11 +190,14 @@ export default (props) => {
                 penaltyReducer.loading?
                     <ProgressBarSpinner />
                 :
-                    (penaltyReducer.data.length > 0)?
+                    ("data" in penaltyData)?
                     <>
-                        <Table rows= {formatData( penaltyReducer.data)} 
-                            tableHeader ={ getTableHeaders(formatData( penaltyReducer.data)) }/>
-                        <Paginator />
+                        <Table rows= {formatData( penaltyData.data)} 
+                            tableHeader ={ getTableHeaders(formatData( penaltyData.data)) }/>
+                        <Paginator paginationCount={penaltyData.last_page} 
+                            handlePagination={handlePagination} 
+                            page={ penaltyData.current_page }
+                        />
 
                     </>
                     :

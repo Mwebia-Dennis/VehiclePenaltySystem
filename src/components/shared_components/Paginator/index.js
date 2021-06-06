@@ -6,11 +6,11 @@ import { useStyles } from './style';
 export default (props) => {
     
     const classes = useStyles();
-    const [page, setPage] = React.useState(1);
-    const paginationCount = 10;
+    const { page,paginationCount, handlePagination } = props
     const handleChange = (event, value) => {
-      setPage(value);
+      handlePagination(value)
     };
+
     
     return (
 

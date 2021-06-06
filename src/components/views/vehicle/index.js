@@ -18,12 +18,20 @@ export default (props) => {
     
     const dispatch = useDispatch()
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
+    const vehicleData = useSelector((state) => state.vehicleReducer.data)
     
     useEffect(() => {
         
         dispatch(getAllVehicles())
 
     }, [''])
+
+    const handlePagination = (page) => {
+
+        dispatch(getAllVehicles('created_at', page, 25))
+    }
+
+    
         
     const links = [
         {
@@ -99,7 +107,7 @@ export default (props) => {
 
     const formatMainActionData = (data) => {
 
-        const headers = getTableHeaders(formatData( vehicleReducer.data))
+        const headers = getTableHeaders(formatData( vehicleData.data))
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');
@@ -151,8 +159,8 @@ export default (props) => {
                 <BreadCrumb links={links} />
                 <MainActionContainer 
                     data={formatMainActionData(pageType.vehicle)}
-                    dataSet={formatData( vehicleReducer.data)} 
-                    dataSetHeaders={getTableHeaders(formatData( vehicleReducer.data))}
+                    dataSet={formatData( vehicleData.data)} 
+                    dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
                     handleSearching = {handleSearching}
                     handleRefreshPage={handleRefreshPage}
                 />
@@ -160,12 +168,14 @@ export default (props) => {
                 {
                     vehicleReducer.loading?
                         <ProgressBarSpinner />
-                    :
-                    (vehicleReducer.data.length > 0)?
+                    :("data" in vehicleData)?
                     <>
-                        <Table rows= {formatData( vehicleReducer.data)} 
-                            tableHeader ={ getTableHeaders(formatData( vehicleReducer.data)) }/>
-                        <Paginator />
+                        <Table rows= {formatData( vehicleData.data)} 
+                            tableHeader ={ getTableHeaders(formatData( vehicleData.data)) }/>
+                        <Paginator paginationCount={vehicleData.last_page} 
+                            handlePagination={handlePagination} 
+                            page={ vehicleData.current_page }
+                        />
 
                     </>
                     :

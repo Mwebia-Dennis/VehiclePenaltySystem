@@ -18,11 +18,11 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getMenuData = (menu_id) => (dispatch) => {
+export const getMenuData = (menu_id,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_MENU_DATA_DATA })
-    axios.get('menu/'+menu_id+'/menu-data')
+    axios.get('menu/'+menu_id+'/menu-data?per_page='+perPage+'&page='+page+'&sort_by='+sort_by)
     .then((res)=>{
         
         dispatch({ type: CLEAR_MENU_DATA_ERROR})
