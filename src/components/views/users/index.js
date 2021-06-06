@@ -16,6 +16,7 @@ export default (props) => {
     
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
+    const userData = useSelector((state) => state.userReducer.data)
 
     useEffect(() => {
 
@@ -23,6 +24,10 @@ export default (props) => {
 
     }, [''])
 
+    const handlePagination = (page) => {
+
+        dispatch(getAllUsersData('created_at', page, 25))
+    }
     const links = [
         {
             url:"/home", 
@@ -100,7 +105,7 @@ export default (props) => {
 
     const formatMainActionData = (data) => {
 
-        const headers = getTableHeaders(formatData( userReducer.data))
+        const headers = getTableHeaders(formatData( userData.data))
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');
@@ -151,8 +156,8 @@ export default (props) => {
                 <BreadCrumb links={links} />
                 <MainActionContainer 
                     data={formatMainActionData(pageType.users)} 
-                    dataSet={formatData( userReducer.data)} 
-                    dataSetHeaders={getTableHeaders(formatData( userReducer.data))}
+                    dataSet={formatData( userData.data)} 
+                    dataSetHeaders={getTableHeaders(formatData( userData.data))}
                     handleSearching = {handleSearching}
                     handleRefreshPage={handleRefreshPage}
                 />
@@ -161,12 +166,15 @@ export default (props) => {
                     userReducer.loading?
                         <ProgressBarSpinner />
                     :
-                    (userReducer.data.length > 0)?
+                    ("data" in userData)?
                     <>
-                        <Table rows= {formatData( userReducer.data)} 
-                            tableHeader ={ getTableHeaders(formatData( userReducer.data)) }
+                        <Table rows= {formatData( userData.data)} 
+                            tableHeader ={ getTableHeaders(formatData( userData.data)) }
                         />
-                        <Paginator />
+                        <Paginator paginationCount={userData.last_page} 
+                            handlePagination={handlePagination} 
+                            page={ userData.current_page }
+                        />
 
                     </>
                     :

@@ -18,11 +18,11 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getAllVehicles = () => (dispatch) => {
+export const getAllVehicles = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_VEHICLE_DATA })
-    axios.get('vehicle')
+    axios.get('vehicle?per_page='+perPage+'&page='+page+'&sort_by='+sort_by)
     .then((res)=>{
         
         dispatch({ type: CLEAR_VEHICLE_ERROR})
@@ -68,11 +68,11 @@ export const setNewVehicle = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
-export const searchVehiclesData = (data) => (dispatch) => {
+export const searchVehiclesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_VEHICLE_DATA })
-    axios.post('vehicles-search', data)
+    axios.post('vehicles-search?per_page='+perPage+'&page='+page+'&sort_by='+sort_by, data)
     .then((res)=>{
         
         dispatch({ type: CLEAR_VEHICLE_ERROR})
