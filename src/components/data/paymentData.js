@@ -5,7 +5,7 @@ export const PaymentData = {
     ],
     datasets: [{
         label: 'Settled Payments',
-        data: [4000, 6576],
+        data: [50,50],
         backgroundColor: [
             '#36a2eb',
             '#00cc66'

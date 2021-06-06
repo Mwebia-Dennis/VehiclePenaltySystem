@@ -163,7 +163,8 @@ export default (props) => {
                     :
                     (vehicleReducer.data.length > 0)?
                     <>
-                        <Table rows= {formatData( vehicleReducer.data)} tableHeader ={ getTableHeaders(formatData( vehicleReducer.data)) }/>
+                        <Table rows= {formatData( vehicleReducer.data)} 
+                            tableHeader ={ getTableHeaders(formatData( vehicleReducer.data)) }/>
                         <Paginator />
 
                     </>

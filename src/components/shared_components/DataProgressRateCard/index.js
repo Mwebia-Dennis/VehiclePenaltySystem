@@ -28,7 +28,7 @@ export default (props) => {
                 <Grid item xs={6} className={classes.infoContainer}>
                     
                     <Typography className={classes.header} > {dataType} </Typography>
-                    <Typography className={classes.info}>{value}% increase from yesterday</Typography>
+                    <Typography className={classes.info}>{value}% increase from Last Month</Typography>
 
                 </Grid>
             </Grid>
