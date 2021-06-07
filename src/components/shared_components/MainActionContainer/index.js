@@ -137,7 +137,7 @@ export default (props) => {
 
 
             <Grid container spacing={1}>
-                <Grid item xs={12} md={1}>
+                <Grid item xs={3} md={1}>
                     
                     <IconButton 
                         variant="contained" 
@@ -146,7 +146,7 @@ export default (props) => {
                     ><Add /> {/*data.type*/}</IconButton>
                 </Grid>
                 
-                <Grid item xs={12} md={1}>
+                <Grid item xs={3} md={1}>
                       
                     <IconButton variant="contained" 
                         color="primary" 
@@ -155,7 +155,7 @@ export default (props) => {
                        <Print />
                     </IconButton>
                 
-                </Grid><Grid item xs={12} md={1}>
+                </Grid><Grid item xs={3} md={1}>
                       
                       <IconButton variant="contained" 
                           color="primary" 
