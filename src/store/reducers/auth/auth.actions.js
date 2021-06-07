@@ -24,7 +24,6 @@ export const loginUser = (userData, navigate) => (dispatch) => {
     axios.post('auth/login', userData)
     .then((res)=>{
 
-        
         localStorage.setItem('access_token', `Bearer ${res.data.access_token}`);
         setAuthorizationHeader()
         dispatch({ type: CLEAR_ERROR})
@@ -38,7 +37,6 @@ export const loginUser = (userData, navigate) => (dispatch) => {
 
     })
     .catch((error)=> {
-        
         dispatch({
             type: SET_ERROR,
             payload: error.response.data

@@ -14,6 +14,7 @@ import 'react-calendar/dist/Calendar.css';
 import DataProgressRateCard from '../../shared_components/DataProgressRateCard'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStatistics } from '../../../store/reducers/statistics/statistics.actions';
+import ProgressSpinner from '../../shared_components/ProgressBarSpinner'
 
 export default (props) => {
     
@@ -49,12 +50,14 @@ export default (props) => {
         const vehicleData = []
         const penaltyData = []
 
-        const allData = statisticsReducer.data.vehicleWeeklydata
-        for(let i=allData.length-1; i>=0; i--) {
-            for (const key in allData[i]) {
-                labels.push( key )
-                vehicleData.push( allData[i][key] )
-                penaltyData.push( statisticsReducer.data.penaltyWeeklydata[i][key] )
+        if("vehicleWeeklydata" in statisticsReducer.data) {
+            const allData = statisticsReducer.data.vehicleWeeklydata
+            for(let i=allData.length-1; i>=0; i--) {
+                for (const key in allData[i]) {
+                    labels.push( key )
+                    vehicleData.push( allData[i][key] )
+                    penaltyData.push( statisticsReducer.data.penaltyWeeklydata[i][key] )
+                }
             }
         }
         data.labels = labels
@@ -72,128 +75,140 @@ export default (props) => {
 
 
     return (
+        
+
         <div>
-            <Grid container spacing={1}>
-                {
-                    summaryCardItems.map((item, index)=> 
-                        <SummaryCards 
-                            key={index}
-                            color = {item.color} 
-                            title = {item.title}
-                            value = {item.value} 
-                            url = {item.url}
-                            icon = {item.icon}
-                        />
-                    )
-                }
-            </Grid>
 
-            
-            <Paper style={{margin: '15px 0'}}>
+            {
+                statisticsReducer.loading?
+                    <ProgressSpinner />
 
-                <Typography className={classes.header}>Total penalties and vehicles</Typography>
-                <Divider style={{margin: '15px 0',}}/>
-                <div  className={classes.chartCanvas}>
-                    <Line
-                        data={getGraphData(State)}
-                        options={{
-                            
-                            responsive:true,
-                            maintainAspectRatio: false,
-                            title:{
-                                display:true,
-                                text:'Total Penalties issued this week',
-                                fontSize:12
-                            },
-                            legend:{
-                                display:true,
-                                position: 'right',
-                            },
-                        }}
-                    />
-
-                </div>
-            </Paper>
-
-
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)} color="#00cc66" dataType="Users"/>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} color="#36a2eb" dataType="Penalties" />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                    <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)} color="#ffcc00" dataType="Vehicles"/>
-                </Grid>
-            </Grid>
-
-
-            <Grid container spacing={2} className={classes.notificationCard}>
-
-                
-                <Grid item xs={12} md={4}>
-
-                    <DashboardCard header="Payments Report" >
-                        <Doughnut 
-
-                            
-                            data={()=>{
-                                PaymentData.datasets["0"].data = [
-                                    Math.round(statisticsReducer.data.paidPayment),
-                                    Math.round(statisticsReducer.data.pendingPayment)
-                                ]
-                                return PaymentData
-                            }}
-                            options={{
-                                
-                                responsive:true,
-                                maintainAspectRatio: true,
-                                legend:{
-                                    display:true,
-                                    position: 'right',
-                                },
-                            }}
-                        
-                        />
-                    </DashboardCard>
-
-                </Grid>
-                <Grid item xs={12} md={4}>
-
-                    <DashboardCard header="My Notifications" >
-                        
-                        { [1,2,3,4].map((item, index)=><NotificationCard key={index}/>)}
-                    </DashboardCard>
-                </Grid>
-
-                <Grid item xs={12} md={4}>
-                    
-                    <DashboardCard header="Calendar">
-
-                    <Calendar
-                                    onChange={setCalendarDate}
-                                    defaultValue={calendarDate}
-                                    value={calendarDate}
-                                    className={classes.calendar}
+                :
+                <>
+                    <Grid container spacing={1}>
+                        {
+                            summaryCardItems.map((item, index)=> 
+                                <SummaryCards 
+                                    key={index}
+                                    color = {item.color} 
+                                    title = {item.title}
+                                    value = {item.value} 
+                                    url = {item.url}
+                                    icon = {item.icon}
                                 />
-                        <Grid 
-                            container            
-                            direction="column"
-                            alignItems="center"
-                            justify="center"
-                        >
+                            )
+                        }
+                    </Grid>
 
-                            <Grid item xs={12} sm={12} md={8}>
-                                
-                                
+                    
+                    <Paper style={{margin: '15px 0'}}>
 
-                            </Grid>
+                        <Typography className={classes.header}>Total penalties and vehicles</Typography>
+                        <Divider style={{margin: '15px 0',}}/>
+                        <div  className={classes.chartCanvas}>
+                            <Line
+                                data={getGraphData(State)}
+                                options={{
+                                    
+                                    responsive:true,
+                                    maintainAspectRatio: false,
+                                    title:{
+                                        display:true,
+                                        text:'Total Penalties issued this week',
+                                        fontSize:12
+                                    },
+                                    legend:{
+                                        display:true,
+                                        position: 'right',
+                                    },
+                                }}
+                            />
+
+                        </div>
+                    </Paper>
+
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)} color="#00cc66" dataType="Users"/>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} color="#36a2eb" dataType="Penalties" />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)} color="#ffcc00" dataType="Vehicles"/>
+                        </Grid>
+                    </Grid>
+
+
+                    <Grid container spacing={2} className={classes.notificationCard}>
+
+                        
+                        <Grid item xs={12} md={4}>
+
+                            <DashboardCard header="Payments Report" >
+                                <Doughnut 
+
+                                    
+                                    data={()=>{
+                                        PaymentData.datasets["0"].data = [
+                                            Math.round(statisticsReducer.data.paidPayment),
+                                            Math.round(statisticsReducer.data.pendingPayment)
+                                        ]
+                                        return PaymentData
+                                    }}
+                                    options={{
+                                        
+                                        responsive:true,
+                                        maintainAspectRatio: true,
+                                        legend:{
+                                            display:true,
+                                            position: 'right',
+                                        },
+                                    }}
+                                
+                                />
+                            </DashboardCard>
 
                         </Grid>
-                    </DashboardCard>
-                </Grid>
-            </Grid>
+                        <Grid item xs={12} md={4}>
+
+                            <DashboardCard header="My Notifications" >
+                                
+                                { [1,2,3,4].map((item, index)=><NotificationCard key={index}/>)}
+                            </DashboardCard>
+                        </Grid>
+
+                        <Grid item xs={12} md={4}>
+                            
+                            <DashboardCard header="Calendar">
+
+                            <Calendar
+                                            onChange={setCalendarDate}
+                                            defaultValue={calendarDate}
+                                            value={calendarDate}
+                                            className={classes.calendar}
+                                        />
+                                <Grid 
+                                    container            
+                                    direction="column"
+                                    alignItems="center"
+                                    justify="center"
+                                >
+
+                                    <Grid item xs={12} sm={12} md={8}>
+                                        
+                                        
+
+                                    </Grid>
+
+                                </Grid>
+                            </DashboardCard>
+                        </Grid>
+                    </Grid>
+                </>
+                
+            }
         </div>
     )
 }
