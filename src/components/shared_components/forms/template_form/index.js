@@ -206,8 +206,8 @@ export default (props) => {
                                             >
 
                                                 {
-                                                    (Array.isArray(vehicleReducer.data))?
-                                                        vehicleReducer.data.map((item)=>(
+                                                    (Array.isArray(vehicleReducer.data.data))?
+                                                        vehicleReducer.data.data.map((item)=>(
                                                             <MenuItem key={item.id} value={item.plate_number}>{item.plate_number}</MenuItem>
                                                         ))
                                                     :

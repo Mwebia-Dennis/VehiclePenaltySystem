@@ -14,7 +14,16 @@ import SearchIcon from '@material-ui/icons/Search';
 
 export default (props) => {
 
-    const { data, dataSet, dataSetHeaders, handleSearching, handleRefreshPage } = props;
+    const { 
+        data, 
+        dataSet, 
+        dataSetHeaders,
+        sortingValues,
+        handleSearching, 
+        handleRefreshPage, 
+        handleSortByChange,
+        handleLimitEntriesChange 
+    } = props;
     const classes = useStyles();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,9 +34,9 @@ export default (props) => {
     const limitEntriesData = ["10", "25", "50", "100"];
     const sortByData = data.sortByOptions;
     const isMenuOpen = Boolean(anchorEl);
-    const [limitEntries, setLimitEntries] = useState(limitEntriesData["0"]);
-    const [sortBy, setSortBy] = useState(sortByData["0"]);
     const [searchQuery, setSearchQuery] = useState('');
+
+    console.log(data)
 
 
     if(searchQuery == '' && data.searchOptions.length > 0) {
@@ -65,13 +74,6 @@ export default (props) => {
     };
 
 
-    const handleLimitEntriesChange = (event) => {
-        setLimitEntries(event.target.value);
-    };
-
-    const handleSortByChange = (event) => {
-        setSortBy(event.target.value);
-    };
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -230,7 +232,7 @@ export default (props) => {
                         <Select
                             labelId="demo-customized-select-label"
                             id="demo-customized-select"
-                            value={limitEntries}
+                            value={sortingValues.limitEntries}
                             onChange={handleLimitEntriesChange}
                             input={<BootstrapInput />}
                             >
@@ -251,7 +253,7 @@ export default (props) => {
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={sortBy}
+                            value={sortingValues.sortBy}
                             onChange={handleSortByChange}
                         >
 

@@ -17,17 +17,43 @@ export default (props) => {
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
     const userData = useSelector((state) => state.userReducer.data)
+    const [sortingValues, setSortingValues] = useState({
+        sortBy: 'created_at',
+        limitEntries:25,
+        page: 1
+    })
 
     useEffect(() => {
 
-        dispatch(getAllUsersData())
+        dispatch(getAllUsersData(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
-    }, [''])
+    }, [sortingValues])
 
     const handlePagination = (page) => {
-
-        dispatch(getAllUsersData('created_at', page, 25))
+        setSortingValues({
+            ...sortingValues,
+            page: page
+        })
     }
+
+    
+    const handleLimitEntriesChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                limitEntries: event.target.value,
+            }
+        );
+    };
+
+    const handleSortByChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                sortBy: event.target.value,
+            }
+        );
+    };
     const links = [
         {
             url:"/home", 
@@ -103,7 +129,7 @@ export default (props) => {
         }
     }
 
-    const formatMainActionData = (data) => {
+    const formatSortHeaders = () => {
 
         const headers = getTableHeaders(formatData( userData.data))
         // removing unwanted cols
@@ -119,8 +145,8 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
-        if(headers.includes('profile_img')) {
-            const index = headers.indexOf('profile_img');
+        if(headers.includes('profile')) {
+            const index = headers.indexOf('profile');
             if (index > -1) {
                 headers.splice(index, 1);
             }
@@ -131,6 +157,14 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
+
+        return headers;
+    }
+
+    const formatMainActionData = (data) => {
+
+        const headers = formatSortHeaders()
+
         if(headers.includes('created_at')) {
             const index = headers.indexOf('created_at');
             if (index > -1) {
@@ -145,22 +179,14 @@ export default (props) => {
         }
         
         data.searchOptions = headers;
-
+        data.sortByOptions = formatSortHeaders();
         return data;
     }
-
     return (
 
         <>
             <div>
                 <BreadCrumb links={links} />
-                <MainActionContainer 
-                    data={formatMainActionData(pageType.users)} 
-                    dataSet={formatData( userData.data)} 
-                    dataSetHeaders={getTableHeaders(formatData( userData.data))}
-                    handleSearching = {handleSearching}
-                    handleRefreshPage={handleRefreshPage}
-                />
 
                 {
                     userReducer.loading?
@@ -168,6 +194,16 @@ export default (props) => {
                     :
                     ("data" in userData)?
                     <>
+                        <MainActionContainer 
+                            data={formatMainActionData(pageType.users)} 
+                            dataSet={formatData( userData.data)} 
+                            dataSetHeaders={getTableHeaders(formatData( userData.data))}
+                            sortingValues={sortingValues}
+                            handleSearching = {handleSearching}
+                            handleRefreshPage={handleRefreshPage}
+                            handleLimitEntriesChange={handleLimitEntriesChange}
+                            handleSortByChange={handleSortByChange}
+                        />
                         <Table rows= {formatData( userData.data)} 
                             tableHeader ={ getTableHeaders(formatData( userData.data)) }
                         />
