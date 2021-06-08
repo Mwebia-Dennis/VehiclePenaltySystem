@@ -6,7 +6,8 @@ import {
     SET_USER_DETAILS,
     LOADING_USER,
     SET_ERROR,
-    SET_MESSAGE
+    SET_MESSAGE,
+    SET_UNAUTHENTICATED
 } from './auth.types'
 
 
@@ -140,6 +141,27 @@ export const editProfile = (userData, user_id) => (dispatch) => {
             type: SET_MESSAGE,
             payload: res.data['message']
         })
+
+    })
+    .catch((error)=> {
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+export const logOut = (navigate) => (dispatch) => {
+
+    dispatch({ type: LOADING_USER })
+    axios.post('auth/logout')
+    .then((res)=>{
+        //delete access token
+        localStorage.setItem('access_token', '')
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({ type: SET_UNAUTHENTICATED})        
+        navigate('/auth/login')
 
     })
     .catch((error)=> {

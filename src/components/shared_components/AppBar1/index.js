@@ -3,25 +3,22 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useStyles } from './style';
-import { Button, Divider, Drawer, Link, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Avatar, Button, Divider, Drawer, Link, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { SideMenuItems } from '../../data/sideMenuItems';
 import { useNavigate } from 'react-router-dom';
 import { Close } from '@material-ui/icons';
 import DropDownMenu from './drop_down_menu'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMenus } from '../../../store/reducers/menu/menu.actions';
+import { logOut } from '../../../store/reducers/auth/auth.actions';
 import CategoryIcon from '@material-ui/icons/Category';
+import axios from 'axios';
 
 
 export default function PrimarySearchAppBar() {
@@ -48,11 +45,13 @@ export default function PrimarySearchAppBar() {
   const loggedInMenu = [
     {
         name:"Edit Profile",
-        url: "/profile/current-user"
+        url: "/profile/current-user",
+        onclick: null,
     },
     {
         name:"Logout",
-        url: "auth/logout"
+        url: "",
+        onclick:{handleLogout}
     },
   ];
 
@@ -101,6 +100,13 @@ export default function PrimarySearchAppBar() {
     }
   };
 
+  function handleLogout(){
+    
+    setAnchorEl(null);
+    handleMobileMenuClose();
+    dispatch(logOut(navigate))
+  }
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -140,7 +146,7 @@ export default function PrimarySearchAppBar() {
           isLoggedIn?
               loggedInMenu.map((item, index)=>(
 
-                  <MenuItem key={index} onClick={()=>handleMenuClose(item.url)}>{item.name}</MenuItem>
+                  <MenuItem key={index} onClick={item.onclick != null ?handleLogout:()=>handleMenuClose(item.url)}>{item.name}</MenuItem>
               ))
           :
               loggedOutMenu.map((item, index)=>(
@@ -163,22 +169,7 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
+      
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -186,7 +177,7 @@ export default function PrimarySearchAppBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          {("profile_img" in authState.data)?<Avatar src={axios.defaults.baseURL + authState.data.profile_img}/> :<AccountCircle />}
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -229,16 +220,7 @@ export default function PrimarySearchAppBar() {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                    <MailIcon />
-                </Badge>
-                </IconButton>
-                <IconButton aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                    <NotificationsIcon />
-                </Badge>
-                </IconButton>
+                
                 <IconButton
                   edge="end"
                   aria-label="account of current user"
@@ -247,7 +229,7 @@ export default function PrimarySearchAppBar() {
                   onClick={handleProfileMenuOpen}
                   color="inherit"
                 >
-                <AccountCircle />
+                {("profile_img" in authState.data)?<Avatar src={axios.defaults.baseURL + authState.data.profile_img}/> :<AccountCircle />}
                 </IconButton>
             </div>
             <div className={classes.sectionMobile}>
