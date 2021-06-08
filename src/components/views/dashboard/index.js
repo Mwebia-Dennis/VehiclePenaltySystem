@@ -7,7 +7,7 @@ import {Line,Doughnut } from 'react-chartjs-2';
 import { State } from '../../data/totalPenaltiesPerWeek';
 import { PaymentData } from '../../data/paymentData';
 import { useStyles } from './style';
-import NotificationCard from '../../shared_components/notification_card';
+import MenuCard from '../../shared_components/menu_card';
 import Calendar from 'react-calendar';
 import DashboardCard from '../../shared_components/dashboard_card';
 import 'react-calendar/dist/Calendar.css';
@@ -23,7 +23,7 @@ export default (props) => {
     const classes = useStyles();
     const dispatch = useDispatch()
     const statisticsReducer = useSelector((state) => state.statisticsReducer)
-    console.log(statisticsReducer)
+    const menuReducer = useSelector(state => state.menuReducer)
     
     const summaryCardItems = SummaryCardItems.map((item)=>{
 
@@ -173,9 +173,23 @@ export default (props) => {
                         </Grid>
                         <Grid item xs={12} md={4}>
 
-                            <DashboardCard header="My Notifications" >
+                            <DashboardCard header="All Menu Categories" >
                                 
-                                { [1,2,3,4].map((item, index)=><NotificationCard key={index}/>)}
+                                { 
+                                    menuReducer.loading?
+                                        <ProgressSpinner />
+                                    :
+                                    Array.isArray(menuReducer.data) && menuReducer.data.length > 0?
+                                        menuReducer.data.map((item)=>(
+                                            <MenuCard 
+                                                key={item.id}
+                                                menu_id={item.id}
+                                                menu_name = {item.name}
+                                                created_at = {item.created_at}
+                                            />)
+                                        )
+                                    :<div>0 results found</div>
+                                }
                             </DashboardCard>
                         </Grid>
 

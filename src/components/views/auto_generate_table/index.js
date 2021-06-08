@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useDispatch,useSelector } from 'react-redux';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import { getMenuInfo } from '../../../store/reducers/menu/menu.actions';
-import { getMenuData } from '../../../store/reducers/menu_data/menu_data.actions';
+import { getMenuData, searchMenuData_data } from '../../../store/reducers/menu_data/menu_data.actions';
 import { Avatar, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
@@ -42,6 +42,22 @@ export default (props) => {
 
     }, [menu_id])
 
+    
+    const handleRefreshPage = ()=> {
+
+        dispatch(getMenuData(menu_id))
+    }
+    
+    const handleSearching = (data)=> {
+
+        if(data.query != '') {
+            data.menu_id = menu_id
+            dispatch(searchMenuData_data(data))
+        }else {
+            handleRefreshPage()
+        }
+    }
+
     const handlePagination = (page) => {
 
         dispatch(getMenuData(menu_id,'created_at', page, 25))
@@ -53,13 +69,7 @@ export default (props) => {
     };
     const handleModalClose = () => {
       setOpen(false);
-    };
-    
-    const TableHeader = [
-        '#','pdf','Plate Number','Owner', 'penalty_id', 
-        'receipt number', 'penalty date', 'payment date', 'payment status', 'action',
-    ]
-    
+    };    
 
     const links = [
         {
@@ -132,7 +142,7 @@ export default (props) => {
             <BreadCrumb links={links} />
 
             {
-                menuReducer.loading?
+                menuDataReducer.loading?
                     <ProgressBarSpinner />
                 :
 
@@ -148,10 +158,12 @@ export default (props) => {
                                     "Name",
                                     "creation date"
                                 ],
-                                searchOptions: ["Name"],
+                                searchOptions: ["keyword"],
                             }}
                             dataSet={tableData} 
                             dataSetHeaders={tableHeaders} 
+                            handleSearching = {handleSearching}
+                            handleRefreshPage={handleRefreshPage}
                         />
 
                         {

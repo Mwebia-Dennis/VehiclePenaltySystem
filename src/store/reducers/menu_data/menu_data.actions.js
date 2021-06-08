@@ -69,6 +69,31 @@ export const setNewMenuData = (newData, user_id, navigate) => (dispatch) => {
 
 }
 
+export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_MENU_DATA_DATA })
+    axios.get('menu-data-search?value='+data.query+'&menu_id='+data.menu_id+'&per_page='+perPage+'&page='+page+'&sort_by='+sort_by)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_MENU_DATA_ERROR})
+        dispatch({
+            type: SET_MENU_DATA_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_MENU_DATA_DATA,
+            payload: error.response.data
+        })
+    })
+
+}
+
 
 
 

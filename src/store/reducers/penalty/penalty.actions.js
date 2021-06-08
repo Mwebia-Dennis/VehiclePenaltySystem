@@ -18,7 +18,7 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getAllPenalties = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const getAllPenalties = (sort_by = 'created_at', page = 1, perPage = 2) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PENALTY_DATA })
