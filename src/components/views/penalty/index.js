@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import Table from '../../shared_components/table';
 // import { PenaltyTableHeader, PenaltyData } from '../../data/PenaltyData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
@@ -17,7 +17,8 @@ import Alert from '@material-ui/lab/Alert';
 export default (props) => {
 
     
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [page, setPage] = useState(1);
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const penaltyData = useSelector((state) => state.penaltyReducer.data)
@@ -37,9 +38,14 @@ export default (props) => {
 
     }, [''])
 
-    const handlePagination = (page) => {
+    const getAllData = ()=> {
 
-        dispatch(getAllPenalties('created_at', page, 25))
+        dispatch(getAllPenalties('created_at', page, 2))
+    }
+
+    const handlePagination = (page) => {
+        setPage(page)
+        getAllData()
     }
 
     const links = [

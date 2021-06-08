@@ -146,5 +146,32 @@ export const setNewMenuEntries = (newData, user_id,navigate) => (dispatch) => {
 
 }
 
+export const deleteMenu = (user_id, menu_id) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_MENU_DATA })
+    axios.delete('users/'+parseInt(user_id)+'/menu/'+parseInt(menu_id))
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_MENU_ERROR})
+        dispatch({
+            type: SET_MENU_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getAllMenus())
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_MENU_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 
 
