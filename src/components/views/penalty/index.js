@@ -22,6 +22,11 @@ export default (props) => {
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const penaltyData = useSelector((state) => state.penaltyReducer.data)
+    const [sortingValues, setSortingValues] = useState({
+        sortBy: 'created_at',
+        limitEntries:25,
+        page: 1
+    })
 
     function handleModalOpen(){
         console.log('clicked')
@@ -34,19 +39,35 @@ export default (props) => {
     
     useEffect(() => {
         
-        dispatch(getAllPenalties())
+        dispatch(getAllPenalties(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
-    }, [''])
-
-    const getAllData = ()=> {
-
-        dispatch(getAllPenalties('created_at', page, 2))
-    }
+    }, [sortingValues])
 
     const handlePagination = (page) => {
-        setPage(page)
-        getAllData()
+        setSortingValues({
+            ...sortingValues,
+            page: page
+        })
     }
+
+    
+    const handleLimitEntriesChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                limitEntries: event.target.value,
+            }
+        );
+    };
+
+    const handleSortByChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                sortBy: event.target.value,
+            }
+        );
+    };
 
     const links = [
         {
@@ -128,7 +149,7 @@ export default (props) => {
         return tableHeaders
     }
 
-    const formatMainActionData = (data) => {
+    const formatMoreData = () => {
 
         const headers = getTableHeaders(formatData( penaltyData.data))
         // removing unwanted cols
@@ -162,6 +183,15 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
+        
+
+        return headers;
+    }
+    const formatMainActionData = (data) => {
+
+        const headers = formatMoreData()
+        // removing unwanted cols
+        
         if(headers.includes('created_at')) {
             const index = headers.indexOf('created_at');
             if (index > -1) {
@@ -175,6 +205,7 @@ export default (props) => {
             }
         }
         
+        data.sortByOptions = formatMoreData();
         data.searchOptions = headers;
 
         return data;
@@ -184,13 +215,6 @@ export default (props) => {
 
         <div>
             <BreadCrumb links={links} />
-            <MainActionContainer 
-                data={formatMainActionData(pageType.penalty)}
-                dataSet={formatData( penaltyData.data)} 
-                dataSetHeaders={getTableHeaders(formatData( penaltyData.data))}
-                handleSearching = {handleSearching}
-                handleRefreshPage={handleRefreshPage}
-            />
 
             {
                 penaltyReducer.loading?
@@ -198,6 +222,16 @@ export default (props) => {
                 :
                     ("data" in penaltyData)?
                     <>
+                        <MainActionContainer 
+                            data={formatMainActionData(pageType.penalty)}
+                            dataSet={formatData( penaltyData.data)} 
+                            dataSetHeaders={getTableHeaders(formatData( penaltyData.data))}
+                            sortingValues={sortingValues}
+                            handleSearching = {handleSearching}
+                            handleRefreshPage={handleRefreshPage}
+                            handleLimitEntriesChange={handleLimitEntriesChange}
+                            handleSortByChange={handleSortByChange}
+                        />
                         <Table rows= {formatData( penaltyData.data)} 
                             tableHeader ={ getTableHeaders(formatData( penaltyData.data)) }/>
                         <Paginator paginationCount={penaltyData.last_page} 

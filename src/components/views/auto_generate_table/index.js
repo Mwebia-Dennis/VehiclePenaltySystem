@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from '../../shared_components/table';
 // import { PenaltyTableHeader, PenaltyData } from '../../data/PenaltyData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
@@ -27,6 +27,12 @@ export default (props) => {
     const menuData = useSelector((state) => state.menuDataReducer.data)
     const tableData = formatData(menuData.data)
     const tableHeaders = getTableHeaders(tableData)
+    
+    const [sortingValues, setSortingValues] = useState({
+        sortBy: 'created_at',
+        limitEntries:25,
+        page: 1
+    })
 
     //checking if menu id is available in db
 
@@ -38,10 +44,36 @@ export default (props) => {
     useEffect(() => {
         
         dispatch(getMenuInfo(menu_id))
-        dispatch(getMenuData(menu_id))
+        dispatch(getMenuData(menu_id,sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
-    }, [menu_id])
+    }, [sortingValues, menu_id])
 
+    
+    const handlePagination = (page) => {
+        setSortingValues({
+            ...sortingValues,
+            page: page
+        })
+    }
+
+    
+    const handleLimitEntriesChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                limitEntries: event.target.value,
+            }
+        );
+    };
+
+    const handleSortByChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                sortBy: event.target.value,
+            }
+        );
+    };
     
     const handleRefreshPage = ()=> {
 
@@ -56,11 +88,6 @@ export default (props) => {
         }else {
             handleRefreshPage()
         }
-    }
-
-    const handlePagination = (page) => {
-
-        dispatch(getMenuData(menu_id,'created_at', page, 25))
     }
 
     function handleModalOpen(){
@@ -155,8 +182,8 @@ export default (props) => {
                                 type: menuReducer.singleMenuData.name,
                                 menu_id: menuReducer.singleMenuData.id,
                                 sortByOptions: [
-                                    "Name",
-                                    "creation date"
+                                    "created_at",
+                                    "updated_at"
                                 ],
                                 searchOptions: ["keyword"],
                             }}
@@ -164,6 +191,11 @@ export default (props) => {
                             dataSetHeaders={tableHeaders} 
                             handleSearching = {handleSearching}
                             handleRefreshPage={handleRefreshPage}
+                            sortingValues={sortingValues}
+                            handleSearching = {handleSearching}
+                            handleRefreshPage={handleRefreshPage}
+                            handleLimitEntriesChange={handleLimitEntriesChange}
+                            handleSortByChange={handleSortByChange}
                         />
 
                         {

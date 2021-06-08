@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import Table from '../../shared_components/table';
 import { VehicleData, VehicleTableHeader } from '../../data/VehicleData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
@@ -20,17 +20,43 @@ export default (props) => {
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
     const vehicleData = useSelector((state) => state.vehicleReducer.data)
     
+    const [sortingValues, setSortingValues] = useState({
+        sortBy: 'created_at',
+        limitEntries:25,
+        page: 1
+    })
+    
     useEffect(() => {
         
-        dispatch(getAllVehicles())
+        dispatch(getAllVehicles(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
-    }, [''])
+    }, [sortingValues])
 
     const handlePagination = (page) => {
-
-        dispatch(getAllVehicles('created_at', page, 25))
+        setSortingValues({
+            ...sortingValues,
+            page: page
+        })
     }
 
+    
+    const handleLimitEntriesChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                limitEntries: event.target.value,
+            }
+        );
+    };
+
+    const handleSortByChange = (event) => {
+        setSortingValues(
+            {
+                ...sortingValues,
+                sortBy: event.target.value,
+            }
+        );
+    };
     
         
     const links = [
@@ -105,7 +131,7 @@ export default (props) => {
         return tableHeaders
     }
 
-    const formatMainActionData = (data) => {
+    const formatSortHeaders = () => {
 
         const headers = getTableHeaders(formatData( vehicleData.data))
         // removing unwanted cols
@@ -133,6 +159,14 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
+
+        return headers;
+    }
+
+    const formatMainActionData = (data) => {
+
+        const headers = formatSortHeaders()
+
         if(headers.includes('created_at')) {
             const index = headers.indexOf('created_at');
             if (index > -1) {
@@ -147,9 +181,10 @@ export default (props) => {
         }
         
         data.searchOptions = headers;
-
+        data.sortByOptions = formatSortHeaders();
         return data;
     }
+
 
     return (
 
@@ -157,19 +192,22 @@ export default (props) => {
             <div>
 
                 <BreadCrumb links={links} />
-                <MainActionContainer 
-                    data={formatMainActionData(pageType.vehicle)}
-                    dataSet={formatData( vehicleData.data)} 
-                    dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
-                    handleSearching = {handleSearching}
-                    handleRefreshPage={handleRefreshPage}
-                />
-
                 {
                     vehicleReducer.loading?
                         <ProgressBarSpinner />
                     :("data" in vehicleData)?
                     <>
+                        <MainActionContainer 
+                            data={formatMainActionData(pageType.vehicle)}
+                            dataSet={formatData( vehicleData.data)} 
+                            dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
+                            sortingValues={sortingValues}
+                            handleSearching = {handleSearching}
+                            handleRefreshPage={handleRefreshPage}
+                            handleLimitEntriesChange={handleLimitEntriesChange}
+                            handleSortByChange={handleSortByChange}
+                        />
+    
                         <Table rows= {formatData( vehicleData.data)} 
                             tableHeader ={ getTableHeaders(formatData( vehicleData.data)) }/>
                         <Paginator paginationCount={vehicleData.last_page} 
