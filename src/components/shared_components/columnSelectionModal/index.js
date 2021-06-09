@@ -21,7 +21,10 @@ export default function AlertDialogSlide(props) {
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
     const dataSetHeadersIds = [];
+
+    console.log(dataSet)
     for (const __data in dataSet["0"]) {
+        //get data keys 
         dataSetHeadersIds.push(__data);
     }
 
@@ -79,6 +82,14 @@ export default function AlertDialogSlide(props) {
     
     const ExportToExcelBtn = () => {
         
+        const newDataSet = dataSet.map((data_item)=>{
+            const __dataSet = {}
+            let selected = selectedData.split(',')
+            selected = (selected["0"] === "" && selected.length === 1)?[]:selected
+            selected.map((item) => __dataSet[item] = data_item[item].toString())
+            return __dataSet
+        })
+        console.log(newDataSet)
         return (
             <ExcelFile
                 filename={"report"}
@@ -89,12 +100,12 @@ export default function AlertDialogSlide(props) {
                     > Export to Excel</Button>
                     }
                 >
-                <ExcelSheet data={dataSet} name="Employees">
+                <ExcelSheet data={newDataSet} name="Report">
 
                     {
                         selectedData.split(',').map((item, index) => (
 
-                            <ExcelColumn label={item} value={item} key={index} />
+                            <ExcelColumn label={item} value={item} key={index} style={{font: {sz: "20", bold: true}}}/>
                         ))
                     }
                 </ExcelSheet>
@@ -122,7 +133,7 @@ export default function AlertDialogSlide(props) {
                         dataSetHeadersIds.map((item,index)=>(
     
                             <FormControlLabel
-                                control={<Checkbox onChange={handleChange} checked={selectedData.includes(item)} name={"checked"+index} value={item} />}
+                                control={<Checkbox onChange={handleChange} checked={selectedData.split(',').includes(item)} name={"checked"+index} value={item} />}
                                 label={item}
                             />
                         ))
