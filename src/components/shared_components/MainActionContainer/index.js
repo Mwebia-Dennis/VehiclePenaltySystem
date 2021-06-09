@@ -36,7 +36,6 @@ export default (props) => {
     const isMenuOpen = Boolean(anchorEl);
     const [searchQuery, setSearchQuery] = useState('');
 
-    console.log(data)
 
 
     if(searchQuery == '' && data.searchOptions.length > 0) {

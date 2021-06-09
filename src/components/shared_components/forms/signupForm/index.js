@@ -35,7 +35,7 @@ export default (props) => {
       }
 
       if(authState.message) {
-        showSnackBar(authState.message.data.message, 'success');
+        showSnackBar(authState.message, 'success');
         dispatch({ type: CLEAR_MESSAGE})
     }
 
