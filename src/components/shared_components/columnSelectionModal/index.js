@@ -50,9 +50,17 @@ export default function AlertDialogSlide(props) {
             dataSetHeadersIds.splice(index, 1);
         }
     }
+    if(dataSetHeadersIds.includes('select')) {
+        const index = dataSetHeadersIds.indexOf('action');
+        if (index > -1) {
+            dataSetHeadersIds.splice(index, 1);
+        }
+    }
 
     const [selectedData, setSelectedData] = useState(dataSetHeadersIds.join())
-
+    const handleSelectAll = ()=> {
+        setSelectedData(dataSetHeadersIds.join())
+    }
     const handleChange = (event) => {
         const selectedDataSetHeadersIds = selectedData.split(',');
         if(selectedDataSetHeadersIds.includes(event.target.value)){
@@ -125,6 +133,9 @@ export default function AlertDialogSlide(props) {
 
         </DialogContent>
         <DialogActions>
+          <Button onClick={handleSelectAll} color="secondary" variant="contained">
+            Select All
+          </Button>
           <Button onClick={handleClose} color="secondary" variant="contained">
             Close
           </Button>

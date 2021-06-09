@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import {
     CLEAR_VEHICLE_ERROR,
-    CLEAR_VEHICLE_MESSAGE,
+    SET_VEHICLE_PLATES_DATA,
     LOADING_VEHICLE_DATA,
     SET_VEHICLE_DATA,
     SET_VEHICLE_ERROR,
@@ -28,6 +28,31 @@ export const getAllVehicles = (sort_by = 'created_at', page = 1, perPage = 25) =
         dispatch({ type: CLEAR_VEHICLE_ERROR})
         dispatch({
             type: SET_VEHICLE_DATA,
+            payload: res.data
+        })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_VEHICLE_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+export const getAllVehiclesPlateNumber = () => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_VEHICLE_DATA })
+    axios.get('all-vehicle-plates')
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_VEHICLE_ERROR})
+        dispatch({
+            type: SET_VEHICLE_PLATES_DATA,
             payload: res.data
         })
 

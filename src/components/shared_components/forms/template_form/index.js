@@ -1,6 +1,7 @@
 
 import { Button,  Paper, Grid, TextField, Typography, IconButton, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useStyles} from '../new_vehicle/style'
 import "react-datepicker/dist/react-datepicker.css";
 import { Close } from '@material-ui/icons';
@@ -11,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
-import { getAllVehicles } from '../../../../store/reducers/vehicle/vehicle.actions';
+import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions';
 import { setNewMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
 import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
@@ -20,6 +21,8 @@ export default (props) => {
 
     const { title } = props;
     const classes = useStyles();
+    const [plateNumber, setPlateNumber] = useState('');
+    const [plateNumberError, setPlateNumberError] = useState('');
     const [uploadedPdf, setUploadedPdf] = useState(null)
     const [fileError, setFileError] = useState('')
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -34,7 +37,7 @@ export default (props) => {
 
     useEffect(() => {
         
-        dispatch(getAllVehicles())
+        dispatch(getAllVehiclesPlateNumber())
         dispatch(getAllMenuEntries(menu_id))
     }, [''])
 
@@ -54,10 +57,14 @@ export default (props) => {
 
     const onSubmit = (data) =>{
         
+        if(plateNumber == '') {
+            setPlateNumberError('this field is required')
+            return
+        }
         if(("name" in uploadedPdf) && uploadedPdf != null) {
 
-            
             const formData = new FormData()
+            formData.append("vehicle_id", plateNumber.id)
             formData.append('pdf', uploadedPdf,uploadedPdf.name)
             formData.append('data', JSON.stringify(formatDataHeaders(data)) )
             formData.append('menu_id', menu_id)
@@ -196,28 +203,27 @@ export default (props) => {
                                         <ProgressSpinner />
 
                                     :
+                                        (vehicleReducer.allVehiclePlates.length > 0)?
+                                            <FormControl style={{ width: '100%' }}>
+                                                
+                                                <Autocomplete
+                                                    id="plate_number"
+                                                    options={vehicleReducer.allVehiclePlates}
+                                                    getOptionLabel={(option) => option.plate_number}                                                    
+                                                    value={plateNumber}
+                                                    onChange={(event, newValue) => {
+                                                    setPlateNumber(newValue);
+                                                    }}
+                                                    renderInput={(params) => <TextField 
+                                                        required {...params} label="Plaka No" margin="normal"
+                                                        fullWidth
+                                                    />}
+                                                />
+                                                <span>{plateNumberError}</span>
 
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Plate Number</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                {...register('plate_number',{ required: true })}
-                                            >
-
-                                                {
-                                                    (Array.isArray(vehicleReducer.data.data))?
-                                                        vehicleReducer.data.data.map((item)=>(
-                                                            <MenuItem key={item.id} value={item.plate_number}>{item.plate_number}</MenuItem>
-                                                        ))
-                                                    :
-                                                    <MenuItem disabled >0 results found</MenuItem>
-                                                }
-                                            </Select>
-                                            {errors["plate_number"] && <span>This field is required</span>}
-                                        </FormControl>
-
-
+                                            </FormControl>
+                                        :
+                                        <div>O results found</div>
 
                                 }
                         </Grid>

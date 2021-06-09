@@ -1,6 +1,7 @@
 
 import { Button, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import React, { forwardRef, useEffect, useState } from 'react'
+import Autocomplete from '@material-ui/lab/Autocomplete';   
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
 import DatePicker from "react-datepicker";
@@ -13,15 +14,19 @@ import { Close } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
-import { getAllVehicles } from '../../../../store/reducers/vehicle/vehicle.actions';
+import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
 import { setNewPenalty } from '../../../../store/reducers/penalty/penalty.actions';
 
 export default (props) => {
 
     const classes = useStyles();
+    const [plateNumber, setPlateNumber] = useState('');
+    const [plateNumberError, setPlateNumberError] = useState('');
     const [penaltyDate, setPenaltyDate] = useState(new Date());
     const [paymentDate, setPaymentDate] = useState(new Date());
+    const [notificationDate, setNotificationDate] = useState(new Date());
+    const [penaltyHour, setPenaltyHour] = useState(new Date());
     const [fileError, setFileError] = useState('')
     const [uploadedPdf, setUploadedPdf] = useState(null)
     const dispatch = useDispatch()
@@ -34,7 +39,7 @@ export default (props) => {
 
     useEffect(() => {
         
-        dispatch(getAllVehicles())
+        dispatch(getAllVehiclesPlateNumber())
     }, [''])
 
     const links = [
@@ -55,14 +60,68 @@ export default (props) => {
 
     const textFields = [
         {
-            placeholder: "Penalty type",
-            name: "penalty type",
+            placeholder: "MAKBUZ-NO",
+            name: "receipt_number",
             type: "text"
 
         },
         {
-            placeholder: "Receipt Number",
-            name: "receipt_number",
+            placeholder: "CEZA MADDE",
+            name: "penalty_article",
+            type: "text"
+
+        },
+        {
+            placeholder: "CEZATUTAR ",
+            name: "penalty",
+            type: "text"
+
+        },
+        {
+            placeholder: "NOT ",
+            name: "note",
+            type: "text"
+
+        },
+        {
+            placeholder: "ÖDEME YAPAN",
+            name: "paying",
+            type: "text"
+
+        },
+        {
+            placeholder: "KAYNAK ",
+            name: "source",
+            type: "text"
+
+        },
+        {
+            placeholder: "BİRİM  ",
+            name: "unit",
+            type: "text"
+
+        },
+        {
+            placeholder: "İADE ID  ",
+            name: "return_id",
+            type: "text"
+
+        },
+        {
+            placeholder: "PESİNTUTAR ",
+            name: "pesintutar",
+            type: "text"
+
+        },
+        {
+            placeholder: "İDAYSİSID",
+            name: "daysisid",
+            type: "text"
+
+        },
+        {
+            placeholder: "DAYSİSONAY",
+            name: "daysisonay",
             type: "text"
 
         },
@@ -91,13 +150,21 @@ export default (props) => {
 
     
     const onSubmit = (data)=> {
+
+        if(plateNumber == '') {
+            setPlateNumberError('this field is required')
+            return
+        }
         if(("name" in uploadedPdf) && uploadedPdf != null) {
 
             
             const formData = new FormData()
             formData.append('pdf', uploadedPdf,uploadedPdf.name)
+            formData.append("vehicle_id", plateNumber.id)
             formData.append("penalty_date", formatDate(new Date(penaltyDate)))
             formData.append("payment_date", formatDate(new Date(paymentDate)))
+            formData.append("notification_date", formatDate(new Date(notificationDate)))
+            formData.append("penalty_hour", (new Date(penaltyHour).toLocaleTimeString('it-IT')))
             for (const key in data) {
                 
                 formData.append(key, data[key])
@@ -164,7 +231,7 @@ export default (props) => {
 
                 
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Typography className={classes.header}>Add New Penalty</Typography>
+                    <Typography className={classes.header}>Yeni Metin Belgesi</Typography>
                     <Grid 
                         container 
                         spacing={2}
@@ -181,27 +248,25 @@ export default (props) => {
                                     <ProgressSpinner />
                                 
                                 :
+                                    (vehicleReducer.allVehiclePlates.length > 0)?
+                                        <FormControl className={classes.formControl}>
+                                            
+                                            <Autocomplete
+                                                id="plate_number"
+                                                options={vehicleReducer.allVehiclePlates}
+                                                getOptionLabel={(option) => option.plate_number}
+                                                style={{ width: '100%' }}
+                                                value={plateNumber}
+                                                onChange={(event, newValue) => {
+                                                setPlateNumber(newValue);
+                                                }}
+                                                renderInput={(params) => <TextField required {...params} label="Plaka No" margin="normal" />}
+                                            />
+                                            <span>{plateNumberError}</span>
 
-                                     <FormControl className={classes.formControl}>
-                                        <InputLabel id="vehicle">Vehicle Plate Number</InputLabel>
-                                        <Select
-                                            name="vehicle_id"
-                                            labelId="vehicle"
-                                            id="vehicle-select"
-                                            {...register('vehicle_id',{ required: true })}
-                                        >
-
-                                            {
-                                                (Array.isArray(vehicleReducer.data.data))?
-                                                    vehicleReducer.data.data.map((item)=>(
-                                                        <MenuItem key={item.id} value={item.id}>{item.plate_number}</MenuItem>
-                                                    ))
-                                                :
-                                                <MenuItem disabled >0 results found</MenuItem>
-                                            }
-                                        </Select>
-                                        {errors["status"] && <span>This field is required</span>}
-                                    </FormControl>
+                                        </FormControl>
+                                    :
+                                    <div>O results found</div>
                                 
                             }
                         </Grid>
@@ -234,12 +299,12 @@ export default (props) => {
                                 xs={12} 
                                 md={6} 
                                 >
-                                    <Typography variant="h6" className={classes.label}>Penalty Date</Typography>
+                                    <Typography variant="h6" className={classes.label}>CEZA TARİHİ</Typography>
                                     <DatePicker 
                                         selected={penaltyDate}
                                         customInput={<ExampleCustomInput />}
                                         onChange={date => setPenaltyDate(date)}
-                                        label="Penalty Date"
+                                        label="CEZA TARİHİ"
                                         name="penalty_date"
                                     />
                                     {errors["penalty_date"] && <span>This field is required</span>}
@@ -249,16 +314,52 @@ export default (props) => {
                                 xs={12}
                                 md={6}
                             >
-                                    <Typography variant="h6" className={classes.label}>Payment Date</Typography>
+                                    <Typography variant="h6" className={classes.label}>ÖDEME TARİHİ</Typography>
                                     <DatePicker 
                                         selected={paymentDate}
                                         customInput={<ExampleCustomInput />}
                                         onChange={date => setPaymentDate(date)}
-                                        label="Payment Date"
-                                        placeholder="Payment Date"
+                                        label="ÖDEME TARİHİ"
+                                        placeholder="ÖDEME TARİHİ"
                                         name="payment_date"
                                     />
                                     {errors["payment_date"] && <span>This field is required</span>}
+                            </Grid>
+                            <Grid
+                                item 
+                                xs={12}
+                                md={6}
+                            >
+                                    <Typography variant="h6" className={classes.label}>TEBLİG TARİHİ</Typography>
+                                    <DatePicker 
+                                        selected={notificationDate}
+                                        customInput={<ExampleCustomInput />}
+                                        onChange={date => setNotificationDate(date)}
+                                        label="TEBLİG TARİHİ"
+                                        placeholder="TEBLİG TARİHİ"
+                                        name="notification_date"
+                                    />
+                                    {errors["notification_date"] && <span>This field is required</span>}
+                            </Grid>
+                            <Grid
+                                item 
+                                xs={12}
+                                md={6}
+                            >
+                                    <Typography variant="h6" className={classes.label}>CEZA-SAAT</Typography>
+                                    <DatePicker 
+                                        selected={penaltyHour}
+                                        customInput={<ExampleCustomInput />}
+                                        onChange={date => setPenaltyHour(date)}
+                                        showTimeSelect
+                                        showTimeSelectOnly
+                                        timeIntervals={1}
+                                        dateFormat="hh:mm:ss "
+                                        label="CEZA-SAAT"
+                                        placeholder="CEZA-SAAT"
+                                        name="penalty_hour"
+                                    />
+                                    {errors["penalty_hour"] && <span>This field is required</span>}
                             </Grid>
 
                             <Grid
@@ -266,7 +367,7 @@ export default (props) => {
                                 xs={12}
                                 >
                                     <FormControl className={classes.formControl}>
-                                        <InputLabel id="demo-simple-select-label">Payment Status</InputLabel>
+                                        <InputLabel id="demo-simple-select-label">ÖDEME DURUMU</InputLabel>
                                         <Select
                                             name="status"
                                             labelId="demo-simple-select-label"
@@ -318,7 +419,8 @@ export default (props) => {
                 >
                     <Grid item xs={8}>
                         <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                            Submit
+                            
+                            {penaltyReducer.loading ? <ProgressSpinner />: "Submit"}
                         </Button>
 
                     </Grid>

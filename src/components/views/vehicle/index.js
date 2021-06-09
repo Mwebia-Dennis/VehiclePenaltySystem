@@ -1,6 +1,5 @@
 import React, { useEffect,useState } from 'react'
 import Table from '../../shared_components/table';
-import { VehicleData, VehicleTableHeader } from '../../data/VehicleData'
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
@@ -80,7 +79,6 @@ export default (props) => {
 
         if(data.query != '') {
             const formData = new FormData()
-            formData.append('column', data.column.toLowerCase())
             formData.append('value', data.query.toLowerCase())
 
             dispatch(searchVehiclesData(formData))
@@ -165,22 +163,6 @@ export default (props) => {
 
     const formatMainActionData = (data) => {
 
-        const headers = formatSortHeaders()
-
-        if(headers.includes('created_at')) {
-            const index = headers.indexOf('created_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
-        if(headers.includes('updated_at')) {
-            const index = headers.indexOf('updated_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
-        
-        data.searchOptions = headers;
         data.sortByOptions = formatSortHeaders();
         return data;
     }
@@ -192,21 +174,22 @@ export default (props) => {
             <div>
 
                 <BreadCrumb links={links} />
+                <MainActionContainer 
+                    data={formatMainActionData(pageType.vehicle)}
+                    dataSet={formatData( vehicleData.data)} 
+                    dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
+                    sortingValues={sortingValues}
+                    handleSearching = {handleSearching}
+                    handleRefreshPage={handleRefreshPage}
+                    handleLimitEntriesChange={handleLimitEntriesChange}
+                    handleSortByChange={handleSortByChange}
+                />
                 {
                     vehicleReducer.loading?
                         <ProgressBarSpinner />
                     :("data" in vehicleData)?
                     <>
-                        <MainActionContainer 
-                            data={formatMainActionData(pageType.vehicle)}
-                            dataSet={formatData( vehicleData.data)} 
-                            dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
-                            sortingValues={sortingValues}
-                            handleSearching = {handleSearching}
-                            handleRefreshPage={handleRefreshPage}
-                            handleLimitEntriesChange={handleLimitEntriesChange}
-                            handleSortByChange={handleSortByChange}
-                        />
+                        
     
                         <Table rows= {formatData( vehicleData.data)} 
                             tableHeader ={ getTableHeaders(formatData( vehicleData.data)) }/>

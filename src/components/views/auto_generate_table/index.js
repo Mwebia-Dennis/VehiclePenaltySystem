@@ -130,12 +130,17 @@ export default (props) => {
                     formattedData['pdf'] = <IconButton onClick={handleModalOpen}> 
                             <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                         </IconButton>
+                }else if(header.trim() == 'plate_number') {
+                    continue
                 }else {
                     formattedData[header] = __data[header]
                 }
 
                 
             }
+            formattedData["plate_number"] = data[key].vehicle.plate_number
+            formattedData["created_at"] = data[key].created_at
+            formattedData["updated_at"] = data[key].updated_at
             
             formattedData["action"] = <>
                     <IconButton color="primary"> <Edit /> </IconButton>
@@ -167,6 +172,27 @@ export default (props) => {
 
         <div>
             <BreadCrumb links={links} />
+            <MainActionContainer 
+                // data={menuReducer.singleMenuData.name} 
+                data={{
+                    type: menuReducer.singleMenuData.name,
+                    menu_id: menuReducer.singleMenuData.id,
+                    sortByOptions: [
+                        "created_at",
+                        "updated_at"
+                    ],
+                    searchOptions: ["keyword"],
+                }}
+                dataSet={tableData} 
+                dataSetHeaders={tableHeaders} 
+                handleSearching = {handleSearching}
+                handleRefreshPage={handleRefreshPage}
+                sortingValues={sortingValues}
+                handleSearching = {handleSearching}
+                handleRefreshPage={handleRefreshPage}
+                handleLimitEntriesChange={handleLimitEntriesChange}
+                handleSortByChange={handleSortByChange}
+            />
 
             {
                 menuDataReducer.loading?
@@ -176,27 +202,6 @@ export default (props) => {
                 (!Array.isArray(menuReducer.singleMenuData))?
                     <>
 
-                        <MainActionContainer 
-                            // data={menuReducer.singleMenuData.name} 
-                            data={{
-                                type: menuReducer.singleMenuData.name,
-                                menu_id: menuReducer.singleMenuData.id,
-                                sortByOptions: [
-                                    "created_at",
-                                    "updated_at"
-                                ],
-                                searchOptions: ["keyword"],
-                            }}
-                            dataSet={tableData} 
-                            dataSetHeaders={tableHeaders} 
-                            handleSearching = {handleSearching}
-                            handleRefreshPage={handleRefreshPage}
-                            sortingValues={sortingValues}
-                            handleSearching = {handleSearching}
-                            handleRefreshPage={handleRefreshPage}
-                            handleLimitEntriesChange={handleLimitEntriesChange}
-                            handleSortByChange={handleSortByChange}
-                        />
 
                         {
                             ("data" in menuData)?

@@ -120,7 +120,6 @@ export default (props) => {
 
         if(data.query != '') {
             const formData = new FormData()
-            formData.append('column', data.column.toLowerCase())
             formData.append('value', data.query.toLowerCase())
 
             dispatch(searchUsersData(formData))
@@ -162,23 +161,6 @@ export default (props) => {
     }
 
     const formatMainActionData = (data) => {
-
-        const headers = formatSortHeaders()
-
-        if(headers.includes('created_at')) {
-            const index = headers.indexOf('created_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
-        if(headers.includes('updated_at')) {
-            const index = headers.indexOf('updated_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
-        
-        data.searchOptions = headers;
         data.sortByOptions = formatSortHeaders();
         return data;
     }
@@ -187,6 +169,16 @@ export default (props) => {
         <>
             <div>
                 <BreadCrumb links={links} />
+                <MainActionContainer 
+                    data={formatMainActionData(pageType.users)} 
+                    dataSet={formatData( userData.data)} 
+                    dataSetHeaders={getTableHeaders(formatData( userData.data))}
+                    sortingValues={sortingValues}
+                    handleSearching = {handleSearching}
+                    handleRefreshPage={handleRefreshPage}
+                    handleLimitEntriesChange={handleLimitEntriesChange}
+                    handleSortByChange={handleSortByChange}
+                />
 
                 {
                     userReducer.loading?
