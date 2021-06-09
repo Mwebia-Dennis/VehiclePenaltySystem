@@ -35,15 +35,19 @@ export default function CustomizedTables(props) {
           {rows.map((item, index) => {
 
                 const cellsData = [];
+                let i = 0
                 for (const key in item) {
-                    cellsData.push(<StyledTableCell align="center">{item[key]}</StyledTableCell>)
+                  
+                  if(i == 1) {
+                    
+                    cellsData.push(<StyledTableCell  component="th" scope="row" align="center">{index + 1}</StyledTableCell>)
+                  }
+                  
+                  cellsData.push(<StyledTableCell align="center">{item[key]}</StyledTableCell>)
+                  i++
                 }
                 return (
                     <StyledTableRow key={index}>
-                        <StyledTableCell component="th" scope="row">
-                            {index + 1}
-                        </StyledTableCell>
-
 
                         { cellsData }
                     </StyledTableRow>

@@ -6,6 +6,7 @@ import {
     SET_VEHICLE_DATA,
     SET_VEHICLE_ERROR,
     SET_VEHICLE_MESSAGE,
+    SET_VEHICLE_PLATES_DATA,
 } from './vehicle.types'
 
 
@@ -14,6 +15,7 @@ const initialState = {
     data: {},
     errors: null,
     message: null,
+    allVehiclePlates: [],
   };
 export const vehicleReducer = (state = initialState, action)=> {
 
@@ -22,6 +24,12 @@ export const vehicleReducer = (state = initialState, action)=> {
             return {
                 ...state,
                 data: action.payload,
+                loading: false,
+            };
+        case SET_VEHICLE_PLATES_DATA:
+            return {
+                ...state,
+                allVehiclePlates: action.payload,
                 loading: false,
             };
         

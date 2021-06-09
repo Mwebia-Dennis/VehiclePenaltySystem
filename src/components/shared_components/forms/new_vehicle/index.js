@@ -1,11 +1,13 @@
 import { Button, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
-import React from 'react'
+import React, {forwardRef, useState} from 'react'
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Close } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { setNewVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
@@ -14,6 +16,7 @@ import { CLEAR_VEHICLE_ERROR, CLEAR_VEHICLE_MESSAGE } from '../../../../store/re
 export default (props) => {
 
     const classes = useStyles();
+    const [deliveryDate, setDeliveryDate] = useState(new Date());
     const dispatch = useDispatch()
     const { register, handleSubmit, formState:{ errors } } = useForm()
     const navigate = useNavigate()
@@ -40,32 +43,58 @@ export default (props) => {
 
     const textFields = [
         {
-            placeholder: "Plate Number",
+            placeholder: "Plaka No",
             name: "plate_number"
 
         },
         {
-            placeholder: "Name",
-            name: "owner_name"
+            placeholder: "Araç Grubu",
+            name: "vehicle_group"
 
         },
         {
-            placeholder: "Surname",
-            name: "owner_surname"
+            placeholder: "Marka-Model",
+            name: "brand_model"
 
         },
         {
-            placeholder: "Duty location",
-            name: "duty_location"
-        },{
-            placeholder: "unit",
-            name: "unit"
+            placeholder: "Şase No",
+            name: "chassis_number"
+        },
+        {
+            placeholder: "Motor No",
+            name: "motor_number"
+        },
+        {
+            placeholder: "Model Yılı",
+            name: "model_year"
+        },
+        {
+            placeholder: "Renk",
+            name: "color"
+        },
+        {
+            placeholder: "Dosya No",
+            name: "file_number"
+        },
+        {
+            placeholder: "Künye",
+            name: "tag"
+        },
+        {
+            placeholder: "Alım Tipi",
+            name: "reception_type"
+        },
+        {
+            placeholder: "Demirbaş No",
+            name: "asset_number"
         }
     ]
 
 
     const onSubmit = (data)=> {
         //handleBackdropToggle()
+        data["delivery_date"] = formatDate(new Date(deliveryDate))
         if('id' in authReducer.data) {
 
             dispatch(setNewVehicle(data, authReducer.data.id, navigate))
@@ -105,6 +134,32 @@ export default (props) => {
         })
     }
 
+    function formatDate(date) {
+        var mm = date.getMonth() + 1; // getMonth() is zero-based
+        var dd = date.getDate();
+      
+        return [date.getFullYear(),
+                (mm>9 ? '' : '0') + mm,
+                (dd>9 ? '' : '0') + dd
+               ].join('-');
+    }
+
+    const ExampleCustomInput = forwardRef(
+        ({ value, onClick, name}, ref) => (
+
+            <TextField 
+                required 
+                ref={ref}
+                value={value}
+                onClick={onClick}
+                className= {classes.textfield}
+                fullWidth
+                name={name}
+
+            />
+        ),
+      );
+
     return (
 
         <>
@@ -129,7 +184,8 @@ export default (props) => {
                                         xs={12}
                                         key={index}                                
                                     >
-                                        <TextField 
+                                        <TextField
+                                            type="text"
                                             required 
                                             label={item.placeholder} 
                                             placeholder={item.placeholder}
@@ -142,6 +198,22 @@ export default (props) => {
                                     </Grid>
                                 ))
                             }
+
+                            
+                            <Grid
+                                item 
+                                xs={12} 
+                                >
+                                    <Typography variant="h6" className={classes.label}>Kuruma Teslim Tarihi ve Saati</Typography>
+                                    <DatePicker 
+                                        selected={deliveryDate}
+                                        customInput={<ExampleCustomInput />}
+                                        onChange={date => setDeliveryDate(date)}
+                                        label="CEZA TARİHİ"
+                                        name="delivery_date"
+                                    />
+                                    {errors["delivery_date"] && <span>This field is required</span>}
+                            </Grid>
                             
 
                     </Grid>

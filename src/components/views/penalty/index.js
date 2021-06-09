@@ -7,7 +7,7 @@ import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
 import { pageType }  from '../../../utils/constants'
 import pdf_logo from '../../../images/pdf_logo.jpg'
-import { Avatar, Chip, IconButton } from "@material-ui/core";
+import { Avatar, Checkbox, Chip, FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
@@ -19,6 +19,7 @@ export default (props) => {
     
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
+    const [selectedData, setSelectedData] = useState('')
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const penaltyData = useSelector((state) => state.penaltyReducer.data)
@@ -27,6 +28,7 @@ export default (props) => {
         limitEntries:25,
         page: 1
     })
+
 
     function handleModalOpen(){
         console.log('clicked')
@@ -89,7 +91,6 @@ export default (props) => {
 
         if(data.query != '') {
             const formData = new FormData()
-            formData.append('column', data.column.toLowerCase())
             formData.append('value', data.query.toLowerCase())
 
             dispatch(searchPenaltiesData(formData))
@@ -97,12 +98,46 @@ export default (props) => {
             handleRefreshPage()
         }
     }
-        
+
+    const toggleCheckingAllCheckboxes = ()=> {
+
+        if(selectedData.split(',').length  === penaltyData.data.length) {
+            setSelectedData([''].join())
+        }else {
+            const selected = penaltyData.data.map((item)=>item.id)
+            setSelectedData(selected.join())
+        }
+
+    }
+    const handleCheckBoxChange = (e)=> {
+        const value = e.target.value
+        let selected = selectedData.split(',')
+        selected = (selected['0'] === "")?[]:selected
+
+        if(checkIfDataExists(e.target.value)) {
+            const index = selected.indexOf(value);
+            if (index > -1) {
+                selected.splice(index, 1);
+            }
+        }else {
+            selected.push(value)
+        }
+        setSelectedData(selected.join())
+    }
+    
+    function checkIfDataExists(data) {
+        console.log(selectedData.split(','))
+        return selectedData.split(',').includes(data.toString())
+    }
     function formatData(data){
         const allData = []
         let formattedData = {}
         for(const key in data) {
 
+            formattedData['select'] = <FormControlLabel control={
+                <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
+                    onChange={handleCheckBoxChange}/>
+            } />
             for (const header in data[key]) {
 
                 
@@ -136,7 +171,7 @@ export default (props) => {
     }
 
     function getTableHeaders(data){
-        const tableHeaders = ["#"]
+        const tableHeaders = []
         for(const key in data) {
             
             for (const header in data[key]) {
@@ -145,6 +180,9 @@ export default (props) => {
             break
 
         }
+
+        
+        tableHeaders.splice(1, 0, "#");
 
         return tableHeaders
     }
@@ -188,33 +226,41 @@ export default (props) => {
         return headers;
     }
     const formatMainActionData = (data) => {
-
-        const headers = formatMoreData()
-        // removing unwanted cols
-        
-        if(headers.includes('created_at')) {
-            const index = headers.indexOf('created_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
-        if(headers.includes('updated_at')) {
-            const index = headers.indexOf('updated_at');
-            if (index > -1) {
-                headers.splice(index, 1);
-            }
-        }
         
         data.sortByOptions = formatMoreData();
-        data.searchOptions = headers;
 
         return data;
     }
+
+    const formatExcelData = (data) => {
+        
+        const selected = selectedData.split(',')
+        if(!Array.isArray(data)) {
+            return []
+        }
+        return data.filter((item)=> {
+            if(selected.includes(item.id.toString())) {
+                return item;
+            }
+        })
+    }
+
 
     return (
 
         <div>
             <BreadCrumb links={links} />
+            <MainActionContainer 
+                data={formatMainActionData(pageType.penalty)}
+                dataSet={formatData(formatExcelData( penaltyData.data))} 
+                dataSetHeaders={getTableHeaders(formatData( penaltyData.data))}
+                sortingValues={sortingValues}
+                handleSearching = {handleSearching}
+                handleRefreshPage={handleRefreshPage}
+                handleLimitEntriesChange={handleLimitEntriesChange}
+                handleSortByChange={handleSortByChange}
+                toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+            />
 
             {
                 penaltyReducer.loading?
@@ -222,16 +268,6 @@ export default (props) => {
                 :
                     ("data" in penaltyData)?
                     <>
-                        <MainActionContainer 
-                            data={formatMainActionData(pageType.penalty)}
-                            dataSet={formatData( penaltyData.data)} 
-                            dataSetHeaders={getTableHeaders(formatData( penaltyData.data))}
-                            sortingValues={sortingValues}
-                            handleSearching = {handleSearching}
-                            handleRefreshPage={handleRefreshPage}
-                            handleLimitEntriesChange={handleLimitEntriesChange}
-                            handleSortByChange={handleSortByChange}
-                        />
                         <Table rows= {formatData( penaltyData.data)} 
                             tableHeader ={ getTableHeaders(formatData( penaltyData.data)) }/>
                         <Paginator paginationCount={penaltyData.last_page} 

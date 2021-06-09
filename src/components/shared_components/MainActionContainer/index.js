@@ -1,5 +1,5 @@
-import { Button, FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Typography } from '@material-ui/core'
-import { Add, Print, Refresh, Settings } from '@material-ui/icons';
+import { Button, FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Tooltip, Typography } from '@material-ui/core'
+import { Add, CheckBox, Print, Refresh, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import ColumnSelectionModal from '../columnSelectionModal';
 import SearchBar from "material-ui-search-bar";
 import { useDispatch } from 'react-redux';
-import { getUserData, searchUsersData } from '../../../store/reducers/users/user.actions';
 import SearchIcon from '@material-ui/icons/Search';
 
 
@@ -22,7 +21,8 @@ export default (props) => {
         handleSearching, 
         handleRefreshPage, 
         handleSortByChange,
-        handleLimitEntriesChange 
+        handleLimitEntriesChange,
+        toggleCheckingAllCheckboxes
     } = props;
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -30,17 +30,11 @@ export default (props) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [columnSelectionOpen, setColumnSelectionOpen] = useState(false);
     const [searchQueryValue, setSearchQueryValue] = useState('')
-    const searchOptions = data.searchOptions;
     const limitEntriesData = ["10", "25", "50", "100"];
     const sortByData = data.sortByOptions;
-    const isMenuOpen = Boolean(anchorEl);
-    const [searchQuery, setSearchQuery] = useState('');
 
 
 
-    if(searchQuery == '' && data.searchOptions.length > 0) {
-        setSearchQuery(data.searchOptions["0"])
-    }
     const handleFormOpen = () => {
 
         //data
@@ -63,26 +57,9 @@ export default (props) => {
     }
 
     const handleSearchButtonClick = ()=> {
-        handleSearching({column: searchQuery, query: searchQueryValue})
+        handleSearching({query: searchQueryValue})
     }
-
-    const handleSearchQueryChange = (value) => {
-        handleMenuClose()
-        setSearchQuery(value);
-        
-    };
-
-
-
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
-    
+  
 
     const handleColumnSelectionOpen = () => {
         setColumnSelectionOpen(true);
@@ -104,33 +81,6 @@ export default (props) => {
 
     }
 
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-
-            {
-                searchOptions.map((item, index)=>(
-                    <MenuItem 
-                        key={index} 
-                        onClick={()=>{handleSearchQueryChange(item)}} 
-                        value={item}
-                    >
-                        Search by {item} 
-                    </MenuItem>
-                ))
-            }
-
-        </Menu>
-    );
-
 
     return (
 
@@ -140,38 +90,54 @@ export default (props) => {
             <Grid container spacing={1}>
                 <Grid item xs={3} md={1}>
                     
-                    <IconButton 
-                        variant="contained" 
-                        color="primary"
-                        onClick={handleFormOpen}
-                    ><Add /> {/*data.type*/}</IconButton>
+                    <Tooltip title="Add New Data" aria-label="add" placement="top">
+                            
+                        <IconButton 
+                            variant="contained" 
+                            color="primary"
+                            onClick={handleFormOpen}
+                        ><Add /> {/*data.type*/}</IconButton>
+                    </Tooltip>
                 </Grid>
                 
                 <Grid item xs={3} md={1}>
-                      
-                    <IconButton variant="contained" 
-                        color="primary" 
-                        onClick={handleColumnSelectionOpen}
-                    >
-                       <Print />
-                    </IconButton>
+                     
+                    <Tooltip title="Export To Excel" aria-label="export" placement="top">
+                        <IconButton variant="contained" 
+                            color="primary" 
+                            onClick={handleColumnSelectionOpen}
+                        >
+                        <Print />
+                        </IconButton>
+                    </Tooltip> 
                 
-                </Grid><Grid item xs={3} md={1}>
-                      
-                      <IconButton variant="contained" 
-                          color="primary" 
-                          onClick={handleRefreshPage}
-                      >
-                         <Refresh />
-                      </IconButton>
+                </Grid>
+                <Grid item xs={3} md={1}>
+                    
+                    <Tooltip title="Refresh Page" aria-label="refresh page" placement="top">   
+                        <IconButton variant="contained" 
+                            color="primary" 
+                            onClick={handleRefreshPage}
+                        >
+                            <Refresh />
+                        </IconButton>
+                    </Tooltip>
+                  
+                </Grid>
+                <Grid item xs={3} md={1}>
+                    
+                    <Tooltip title="Select All Rows" aria-label="select all rows" placement="top">  
+                        <IconButton variant="contained" 
+                            color="primary" 
+                            onClick={toggleCheckingAllCheckboxes}
+                        >
+                            <CheckBox />
+                        </IconButton>
+
+                    </Tooltip>
                   
                   </Grid>
                 <Grid item xs={12} md={4}>
-                    {/* <input type="text" style={{width: '80%', padding: '10px'}} 
-                        placeholder={"Search by "+searchQuery}
-                        onChange={handleSearchBarChange}
-                        value={searchQueryValue}
-                        /> */}
 
 
                         <Grid container>
@@ -181,7 +147,7 @@ export default (props) => {
                                     value={searchQueryValue}
                                     onChange={(newValue) => handleSearchBarChange(newValue)}
                                     onRequestSearch={handleSearchButtonClick}
-                                    placeholder={"Search by "+searchQuery}
+                                    placeholder={"Search... "}
                                 />
                             </Grid>
                             
@@ -204,21 +170,6 @@ export default (props) => {
                                     </Grid>
                                 :<></>    
                             }
-
-                            <Grid item xs={2}>
- 
-                                <IconButton
-                                    aria-label="show more"
-                                    // aria-controls={mobileMenuId}
-                                    aria-haspopup="true"
-                                    onClick={handleProfileMenuOpen}
-                                    color="inherit"
-                                    className={classes.iconButton}
-                                    variant="outlined" color="primary"
-                                >
-                                    <Settings />
-                                </IconButton>
-                            </Grid>
 
                         </Grid>
 
@@ -245,7 +196,7 @@ export default (props) => {
                         <Typography variant="small">Entries</Typography> 
                     </div> 
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={2}>
                 
                     <FormControl className={classes.formControl}>
                         <InputLabel id="demo-simple-select-label">Sort by:</InputLabel>
@@ -277,8 +228,7 @@ export default (props) => {
                 dataSet={dataSet} 
                 dataSetHeaders={dataSetHeaders}
             />
-
-            {renderMenu}   
+ 
 
         </div>
     );
