@@ -5,9 +5,9 @@ import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
+import { deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
 import { Delete, Edit } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 
@@ -18,6 +18,8 @@ export default (props) => {
     const dispatch = useDispatch()
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
     const vehicleData = useSelector((state) => state.vehicleReducer.data)
+    const authReducer = useSelector((state) => state.authReducer)
+    const [selectedData, setSelectedData] = useState('')
     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
@@ -87,11 +89,23 @@ export default (props) => {
         }
     }
 
+    const handleDelete = (vehicle_id)=> {
+        if('id' in authReducer.data) {
+
+            dispatch(deleteVehicle(authReducer.data.id, vehicle_id))
+        }
+
+    }
+
     function formatData(data){
         const allData = []
         let formattedData = {}
         for(const key in data) {
 
+            formattedData['select'] = <FormControlLabel control={
+                <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
+                    onChange={handleCheckBoxChange}/>
+            } />
             for (const header in data[key]) {
 
                 
@@ -105,7 +119,7 @@ export default (props) => {
             
             formattedData["action"] = <>
                     <IconButton color="primary"> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -157,6 +171,12 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
+        if(headers.includes('select')) {
+            const index = headers.indexOf('select');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
 
         return headers;
     }
@@ -167,6 +187,49 @@ export default (props) => {
         return data;
     }
 
+    const toggleCheckingAllCheckboxes = ()=> {
+
+        const __selectedData = selectedData.split(',').length === 1 && selectedData.split(',')["0"]=== ''?[]:selectedData.split(',')
+        if(__selectedData.length  === vehicleData.data.length) {
+            setSelectedData([''].join())
+        }else {
+            const selected = vehicleData.data.map((item)=>item.id)
+            setSelectedData(selected.join())
+        }
+
+    }
+    const handleCheckBoxChange = (e)=> {
+        const value = e.target.value
+        let selected = selectedData.split(',')
+        selected = (selected['0'] === "")?[]:selected
+
+        if(checkIfDataExists(e.target.value)) {
+            const index = selected.indexOf(value);
+            if (index > -1) {
+                selected.splice(index, 1);
+            }
+        }else {
+            selected.push(value)
+        }
+        setSelectedData(selected.join())
+    }
+    
+    function checkIfDataExists(data) {
+        console.log(selectedData.split(','))
+        return selectedData.split(',').includes(data.toString())
+    }
+    const formatExcelData = (data) => {
+        
+        const selected = selectedData.split(',')
+        if(!Array.isArray(data)) {
+            return []
+        }
+        return data.filter((item)=> {
+            if(selected.includes(item.id.toString())) {
+                return item;
+            }
+        })
+    }
 
     return (
 
@@ -176,13 +239,14 @@ export default (props) => {
                 <BreadCrumb links={links} />
                 <MainActionContainer 
                     data={formatMainActionData(pageType.vehicle)}
-                    dataSet={formatData( vehicleData.data)} 
+                    dataSet={formatData(formatExcelData( vehicleData.data))}
                     dataSetHeaders={getTableHeaders(formatData( vehicleData.data))}
                     sortingValues={sortingValues}
                     handleSearching = {handleSearching}
                     handleRefreshPage={handleRefreshPage}
                     handleLimitEntriesChange={handleLimitEntriesChange}
                     handleSortByChange={handleSortByChange}
+                    toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
                 />
                 {
                     vehicleReducer.loading?

@@ -119,4 +119,31 @@ export const searchVehiclesData = (data,sort_by = 'created_at', page = 1, perPag
 }
 
 
+export const deleteVehicle = (user_id, vehicle_id) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_VEHICLE_DATA })
+    axios.delete('users/'+parseInt(user_id)+'/vehicle/'+parseInt(vehicle_id))
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_VEHICLE_ERROR})
+        dispatch({
+            type: SET_VEHICLE_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getAllVehicles())
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_VEHICLE_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 

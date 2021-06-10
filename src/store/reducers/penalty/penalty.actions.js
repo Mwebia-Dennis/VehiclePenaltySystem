@@ -94,4 +94,31 @@ export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPa
 }
 
 
+export const deletePenalty = (user_id, penalty_id) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_PENALTY_DATA })
+    axios.delete('users/'+parseInt(user_id)+'/penalty/'+parseInt(penalty_id))
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_PENALTY_ERROR})
+        dispatch({
+            type: SET_PENALTY_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getAllPenalties())
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_PENALTY_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 

@@ -6,7 +6,7 @@ import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllUsersData, searchUsersData } from '../../../store/reducers/users/user.actions';
-import { Avatar, IconButton } from '@material-ui/core';
+import { Avatar, Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
@@ -16,6 +16,7 @@ export default (props) => {
     
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
+    const [selectedData, setSelectedData] = useState('')
     const userData = useSelector((state) => state.userReducer.data)
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
@@ -71,6 +72,10 @@ export default (props) => {
         let formattedData = {}
         for(const key in data) {
 
+            formattedData['select'] = <FormControlLabel control={
+                <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
+                    onChange={handleCheckBoxChange}/>
+            } />
             for (const header in data[key]) {
 
                 
@@ -86,10 +91,6 @@ export default (props) => {
                 
             }
             
-            formattedData["action"] = <>
-                    <IconButton color="primary"> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
-                </>
             allData.push(formattedData)
             formattedData = {}
 
@@ -128,6 +129,37 @@ export default (props) => {
         }
     }
 
+    const toggleCheckingAllCheckboxes = ()=> {
+
+        const __selectedData = selectedData.split(',').length === 1 && selectedData.split(',')["0"]=== ''?[]:selectedData.split(',')
+        if(__selectedData.length  === userData.data.length) {
+            setSelectedData([''].join())
+        }else {
+            const selected = userData.data.map((item)=>item.id)
+            setSelectedData(selected.join())
+        }
+
+    }
+    const handleCheckBoxChange = (e)=> {
+        const value = e.target.value
+        let selected = selectedData.split(',')
+        selected = (selected['0'] === "")?[]:selected
+
+        if(checkIfDataExists(e.target.value)) {
+            const index = selected.indexOf(value);
+            if (index > -1) {
+                selected.splice(index, 1);
+            }
+        }else {
+            selected.push(value)
+        }
+        setSelectedData(selected.join())
+    }
+    
+    function checkIfDataExists(data) {
+        console.log(selectedData.split(','))
+        return selectedData.split(',').includes(data.toString())
+    }
     const formatSortHeaders = () => {
 
         const headers = getTableHeaders(formatData( userData.data))
@@ -156,6 +188,12 @@ export default (props) => {
                 headers.splice(index, 1);
             }
         }
+        if(headers.includes('select')) {
+            const index = headers.indexOf('select');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
 
         return headers;
     }
@@ -164,20 +202,33 @@ export default (props) => {
         data.sortByOptions = formatSortHeaders();
         return data;
     }
+    const formatExcelData = (data) => {
+        
+        const selected = selectedData.split(',')
+        if(!Array.isArray(data)) {
+            return []
+        }
+        return data.filter((item)=> {
+            if(selected.includes(item.id.toString())) {
+                return item;
+            }
+        })
+    }
     return (
 
         <>
             <div>
                 <BreadCrumb links={links} />
                 <MainActionContainer 
-                    data={formatMainActionData(pageType.users)} 
-                    dataSet={formatData( userData.data)} 
+                    data={formatMainActionData(pageType.users)}
+                    dataSet={formatData(formatExcelData( userData.data))}
                     dataSetHeaders={getTableHeaders(formatData( userData.data))}
                     sortingValues={sortingValues}
                     handleSearching = {handleSearching}
                     handleRefreshPage={handleRefreshPage}
                     handleLimitEntriesChange={handleLimitEntriesChange}
                     handleSortByChange={handleSortByChange}
+                    toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
                 />
 
                 {
@@ -186,16 +237,6 @@ export default (props) => {
                     :
                     ("data" in userData)?
                     <>
-                        <MainActionContainer 
-                            data={formatMainActionData(pageType.users)} 
-                            dataSet={formatData( userData.data)} 
-                            dataSetHeaders={getTableHeaders(formatData( userData.data))}
-                            sortingValues={sortingValues}
-                            handleSearching = {handleSearching}
-                            handleRefreshPage={handleRefreshPage}
-                            handleLimitEntriesChange={handleLimitEntriesChange}
-                            handleSortByChange={handleSortByChange}
-                        />
                         <Table rows= {formatData( userData.data)} 
                             tableHeader ={ getTableHeaders(formatData( userData.data)) }
                         />

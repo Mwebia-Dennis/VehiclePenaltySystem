@@ -96,4 +96,33 @@ export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPa
 
 
 
+export const deleteMenuData = (user_id, menuData_id, menu_id) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_MENU_DATA_DATA })
+    axios.delete('users/'+parseInt(user_id)+'/menu-data/'+parseInt(menuData_id))
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_MENU_DATA_ERROR})
+        dispatch({
+            type: SET_MENU_DATA_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getMenuData(menu_id))
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_MENU_DATA_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+
+
 

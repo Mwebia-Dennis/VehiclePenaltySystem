@@ -10,7 +10,7 @@ import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox, Chip, FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
+import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 
@@ -23,6 +23,7 @@ export default (props) => {
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const penaltyData = useSelector((state) => state.penaltyReducer.data)
+    const authReducer = useSelector((state) => state.authReducer)
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
         limitEntries:25,
@@ -70,6 +71,13 @@ export default (props) => {
             }
         );
     };
+    const handleDelete = (penalty_id)=> {
+        if('id' in authReducer.data) {
+
+            dispatch(deletePenalty(authReducer.data.id, penalty_id))
+        }
+
+    }
 
     const links = [
         {
@@ -160,7 +168,7 @@ export default (props) => {
             
             formattedData["action"] = <>
                     <IconButton color="primary"> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -217,6 +225,12 @@ export default (props) => {
         }
         if(headers.includes('action')) {
             const index = headers.indexOf('action');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('select')) {
+            const index = headers.indexOf('select');
             if (index > -1) {
                 headers.splice(index, 1);
             }
