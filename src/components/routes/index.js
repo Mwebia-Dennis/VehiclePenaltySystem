@@ -42,7 +42,7 @@ export const routes = (isLoggedIn) => [
     {
      
         path: 'auth',
-        element : isLoggedIn !=true ?<Navigate to="/home" />:<Auth />,
+        element : isLoggedIn ==true ?<Navigate to="/home" />:<Auth />,
         children: [
 
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },
