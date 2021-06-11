@@ -16,16 +16,30 @@ import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
-import { setNewPenalty } from '../../../../store/reducers/penalty/penalty.actions';
+import { setNewPenalty, updatePenalty } from '../../../../store/reducers/penalty/penalty.actions';
+import { handleUpdateData, formatDate } from '../../../../utils/functions'
 
 export default (props) => {
 
+    const { isUpdate, data } = props;
     const classes = useStyles();
-    const [plateNumber, setPlateNumber] = useState('');
-    const [plateNumberError, setPlateNumberError] = useState('');
-    const [penaltyDate, setPenaltyDate] = useState(new Date());
-    const [paymentDate, setPaymentDate] = useState(new Date());
-    const [notificationDate, setNotificationDate] = useState(new Date());
+    const defaultInputData = (data != null && data != undefined)?data:{}
+    const [formInputData, setFormInputData] = useState({})
+    const [plateNumber, setPlateNumber] = useState(
+        ("vehicle" in defaultInputData)?{
+            id: defaultInputData.vehicle.id,
+            plate_number: defaultInputData.vehicle.plate_number
+        }:{}
+    );
+    const [penaltyDate, setPenaltyDate] = useState(
+        ("penalty_date" in defaultInputData)?new Date(defaultInputData.penalty_date):new Date()
+    );
+    const [paymentDate, setPaymentDate] = useState(
+        ("payment_date" in defaultInputData)?new Date(defaultInputData.payment_date):new Date()
+    );
+    const [notificationDate, setNotificationDate] = useState(
+        ("notification_date" in defaultInputData)?new Date(defaultInputData.notification_date):new Date()
+    );
     const [penaltyHour, setPenaltyHour] = useState(new Date());
     const [fileError, setFileError] = useState('')
     const [uploadedPdf, setUploadedPdf] = useState(null)
@@ -36,6 +50,7 @@ export default (props) => {
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const authReducer = useSelector((state) => state.authReducer)
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
+
 
     useEffect(() => {
         
@@ -149,34 +164,82 @@ export default (props) => {
     }
 
     
-    const onSubmit = (data)=> {
+    const handleInputChange = (inputName, inputValue)=> {
+        const data = formInputData
+        data[inputName] = inputValue
+        setFormInputData(data)
+    }
+    const onSubmit = (e)=> {
+        e.preventDefault()
+        let data = formInputData
+        if(data === {} && defaultInputData !== {}){
+            showSnackBar("No data has been editted", "info")
+            return
+            data = defaultInputData
+        }else if(data !== {} && defaultInputData !== {}){
 
-        if(plateNumber == '') {
-            setPlateNumberError('this field is required')
+            //if the state is not empty and there are default values, 
+            //then add un-updated-default-values to data
+            const __defaultInputData = handleUpdateData(defaultInputData)
+            for (const key in __defaultInputData) {
+
+                if(!(key in data)) {
+                    data[key] = __defaultInputData[key]
+                }
+
+            }
+        }else if(data === {} && defaultInputData === {}){
+            showSnackBar("All fields are required", "error")
             return
         }
-        if(("name" in uploadedPdf) && uploadedPdf != null) {
 
+        if(plateNumber == '') {
+            showSnackBar("Plate Number is required", "error")
+            return
+        }
+        
+                    
+        const formData = new FormData()
+        formData.append("vehicle_id", plateNumber.id)
+        formData.append("penalty_date", formatDate(new Date(penaltyDate)))
+        formData.append("payment_date", formatDate(new Date(paymentDate)))
+        formData.append("notification_date", formatDate(new Date(notificationDate)))
+        formData.append("penalty_hour", (new Date(penaltyHour).toLocaleTimeString('it-IT')))
+        for (const key in data) {
             
-            const formData = new FormData()
-            formData.append('pdf', uploadedPdf,uploadedPdf.name)
-            formData.append("vehicle_id", plateNumber.id)
-            formData.append("penalty_date", formatDate(new Date(penaltyDate)))
-            formData.append("payment_date", formatDate(new Date(paymentDate)))
-            formData.append("notification_date", formatDate(new Date(notificationDate)))
-            formData.append("penalty_hour", (new Date(penaltyHour).toLocaleTimeString('it-IT')))
-            for (const key in data) {
-                
-                formData.append(key, data[key])
-            }
-            if('id' in authReducer.data) {
+            formData.append(key, data[key])
+        }
 
+        if(!isUpdate) {
+
+            if( uploadedPdf != null) {
+
+                if(("name" in uploadedPdf)) {
+    
+                    formData.append('pdf', uploadedPdf,uploadedPdf.name)
+                }else {
+    
+                    setFileError('This field is required')
+                    return
+                }
+            }else {
+    
+                setFileError('This field is required')
+                return
+            }
+        }
+
+        
+        if('id' in authReducer.data) {
+    
+            if(isUpdate) {
+                dispatch(updatePenalty(data, authReducer.data.id, defaultInputData.id))
+            }else {
                 dispatch(setNewPenalty(formData, authReducer.data.id, navigate))
             }
-        }else {
-
-            setFileError('This field is required')
         }
+
+
     }
 
     if(penaltyReducer.message) {
@@ -212,25 +275,24 @@ export default (props) => {
         })
     }
 
-    function formatDate(date) {
-        var mm = date.getMonth() + 1; // getMonth() is zero-based
-        var dd = date.getDate();
-      
-        return [date.getFullYear(),
-                (mm>9 ? '' : '0') + mm,
-                (dd>9 ? '' : '0') + dd
-               ].join('-');
+    const getTextInputValue = (name)=> {
+        return (data != null && data != undefined)?data[name]:''
     }
-
+ 
     return (
 
         <>
             
-            <BreadCrumb links={links} />
-            <Paper className={classes.root} >
+            {
+                isUpdate?
+                <></>
+                :
+                <BreadCrumb links={links} />
+            }
+            <Paper className={isUpdate?classes.root1:classes.root} >
 
                 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={onSubmit}>
                     <Typography className={classes.header}>Yeni Metin Belgesi</Typography>
                     <Grid 
                         container 
@@ -248,6 +310,7 @@ export default (props) => {
                                     <ProgressSpinner />
                                 
                                 :
+                                
                                     (vehicleReducer.allVehiclePlates.length > 0)?
                                         <FormControl className={classes.formControl}>
                                             
@@ -257,12 +320,12 @@ export default (props) => {
                                                 getOptionLabel={(option) => option.plate_number}
                                                 style={{ width: '100%' }}
                                                 value={plateNumber}
+                                                disabled={isUpdate}
                                                 onChange={(event, newValue) => {
                                                 setPlateNumber(newValue);
                                                 }}
                                                 renderInput={(params) => <TextField required {...params} label="Plaka No" margin="normal" />}
                                             />
-                                            <span>{plateNumberError}</span>
 
                                         </FormControl>
                                     :
@@ -287,9 +350,11 @@ export default (props) => {
                                             name={item.name}
                                             className= {classes.textfield}
                                             fullWidth
-                                            {...register(item.name, { required: true })}
+                                            defaultValue={getTextInputValue(item.name)}
+                                            onChange={(e)=>handleInputChange(item.name, e.target.value)}
+                                            // {...register(item.name, { required: true })}
                                         />
-                                        {errors[item.name] && <span>This field is required</span>}
+                                        {/* {errors[item.name] && <span>This field is required</span>} */}
                                     </Grid>
                                 ))
                             }
@@ -307,7 +372,7 @@ export default (props) => {
                                         label="CEZA TARİHİ"
                                         name="penalty_date"
                                     />
-                                    {errors["penalty_date"] && <span>This field is required</span>}
+                                    {/* {errors["penalty_date"] && <span>This field is required</span>} */}
                             </Grid>
                             <Grid
                                 item 
@@ -323,7 +388,7 @@ export default (props) => {
                                         placeholder="ÖDEME TARİHİ"
                                         name="payment_date"
                                     />
-                                    {errors["payment_date"] && <span>This field is required</span>}
+                                    {/* {errors["payment_date"] && <span>This field is required</span>} */}
                             </Grid>
                             <Grid
                                 item 
@@ -339,7 +404,7 @@ export default (props) => {
                                         placeholder="TEBLİG TARİHİ"
                                         name="notification_date"
                                     />
-                                    {errors["notification_date"] && <span>This field is required</span>}
+                                    {/* {errors["notification_date"] && <span>This field is required</span>} */}
                             </Grid>
                             <Grid
                                 item 
@@ -359,7 +424,7 @@ export default (props) => {
                                         placeholder="CEZA-SAAT"
                                         name="penalty_hour"
                                     />
-                                    {errors["penalty_hour"] && <span>This field is required</span>}
+                                    {/* {errors["penalty_hour"] && <span>This field is required</span>} */}
                             </Grid>
 
                             <Grid
@@ -372,7 +437,10 @@ export default (props) => {
                                             name="status"
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
-                                            {...register('status',{ required: true })}
+                                            // {...register('status',{ required: true })}                                            
+                                            onChange={(e)=>handleInputChange('status', e.target.value)}
+                                            value={formInputData.status}
+                                            defaultValue={getTextInputValue('status')}  
                                         >
 
                                             {
@@ -385,28 +453,37 @@ export default (props) => {
                                     </FormControl>
                                 </Grid>
 
-                                <Grid
-                                    item 
-                                    xs={12}
-                                >
 
-                                    <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
-
-
-                                        <DropzoneArea
-                                            acceptedFiles={['application/pdf']}
-                                            showPreviews={true}
-                                            useChipsForPreview
-                                            showPreviewsInDropzone={false}
-                                            maxFileSize={5000000}
-                                            filesLimit={1}
-                                            dropzoneText="Drag And Drop PDF document here"
-                                            onChange={handleFileChange}
-                                        />
-                                        <span>{fileError}</span>
+                                {
                                     
+                                    (!isUpdate)?
 
-                                </Grid>
+                                        <Grid
+                                            item 
+                                            xs={12}
+                                        >
+
+                                            <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+
+
+                                                <DropzoneArea
+                                                    acceptedFiles={['application/pdf']}
+                                                    showPreviews={true}
+                                                    useChipsForPreview
+                                                    showPreviewsInDropzone={false}
+                                                    maxFileSize={5000000}
+                                                    filesLimit={1}
+                                                    dropzoneText="Drag And Drop PDF document here"
+                                                    onChange={handleFileChange}
+                                                />
+                                                <span>{fileError}</span>
+                                            
+
+                                        </Grid>
+
+                                    :<></>
+                                }
+
                             
 
                     </Grid>

@@ -2,8 +2,9 @@ import React, { useEffect,useState } from 'react'
 import Table from '../../shared_components/table';
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
+import EditDataModal from '../../shared_components/EditDataModal';
 import Paginator from '../../shared_components/Paginator';
-import { pageType }  from '../../../utils/constants'
+import { pageType, formTypes }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
 import { deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
 import { Delete, Edit } from '@material-ui/icons';
@@ -20,6 +21,10 @@ export default (props) => {
     const vehicleData = useSelector((state) => state.vehicleReducer.data)
     const authReducer = useSelector((state) => state.authReducer)
     const [selectedData, setSelectedData] = useState('')
+    const [editModalOpen, setEditModalOpen] = useState({
+        open: false,
+        data: {},
+    })
     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
@@ -32,6 +37,21 @@ export default (props) => {
         dispatch(getAllVehicles(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
     }, [sortingValues])
+
+
+    const handleEditDataModalOpen = (data) => {
+        setEditModalOpen({
+            data: data,
+            open:true,
+        });
+    };
+
+    const handleEditDataModalClose = () => {
+        setEditModalOpen({
+            ...editModalOpen,
+            open:false,
+        });
+    };
 
     const handlePagination = (page) => {
         setSortingValues({
@@ -97,6 +117,7 @@ export default (props) => {
 
     }
 
+    
     function formatData(data){
         const allData = []
         let formattedData = {}
@@ -118,7 +139,7 @@ export default (props) => {
             }
             
             formattedData["action"] = <>
-                    <IconButton color="primary"> <Edit /> </IconButton>
+                    <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
             allData.push(formattedData)
@@ -130,7 +151,7 @@ export default (props) => {
     }
 
     function getTableHeaders(data){
-        const tableHeaders = ["#"]
+        const tableHeaders = []
         for(const key in data) {
             
             for (const header in data[key]) {
@@ -139,6 +160,8 @@ export default (props) => {
             break
 
         }
+        
+        tableHeaders.splice(1, 0, "#")
 
         return tableHeaders
     }
@@ -215,7 +238,6 @@ export default (props) => {
     }
     
     function checkIfDataExists(data) {
-        console.log(selectedData.split(','))
         return selectedData.split(',').includes(data.toString())
     }
     const formatExcelData = (data) => {
@@ -260,6 +282,11 @@ export default (props) => {
                         <Paginator paginationCount={vehicleData.last_page} 
                             handlePagination={handlePagination} 
                             page={ vehicleData.current_page }
+                        />
+                        <EditDataModal 
+                            editModalOpen={editModalOpen}
+                            handleEditDataModalClose={handleEditDataModalClose}
+                            formType={formTypes.newVehicle}
                         />
 
                     </>

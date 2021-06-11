@@ -69,6 +69,31 @@ export const setNewMenuData = (newData, user_id, navigate) => (dispatch) => {
 
 }
 
+
+export const updateMenuData = (newData, user_id,menuData_id, menu_id) => (dispatch) => {
+
+    
+    dispatch({ type: LOADING_MENU_DATA_DATA })
+    axios.put('users/'+user_id+'/menu-data/'+menuData_id, newData)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_MENU_DATA_ERROR})
+        dispatch({
+            type: SET_MENU_DATA_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getMenuData(menu_id))
+
+    })
+    .catch((error)=> {
+        dispatch({
+            type: SET_MENU_DATA_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
 export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()

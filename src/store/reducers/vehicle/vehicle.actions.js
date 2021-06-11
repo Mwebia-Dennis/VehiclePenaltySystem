@@ -93,6 +93,32 @@ export const setNewVehicle = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
+export const updateVehicle = (newData, user_id,vehicle_id) => (dispatch) => {
+
+    dispatch({ type: LOADING_VEHICLE_DATA })
+    axios.put('users/'+user_id+'/vehicle/'+vehicle_id, newData)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_VEHICLE_ERROR})
+        dispatch({
+            type: SET_VEHICLE_MESSAGE,
+            payload: res.data.message
+        })
+
+        dispatch(getAllVehicles())
+
+    })
+    .catch((error)=> {
+        dispatch({
+            type: SET_VEHICLE_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+
 export const searchVehiclesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()

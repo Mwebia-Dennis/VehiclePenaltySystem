@@ -8,6 +8,7 @@ import ColumnSelectionModal from '../columnSelectionModal';
 import SearchBar from "material-ui-search-bar";
 import { useDispatch } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
+import { formatUrlName } from '../../../utils/functions'
 
 
 
@@ -70,16 +71,7 @@ export default (props) => {
     };
 
 
-    function formatUrlName(name) {
-
-        //used to remove slashes ( '/' ) incase menu name has a slash character eg(debit/receipt)
-        const nameParts = name.split("/")
-        if(nameParts.length > 0) {
-            return nameParts.join('___')
-        }
-        return name
-
-    }
+    
 
 
     return (

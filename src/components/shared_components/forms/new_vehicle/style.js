@@ -15,6 +15,16 @@ export const useStyles = makeStyles((theme) => ({
             padding: '10px',
         }
     },
+    root1: {
+        width: '80%',
+        marginLeft: '10%',
+        padding: '10px',
+        boxShadow: 'none',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            marginLeft: '0',
+        }
+    },
     header: {
         padding: '10px 0',
         fontWeight: 'bold',

@@ -14,26 +14,36 @@ import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions';
-import { setNewMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
+import { setNewMenuData, updateMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
 import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
+import { handleUpdateData } from '../../../../utils/functions'
 
 export default (props) => { 
 
-    const { title } = props;
+    const { isUpdate, title, data } = props;
+    const incomingData = data?data:{}
     const classes = useStyles();
-    const [plateNumber, setPlateNumber] = useState('');
-    const [plateNumberError, setPlateNumberError] = useState('');
+    const defaultInputData = ("data" in incomingData)?JSON.parse(incomingData.data):{}
+    console.log(defaultInputData)
+    const [formInputData, setFormInputData] = useState({})
+    const [plateNumber, setPlateNumber] = useState(
+        ("vehicle" in incomingData)?{
+            id: incomingData.vehicle.id,
+            plate_number: incomingData.vehicle.plate_number
+        }:{}
+    );
     const [uploadedPdf, setUploadedPdf] = useState(null)
     const [fileError, setFileError] = useState('')
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const dispatch = useDispatch()
-    const { register,handleSubmit, formState:{ errors } } = useForm()
+    // const { register,handleSubmit, formState:{ errors } } = useForm()
     const authReducer = useSelector((state) => state.authReducer)
     const menuReducer = useSelector((state) => state.menuReducer)
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
     const menuDataReducer = useSelector((state) => state.menuDataReducer)
     const menu_id = localStorage.getItem("menu_id")
+
 
     useEffect(() => {
         
@@ -44,7 +54,6 @@ export default (props) => {
 
     useEffect(() => {
         if(!menu_id) {
-            console.log("sfdsdfsd")
             showSnackBar('Sorry invalid data provided, contact admin for more info', 'error')
             navigate('/home')
         }
@@ -55,28 +64,82 @@ export default (props) => {
         setUploadedPdf(files["0"])
     }
 
-    const onSubmit = (data) =>{
-        
-        if(plateNumber == '') {
-            setPlateNumberError('this field is required')
+
+    const handleInputChange = (inputName, inputValue)=> {
+        const data = formInputData
+        data[inputName] = inputValue
+        setFormInputData(data)
+    }
+    const onSubmit = (e)=> {
+        e.preventDefault()
+        let data = formInputData
+        if(data === {} && defaultInputData !== {}){
+            showSnackBar("No data has been editted", "info")
+            return
+        }else if(data !== {} && defaultInputData !== {}){
+
+            //if the state is not empty and there are default values, 
+            //then add un-updated-default-values to data
+
+            const __defaultInputData = defaultInputData
+            for (const key in __defaultInputData) {
+
+                if(!(key.trim().toLowerCase() in data)) {
+                    data[key] = __defaultInputData[key]
+                }
+
+            }
+        }else if(data === {} && defaultInputData === {}){
+            showSnackBar("All fields are required", "error")
             return
         }
-        if(("name" in uploadedPdf) && uploadedPdf != null) {
 
-            const formData = new FormData()
-            formData.append("vehicle_id", plateNumber.id)
-            formData.append('pdf', uploadedPdf,uploadedPdf.name)
-            formData.append('data', JSON.stringify(formatDataHeaders(data)) )
-            formData.append('menu_id', menu_id)
+        if(plateNumber == '') {
+            showSnackBar("Plate Number is required", "error")
+            return
+        }
+        
+                    
+        let formData = {}
 
-            if('id' in authReducer.data) {
+        if(!isUpdate) {
 
-                dispatch(setNewMenuData(formData, authReducer.data.id, navigate))
+            if( uploadedPdf != null) {
+
+                if(("name" in uploadedPdf)) {
+                    formData = new FormData()
+                    formData.append("vehicle_id", plateNumber.id)
+                    formData.append('data', JSON.stringify(formatDataHeaders(data)) )
+                    formData.append('pdf', uploadedPdf,uploadedPdf.name)
+                    formData.append('menu_id', menu_id)
+                }else {
+    
+                    setFileError('This field is required')
+                    return
+                }
+            }else {
+    
+                setFileError('This field is required')
+                return
             }
         }else {
-
-            setFileError('This field is required')
+            formData['vehicle_id'] = plateNumber.id
+            formData['data'] =  JSON.stringify(formatDataHeaders(data))
         }
+
+        
+        if('id' in authReducer.data) {
+    
+            if(isUpdate) {
+
+                dispatch(updateMenuData(formData, authReducer.data.id, incomingData.id, menu_id))
+
+            }else {
+                dispatch(setNewMenuData(formData, authReducer.data.id, navigate))
+            }
+        }
+
+
     }
 
 
@@ -104,7 +167,7 @@ export default (props) => {
         }
 
         
-        // dispatch({ type: CLEAR_MENU_DATA_ERROR})
+        dispatch({ type: CLEAR_MENU_DATA_ERROR})
     }
 
       function showSnackBar(msg, variant = 'info'){
@@ -171,20 +234,31 @@ export default (props) => {
 
         return newData
     }
+
     
+    
+    const getTextInputValue = (name)=> {
+        return (defaultInputData != null && defaultInputData !== {})?defaultInputData[name.trim().toString()]:''
+    }
+
 
     return (
 
         <>
             
-            <BreadCrumb links={links} />
-            <Paper className={classes.root} >
+            {
+                isUpdate?
+                <></>
+                :
+                <BreadCrumb links={links} />
+            }
+            <Paper className={isUpdate?classes.root1:classes.root} >
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">add new {reverseUrlName(title)}</Typography>
 
                 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={onSubmit}>
                     <Grid 
                         container 
                         spacing={2}
@@ -211,6 +285,7 @@ export default (props) => {
                                                     options={vehicleReducer.allVehiclePlates}
                                                     getOptionLabel={(option) => option.plate_number}                                                    
                                                     value={plateNumber}
+                                                    disabled={isUpdate}
                                                     onChange={(event, newValue) => {
                                                     setPlateNumber(newValue);
                                                     }}
@@ -219,7 +294,6 @@ export default (props) => {
                                                         fullWidth
                                                     />}
                                                 />
-                                                <span>{plateNumberError}</span>
 
                                             </FormControl>
                                         :
@@ -246,12 +320,14 @@ export default (props) => {
                                                 required 
                                                 label={item.name} 
                                                 placeholder={item.name}
-                                                name={item.name}ty  
+                                                name={item.name}
                                                 className= {classes.textfield}
                                                 fullWidth
-                                                {...register(formatInputName(item.name),{ required: true })}
+                                                defaultValue={getTextInputValue(item.name)}
+                                                onChange={(e)=>handleInputChange(item.name, e.target.value)}
+                                                // {...register(formatInputName(item.name),{ required: true })}
                                             />
-                                            {errors[item.name] && <span>This field is required</span>}
+                                            {/* {errors[item.name] && <span>This field is required</span>} */}
                                         </Grid>
                                     )
                                 }
@@ -260,25 +336,32 @@ export default (props) => {
                         }    
 
 
-                        <Grid
-                            item 
-                            xs={12}
-                        >
+                        {
 
-                            <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
-                            <DropzoneArea
-                                acceptedFiles={['application/pdf']}
-                                showPreviews={true}
-                                useChipsForPreview
-                                showPreviewsInDropzone={false}
-                                maxFileSize={5000000}
-                                filesLimit={1}
-                                dropzoneText="Drag And Drop PDF document here"
-                                onChange={handleFileChange}
-                            />
-                            <span>{fileError}</span>
+                            isUpdate? <></>
+                            :
+                            
 
-                        </Grid>                  
+                                <Grid
+                                    item 
+                                    xs={12}
+                                >
+
+                                    <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+                                    <DropzoneArea
+                                        acceptedFiles={['application/pdf']}
+                                        showPreviews={true}
+                                        useChipsForPreview
+                                        showPreviewsInDropzone={false}
+                                        maxFileSize={5000000}
+                                        filesLimit={1}
+                                        dropzoneText="Drag And Drop PDF document here"
+                                        onChange={handleFileChange}
+                                    />
+                                    <span>{fileError}</span>
+
+                                </Grid>
+                        }                  
 
                     </Grid>
 

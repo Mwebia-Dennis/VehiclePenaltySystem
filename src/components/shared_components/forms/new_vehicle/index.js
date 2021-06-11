@@ -10,15 +10,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
-import { setNewVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
+import { setNewVehicle, updateVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
+import { handleUpdateData, formatDate } from '../../../../utils/functions'
 import { CLEAR_VEHICLE_ERROR, CLEAR_VEHICLE_MESSAGE } from '../../../../store/reducers/vehicle/vehicle.types';
 
 export default (props) => {
 
+    const { isUpdate, data } = props;
     const classes = useStyles();
-    const [deliveryDate, setDeliveryDate] = useState(new Date());
     const dispatch = useDispatch()
-    const { register, handleSubmit, formState:{ errors } } = useForm()
+    const defaultInputData = (data != null && data != undefined)?data:{}
+    const [formInputData, setFormInputData] = useState({})
+    // const { register, handleSubmit, formState:{ errors } } = useForm({
+    //     defaultValues: handleUpdateData(defaultInputData)
+    // })
+    const [deliveryDate, setDeliveryDate] = useState(
+        ("delivery_date" in defaultInputData)?new Date(defaultInputData.delivery_date):new Date()
+    );
     const navigate = useNavigate()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
@@ -91,13 +99,47 @@ export default (props) => {
         }
     ]
 
+    const handleInputChange = (inputName, inputValue)=> {
+        const data = formInputData
+        data[inputName] = inputValue
+        setFormInputData(data)
+    }
+    const onSubmit = (e)=> {
+        e.preventDefault()
+        let data = formInputData
 
-    const onSubmit = (data)=> {
-        //handleBackdropToggle()
+        if(data === {} && defaultInputData !== {}){
+            showSnackBar("No data has been editted", "info")
+            return
+            data = defaultInputData
+        }else if(data !== {} && defaultInputData !== {}){
+
+            //if the state is not empty and there are default values, 
+            //then add un-updated-default-values to data
+            const __defaultInputData = handleUpdateData(defaultInputData)
+            for (const key in __defaultInputData) {
+
+                if(!(key in data)) {
+                    data[key] = __defaultInputData[key]
+                }
+
+            }
+        }else if(data === {} && defaultInputData === {}){
+            showSnackBar("All fields are required", "error")
+            return
+        }
+
+
         data["delivery_date"] = formatDate(new Date(deliveryDate))
         if('id' in authReducer.data) {
 
-            dispatch(setNewVehicle(data, authReducer.data.id, navigate))
+            console.log( handleUpdateData(data) )
+
+            if(isUpdate) {
+                dispatch(updateVehicle(data, authReducer.data.id, defaultInputData.id))
+            }else {
+                dispatch(setNewVehicle(data, authReducer.data.id, navigate))
+            }
         }
     }
 
@@ -123,6 +165,10 @@ export default (props) => {
         dispatch({ type: CLEAR_VEHICLE_ERROR})
     }
 
+
+    const getTextInputValue = (name)=> {
+        return (data != null && data != undefined)?data[name]:''
+    }
     function showSnackBar(msg, variant = 'info'){
         enqueueSnackbar(msg, {
             variant: variant,            
@@ -134,15 +180,6 @@ export default (props) => {
         })
     }
 
-    function formatDate(date) {
-        var mm = date.getMonth() + 1; // getMonth() is zero-based
-        var dd = date.getDate();
-      
-        return [date.getFullYear(),
-                (mm>9 ? '' : '0') + mm,
-                (dd>9 ? '' : '0') + dd
-               ].join('-');
-    }
 
     const ExampleCustomInput = forwardRef(
         ({ value, onClick, name}, ref) => (
@@ -163,13 +200,17 @@ export default (props) => {
     return (
 
         <>
-            
-            <BreadCrumb links={links} />
-            <Paper className={classes.root} >
+            {
+                isUpdate?
+                <></>
+                :
+                <BreadCrumb links={links} />
+            }
+            <Paper className={isUpdate?classes.root1:classes.root} >
 
-                <Typography className={classes.header}>Add New Vehicle</Typography>
+                <Typography className={classes.header}>{isUpdate? "Edit ": "Add New "} Vehicle</Typography>
 
-                <form  onSubmit={handleSubmit(onSubmit)}>
+                <form  onSubmit={onSubmit}>
                     <Grid 
                         container 
                         spacing={2}
@@ -192,9 +233,12 @@ export default (props) => {
                                             name={item.name}
                                             className= {classes.textfield}
                                             fullWidth
-                                            {...register(item.name, { required: true })}
+                                            value={formInputData[item.name]}
+                                            defaultValue={getTextInputValue(item.name)}
+                                            // {...register(item.name, { required: true })}
+                                            onChange={(e)=>handleInputChange(item.name, e.target.value)}
                                         />
-                                        {errors[item.name] && <span>This field is required</span>}
+                                        {/* {errors[item.name] && <span>This field is required</span>} */}
                                     </Grid>
                                 ))
                             }
@@ -212,7 +256,6 @@ export default (props) => {
                                         label="CEZA TARİHİ"
                                         name="delivery_date"
                                     />
-                                    {errors["delivery_date"] && <span>This field is required</span>}
                             </Grid>
                             
 
