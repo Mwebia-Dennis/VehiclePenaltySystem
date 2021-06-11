@@ -5,14 +5,15 @@ import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
-import { pageType }  from '../../../utils/constants'
+import { pageType,formTypes }  from '../../../utils/constants'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox, Chip, FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
-import { getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
+import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
+import EditDataModal from '../../shared_components/EditDataModal';
 
 export default (props) => {
 
@@ -23,10 +24,15 @@ export default (props) => {
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const penaltyData = useSelector((state) => state.penaltyReducer.data)
+    const authReducer = useSelector((state) => state.authReducer)
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
         limitEntries:25,
         page: 1
+    })
+    const [editModalOpen, setEditModalOpen] = useState({
+        open: false,
+        data: {},
     })
 
 
@@ -44,6 +50,21 @@ export default (props) => {
         dispatch(getAllPenalties(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
     }, [sortingValues])
+
+
+    const handleEditDataModalOpen = (data) => {
+        setEditModalOpen({
+            data: data,
+            open:true,
+        });
+    };
+
+    const handleEditDataModalClose = () => {
+        setEditModalOpen({
+            ...editModalOpen,
+            open:false,
+        });
+    };
 
     const handlePagination = (page) => {
         setSortingValues({
@@ -70,6 +91,13 @@ export default (props) => {
             }
         );
     };
+    const handleDelete = (penalty_id)=> {
+        if('id' in authReducer.data) {
+
+            dispatch(deletePenalty(authReducer.data.id, penalty_id))
+        }
+
+    }
 
     const links = [
         {
@@ -132,7 +160,7 @@ export default (props) => {
     function formatData(data){
         const allData = []
         let formattedData = {}
-        for(const key in data) {
+        for(const key in data) { 
 
             formattedData['select'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
@@ -159,8 +187,8 @@ export default (props) => {
             }
             
             formattedData["action"] = <>
-                    <IconButton color="primary"> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                    <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -182,7 +210,7 @@ export default (props) => {
         }
 
         
-        tableHeaders.splice(1, 0, "#");
+        tableHeaders.splice(1, 0, "#")
 
         return tableHeaders
     }
@@ -217,6 +245,12 @@ export default (props) => {
         }
         if(headers.includes('action')) {
             const index = headers.indexOf('action');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('select')) {
+            const index = headers.indexOf('select');
             if (index > -1) {
                 headers.splice(index, 1);
             }
@@ -273,6 +307,11 @@ export default (props) => {
                         <Paginator paginationCount={penaltyData.last_page} 
                             handlePagination={handlePagination} 
                             page={ penaltyData.current_page }
+                        />
+                        <EditDataModal 
+                            editModalOpen={editModalOpen}
+                            handleEditDataModalClose={handleEditDataModalClose}
+                            formType={formTypes.newPenalty}
                         />
 
                     </>

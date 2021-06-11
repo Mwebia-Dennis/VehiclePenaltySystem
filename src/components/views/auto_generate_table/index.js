@@ -10,23 +10,27 @@ import { useNavigate, useParams } from 'react-router';
 import { useDispatch,useSelector } from 'react-redux';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import { getMenuInfo } from '../../../store/reducers/menu/menu.actions';
-import { getMenuData, searchMenuData_data } from '../../../store/reducers/menu_data/menu_data.actions';
-import { Avatar, IconButton } from '@material-ui/core';
+import { deleteMenuData, getMenuData, searchMenuData_data } from '../../../store/reducers/menu_data/menu_data.actions';
+import { Avatar, Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
+import EditDataModal from '../../shared_components/EditDataModal';
+import { formTypes }  from '../../../utils/constants'
+import { formatUrlName }  from '../../../utils/functions'
 
 export default (props) => {
 
+
     
     const { menu_id } = useParams();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [selectedData, setSelectedData] = useState('')
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const menuReducer = useSelector((state) => state.menuReducer)
     const menuDataReducer = useSelector((state) => state.menuDataReducer)
     const menuData = useSelector((state) => state.menuDataReducer.data)
-    const tableData = formatData(menuData.data)
-    const tableHeaders = getTableHeaders(tableData)
+    const authReducer = useSelector((state) => state.authReducer)
     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
@@ -34,6 +38,10 @@ export default (props) => {
         page: 1
     })
 
+    const [editModalOpen, setEditModalOpen] = useState({
+        open: false,
+        data: {},
+    })
     //checking if menu id is available in db
 
     if(!Array.isArray(menuReducer.singleMenuData) && Object.keys(menuReducer.singleMenuData).length === 0) {
@@ -48,6 +56,20 @@ export default (props) => {
 
     }, [sortingValues, menu_id])
 
+    
+    const handleEditDataModalOpen = (data) => {
+        setEditModalOpen({
+            data: data,
+            open:true,
+        });
+    };
+
+    const handleEditDataModalClose = () => {
+        setEditModalOpen({
+            ...editModalOpen,
+            open:false,
+        });
+    };
     
     const handlePagination = (page) => {
         setSortingValues({
@@ -89,6 +111,13 @@ export default (props) => {
             handleRefreshPage()
         }
     }
+    const handleDelete = (menuData_id)=> {
+        if('id' in authReducer.data) {
+
+            dispatch(deleteMenuData(authReducer.data.id, menuData_id, menu_id))
+        }
+
+    }
 
     function handleModalOpen(){
         console.log('clicked')
@@ -115,6 +144,50 @@ export default (props) => {
         )
     }
 
+    
+    const toggleCheckingAllCheckboxes = ()=> {
+
+        const __selectedData = selectedData.split(',').length === 1 && selectedData.split(',')["0"]=== ''?[]:selectedData.split(',')
+        if(__selectedData.length  === menuData.data.length) {
+            setSelectedData([''].join())
+        }else {
+            const selected = menuData.data.map((item)=>item.id)
+            setSelectedData(selected.join())
+        }
+
+    }
+    const handleCheckBoxChange = (e)=> {
+        const value = e.target.value
+        let selected = selectedData.split(',')
+        selected = (selected['0'] === "")?[]:selected
+
+        if(checkIfDataExists(e.target.value)) {
+            const index = selected.indexOf(value);
+            if (index > -1) {
+                selected.splice(index, 1);
+            }
+        }else {
+            selected.push(value)
+        }
+        setSelectedData(selected.join())
+    }
+    
+    function checkIfDataExists(data) {
+        console.log(selectedData.split(','))
+        return selectedData.split(',').includes(data.toString())
+    }
+    const formatExcelData = (data) => {
+        
+        const selected = selectedData.split(',')
+        if(!Array.isArray(data)) {
+            return []
+        }
+        return data.filter((item)=> {
+            if(selected.includes(item.id.toString())) {
+                return item;
+            }
+        })
+    }
 
     function formatData(data){
         const allData = []
@@ -122,6 +195,10 @@ export default (props) => {
         for(const key in data) {
 
             const __data = JSON.parse(data[key].data)
+            formattedData['select'] = <FormControlLabel control={
+                <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
+                    onChange={handleCheckBoxChange}/>
+            } />
             for (const header in __data) {
 
                 
@@ -143,8 +220,8 @@ export default (props) => {
             formattedData["updated_at"] = data[key].updated_at
             
             formattedData["action"] = <>
-                    <IconButton color="primary"> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}}> <Delete /> </IconButton>
+                    <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
+                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -155,7 +232,7 @@ export default (props) => {
     }
 
     function getTableHeaders(data){
-        const tableHeaders = ["#"]
+        const tableHeaders = []
         for(const key in data) {
             
             for (const header in data[key]) {
@@ -164,6 +241,7 @@ export default (props) => {
             break
 
         }
+        tableHeaders.splice(1, 0, "#");
 
         return tableHeaders
     }
@@ -180,11 +258,10 @@ export default (props) => {
                     sortByOptions: [
                         "created_at",
                         "updated_at"
-                    ],
-                    searchOptions: ["keyword"],
+                    ]
                 }}
-                dataSet={tableData} 
-                dataSetHeaders={tableHeaders} 
+                dataSet={formatData(formatExcelData( menuData.data))}
+                dataSetHeaders={getTableHeaders(formatData( menuData.data))}
                 handleSearching = {handleSearching}
                 handleRefreshPage={handleRefreshPage}
                 sortingValues={sortingValues}
@@ -192,6 +269,7 @@ export default (props) => {
                 handleRefreshPage={handleRefreshPage}
                 handleLimitEntriesChange={handleLimitEntriesChange}
                 handleSortByChange={handleSortByChange}
+                toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
             />
 
             {
@@ -211,6 +289,12 @@ export default (props) => {
                                 <Paginator paginationCount={menuData.last_page} 
                                     handlePagination={handlePagination} 
                                     page={ menuData.current_page }
+                                />
+                                <EditDataModal 
+                                    editModalOpen={editModalOpen}
+                                    handleEditDataModalClose={handleEditDataModalClose}
+                                    formType={formTypes.autoGenerateForm}
+                                    page_type={formatUrlName(menuReducer.singleMenuData.name)}
                                 />
 
                             </>

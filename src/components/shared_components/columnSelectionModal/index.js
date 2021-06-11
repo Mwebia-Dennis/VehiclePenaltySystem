@@ -21,8 +21,6 @@ export default function AlertDialogSlide(props) {
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
     const dataSetHeadersIds = [];
-
-    console.log(dataSet)
     for (const __data in dataSet["0"]) {
         //get data keys 
         dataSetHeadersIds.push(__data);
@@ -41,8 +39,8 @@ export default function AlertDialogSlide(props) {
             dataSetHeadersIds.splice(index, 1);
         }
     }
-    if(dataSetHeadersIds.includes('profile')) {
-        const index = dataSetHeadersIds.indexOf('profile');
+    if(dataSetHeadersIds.includes('profile_img')) {
+        const index = dataSetHeadersIds.indexOf('profile_img');
         if (index > -1) {
             dataSetHeadersIds.splice(index, 1);
         }
@@ -54,7 +52,7 @@ export default function AlertDialogSlide(props) {
         }
     }
     if(dataSetHeadersIds.includes('select')) {
-        const index = dataSetHeadersIds.indexOf('action');
+        const index = dataSetHeadersIds.indexOf('select');
         if (index > -1) {
             dataSetHeadersIds.splice(index, 1);
         }
@@ -74,7 +72,6 @@ export default function AlertDialogSlide(props) {
         }else {
             selectedDataSetHeadersIds.push(event.target.value);
         }
-        console.log(selectedDataSetHeadersIds)
         setSelectedData(selectedDataSetHeadersIds.join())
     }    
     
@@ -89,13 +86,13 @@ export default function AlertDialogSlide(props) {
             selected.map((item) => __dataSet[item] = data_item[item].toString())
             return __dataSet
         })
-        console.log(newDataSet)
+        
         return (
             <ExcelFile
                 filename={"report"}
                 element={
                     <Button variant="contained" color="primary" 
-                        disabled={(selectedData.length <= 0)}
+                        disabled={(selectedData.split(',').length ==1 && selectedData.split(',')["0"] === "" )}
                         onClick={handleClose}
                     > Export to Excel</Button>
                     }
@@ -105,7 +102,7 @@ export default function AlertDialogSlide(props) {
                     {
                         selectedData.split(',').map((item, index) => (
 
-                            <ExcelColumn label={item} value={item} key={index} style={{font: {sz: "20", bold: true}}}/>
+                            <ExcelColumn label={item} value={item} key={index} style={{font: {bold: true}}}/>
                         ))
                     }
                 </ExcelSheet>

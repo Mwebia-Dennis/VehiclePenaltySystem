@@ -82,7 +82,7 @@ export default (props) => {
       const handleAddField = () => {
             
         const _fields = (fields != null)?fields.split(','):[]
-        _fields.push(textFieldValue);
+        _fields.push(textFieldValue.trim().toLowerCase());
         setTextFieldValue('')
         setFields(_fields.join());
 

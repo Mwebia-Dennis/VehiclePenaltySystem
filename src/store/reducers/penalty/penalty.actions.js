@@ -68,6 +68,30 @@ export const setNewPenalty = (newData, user_id, navigate) => (dispatch) => {
 }
 
 
+export const updatePenalty = (newData, user_id, penalty_id) => (dispatch) => {
+
+    dispatch({ type: LOADING_PENALTY_DATA })
+    axios.put('users/'+user_id+'/penalty/'+penalty_id, newData)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_PENALTY_ERROR})
+        dispatch({
+            type: SET_PENALTY_MESSAGE,
+            payload: res.data.message
+        })
+        dispatch(getAllPenalties())
+
+    })
+    .catch((error)=> {
+        dispatch({
+            type: SET_PENALTY_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
 export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
 
     setAuthorizationHeader()
@@ -80,6 +104,33 @@ export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPa
             type: SET_PENALTY_DATA,
             payload: res.data
         })
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_PENALTY_ERROR,
+            payload: error.response.data
+        })
+    })
+
+}
+
+
+export const deletePenalty = (user_id, penalty_id) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_PENALTY_DATA })
+    axios.delete('users/'+parseInt(user_id)+'/penalty/'+parseInt(penalty_id))
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_PENALTY_ERROR})
+        dispatch({
+            type: SET_PENALTY_MESSAGE,
+            payload: res.data
+        })
+        dispatch(getAllPenalties())
 
 
     })
