@@ -18,7 +18,7 @@ export const routes = (isLoggedIn) => [
     {
      
         path: '/',
-        element : isLoggedIn?<Home />:<Navigate to="/auth/login" />,
+        element : isLoggedIn?<Home />:<Navigate to="loading" />,
         children: [
 
             
@@ -42,7 +42,7 @@ export const routes = (isLoggedIn) => [
     {
      
         path: 'auth',
-        element : isLoggedIn !=true ?<Navigate to="/home" />:<Auth />,
+        element : isLoggedIn ==true ?<Navigate to="/home" />:<Auth />,
         children: [
 
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },

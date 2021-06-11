@@ -12,7 +12,7 @@ import {
 
 
 const initialState = {
-    authenticated: false,
+    authenticated: true,
     loading: false,
     data: {},
     errors: null,

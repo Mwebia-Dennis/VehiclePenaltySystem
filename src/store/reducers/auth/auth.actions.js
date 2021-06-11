@@ -42,6 +42,7 @@ export const loginUser = (userData, navigate) => (dispatch) => {
             type: SET_ERROR,
             payload: error.response.data
         })
+        dispatch({ type: SET_UNAUTHENTICATED})
     })
 
 }
@@ -73,6 +74,7 @@ export const signUpUser = (userData, navigate, isSignUp = true) => (dispatch) =>
             type: SET_ERROR,
             payload: error.response.data
         })
+        dispatch({ type: SET_UNAUTHENTICATED})
     })
 
 }
@@ -99,6 +101,7 @@ export const getUserDetails = () => (dispatch) => {
             type: SET_ERROR,
             payload: error.response.data
         })
+        dispatch({ type: SET_UNAUTHENTICATED})
     })
 
 }
