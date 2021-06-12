@@ -65,3 +65,5 @@ export const signUpTextfields  = [
 
     },
 ]
+
+export const forgotPasswordPageType = ["check-mail", "password"]

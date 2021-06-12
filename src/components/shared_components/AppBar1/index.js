@@ -30,7 +30,7 @@ export default function PrimarySearchAppBar() {
   const authState = useSelector((state) => state.authReducer)
   const menuReducer = useSelector(state => state.menuReducer)
   const dispatch = useDispatch()
-  
+
   const isLoggedIn = authState.authenticated;
   const loggedOutMenu = [
     {
@@ -177,7 +177,7 @@ export default function PrimarySearchAppBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          {("profile_img" in authState.data)?<Avatar src={axios.defaults.baseURL + authState.data.profile_img}/> :<AccountCircle />}
+          {("profile_img" in authState.data)?<Avatar src={authState.data.profile_img}/> :<AccountCircle />}
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -229,7 +229,7 @@ export default function PrimarySearchAppBar() {
                   onClick={handleProfileMenuOpen}
                   color="inherit"
                 >
-                {("profile_img" in authState.data)?<Avatar src={axios.defaults.baseURL + authState.data.profile_img}/> :<AccountCircle />}
+                {("profile_img" in authState.data)?<Avatar src={authState.data.profile_img}/> :<AccountCircle />}
                 </IconButton>
             </div>
             <div className={classes.sectionMobile}>

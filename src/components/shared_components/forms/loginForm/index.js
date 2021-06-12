@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Close } from '@material-ui/icons';
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
+import { forgotPasswordPageType } from '../../../../utils/constants'
 import ProgressLoader from '../../ProgressBarSpinner'
 
 export default (props) => {
@@ -138,7 +139,7 @@ export default (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography  className={classes.bottomLinks} style={{marginTop: '20px',}}>
-                                <Link href="/auth/forgot-password">Forgot Password</Link>
+                                <Link href={"/auth/forgot-password/"+forgotPasswordPageType["0"]}>Forgot Password</Link>
 
                             </Typography>
                             <Typography className={classes.bottomLinks}>Not A member yet?</Typography>
