@@ -162,8 +162,7 @@ export default (props) => {
         setSelectedData(selected.join())
     }
     
-    function checkIfDataExists(data) {
-        console.log(selectedData.split(','))
+    function checkIfDataExists(data) {  
         return selectedData.split(',').includes(data.toString())
     }
     function formatData(data){
