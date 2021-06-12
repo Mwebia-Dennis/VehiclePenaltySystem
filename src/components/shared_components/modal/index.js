@@ -47,12 +47,16 @@ export default function CustomizedDialogs(props) {
   
   function formatPdfLink(pdf){
 
-    const splitLink = pdf.split(':')
+    if(pdf) {
+      const splitLink = pdf.split(':')
 
-    if(splitLink["0"].trim().toLowerCase() === 'http') {
-      splitLink["0"] = "https"
+      if(splitLink["0"].trim().toLowerCase() === 'http') {
+        splitLink["0"] = "https"
+      }
+      return splitLink.join(':')
     }
-    return splitLink.join(':')
+
+    return pdf
   }
 
 
