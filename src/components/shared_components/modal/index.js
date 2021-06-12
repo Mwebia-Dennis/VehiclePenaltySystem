@@ -44,6 +44,18 @@ export default function CustomizedDialogs(props) {
     setNumPages(numPages);
   }
 
+  function formatPdfLink(pdf){
+
+    const splitLink = pdf.split(':')
+
+    if(splitLink["0"].trim().toLowerCase() === 'http') {
+      splitLink["0"] = "https"
+    }
+    return splitLink.join(':')
+  }
+
+
+
 
   return (
     <div>
@@ -59,7 +71,7 @@ export default function CustomizedDialogs(props) {
         </DialogTitle>
         <DialogContent dividers>
             <Document
-                file={pdf}
+                file={formatPdfLink(pdf)}
                 onLoadSuccess={onDocumentLoadSuccess}
             >
                 <Page pageNumber={pageNumber} />
