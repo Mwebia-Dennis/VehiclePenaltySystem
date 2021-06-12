@@ -42,13 +42,13 @@ export const routes = (isLoggedIn) => [
     {
      
         path: 'auth',
-        element : isLoggedIn ==true ?<Navigate to="/home" />:<Auth />,
+        element : /*isLoggedIn ==true ?<Navigate to="/home" />:*/<Auth />,
         children: [
 
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },
             {path: 'login', element: <FormContainer formType={ formTypes.login } />},
             {path: 'signup', element: <FormContainer formType={ formTypes.signUp } />},
-            {path: 'forgot-password', element: <FormContainer formType={ formTypes.forgotPassword } />},
+            {path: 'forgot-password/:page_type', element: <FormContainer formType={ formTypes.forgotPassword } />},
             {path: 'new-password', element: <FormContainer formType={ formTypes.newPassword } />},
             // {path: '/forgot-password', element: <Dashboard />},
             { path: '*', element: <Navigate to="/404" replace /> },

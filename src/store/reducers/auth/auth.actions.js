@@ -9,6 +9,7 @@ import {
     SET_MESSAGE,
     SET_UNAUTHENTICATED
 } from './auth.types'
+import { forgotPasswordPageType } from '../../../utils/constants'
 
 
 
@@ -154,6 +155,63 @@ export const editProfile = (userData, user_id) => (dispatch) => {
     })
 
 }
+
+
+export const checkEmail = (data, navigate) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER })
+    axios.post('auth/check-account', data)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_MESSAGE,
+            payload: res.data.message
+        })
+        navigate('/auth/forgot-password/'+forgotPasswordPageType["1"])
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+        dispatch({ type: SET_UNAUTHENTICATED})
+    })
+
+}
+
+
+export const forgotPassword = (data, navigate) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER })
+    axios.post('auth/forgot-password', data)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_MESSAGE,
+            payload: res.data.message
+        })
+        navigate('/auth/login')
+
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+        dispatch({ type: SET_UNAUTHENTICATED})
+    })
+
+}
+
 
 export const logOut = (navigate) => (dispatch) => {
 
