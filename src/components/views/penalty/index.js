@@ -18,7 +18,10 @@ import EditDataModal from '../../shared_components/EditDataModal';
 export default (props) => {
 
     
-    const [open, setOpen] = useState(false);
+    const [pdfOpen, setPdfOpen] = useState({
+        open: false,
+        pdf: null,
+    });
     const [page, setPage] = useState(1);
     const [selectedData, setSelectedData] = useState('')
     const dispatch = useDispatch()
@@ -36,12 +39,18 @@ export default (props) => {
     })
 
 
-    function handleModalOpen(){
+    function handleModalOpen(pdf){
         console.log('clicked')
-      setOpen(true);
+        setPdfOpen({
+            pdf: pdf,
+            open : true,
+        });
     };
     const handleModalClose = () => {
-      setOpen(false);
+      setPdfOpen({
+          ...pdfOpen,
+          open: false
+      });
     };
     
     
@@ -173,7 +182,7 @@ export default (props) => {
 
                     if(header.trim() == 'pdf_url') {
                     
-                        formattedData['pdf'] = <IconButton onClick={handleModalOpen}> 
+                        formattedData['pdf'] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
                                 <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                             </IconButton>
                     }else {
@@ -319,7 +328,7 @@ export default (props) => {
                     <Alert severity="info">0 results found</Alert>
             }
 
-            <Modal handleClose={handleModalClose} open={open} />
+            <Modal handleClose={handleModalClose} open={pdfOpen.open} pdf={pdfOpen.pdf} />
         </div>
 
     );

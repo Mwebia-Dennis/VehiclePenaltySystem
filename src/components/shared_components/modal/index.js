@@ -33,13 +33,12 @@ const DialogTitle = withStyles(styles)((props) => {
 
 export default function CustomizedDialogs(props) {
 
-  const { handleClickOpen, handleClose, open } = props;
+  const { pdf, handleClose, open } = props;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
   const theme = useTheme();
   // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log(PDFFile)
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -60,7 +59,7 @@ export default function CustomizedDialogs(props) {
         </DialogTitle>
         <DialogContent dividers>
             <Document
-                file={PDFFile}
+                file={pdf}
                 onLoadSuccess={onDocumentLoadSuccess}
             >
                 <Page pageNumber={pageNumber} />
