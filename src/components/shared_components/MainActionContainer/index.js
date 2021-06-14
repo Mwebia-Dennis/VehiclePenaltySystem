@@ -1,5 +1,5 @@
 import { Button, FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Tooltip, Typography } from '@material-ui/core'
-import { Add, CheckBox, Print, Refresh, Settings } from '@material-ui/icons';
+import { Add, CheckBox, Folder, Print, Publish, Refresh, Settings } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,ActionButton,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
@@ -9,6 +9,10 @@ import SearchBar from "material-ui-search-bar";
 import { useDispatch } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import { formatUrlName } from '../../../utils/functions'
+import { excelFileType } from '../../../utils/constants'
+import ImportExcelData from '../ImportExcelData'
+import AllExcelFiles from '../ExcelFilePreviewModal'
+import MoreVert from '@material-ui/icons/MoreVert';
 
 
 
@@ -33,9 +37,10 @@ export default (props) => {
     const [searchQueryValue, setSearchQueryValue] = useState('')
     const limitEntriesData = ["10", "25", "50", "100"];
     const sortByData = data.sortByOptions;
+    const isMenuOpen = Boolean(anchorEl);
 
 
-
+    console.log(data)
     const handleFormOpen = () => {
 
         //data
@@ -70,8 +75,42 @@ export default (props) => {
         setColumnSelectionOpen(false);
     };
 
+    const getExcelFileType = () => {
 
+        //data
+
+        if(data === pageType.vehicle ) {
+            return excelFileType.vehicle
+        }else if(data === pageType.penalty ) {
+            return excelFileType.penalty
+        }else {
+
+            return data.type.toLowerCase()
+        }
+    }
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    const handleMenuClose = () => {
+        setAnchorEl(null)
+    }
     
+  const menuId = 'more-menus';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      
+      <ImportExcelData excelFileType={getExcelFileType()} />
+      <AllExcelFiles excelFileType={getExcelFileType()} />
+    </Menu>
+  );
 
 
     return (
@@ -80,7 +119,7 @@ export default (props) => {
 
 
             <Grid container spacing={1}>
-                <Grid item xs={3} md={1}>
+                <Grid item xs={2} md={1}>
                     
                     <Tooltip title="Add New Data" aria-label="add" placement="top">
                             
@@ -92,7 +131,7 @@ export default (props) => {
                     </Tooltip>
                 </Grid>
                 
-                <Grid item xs={3} md={1}>
+                <Grid item xs={2} md={1}>
                      
                     <Tooltip title="Export To Excel" aria-label="export" placement="top">
                         <IconButton variant="contained" 
@@ -104,7 +143,7 @@ export default (props) => {
                     </Tooltip> 
                 
                 </Grid>
-                <Grid item xs={3} md={1}>
+                <Grid item xs={2} md={1}>
                     
                     <Tooltip title="Refresh Page" aria-label="refresh page" placement="top">   
                         <IconButton variant="contained" 
@@ -116,7 +155,8 @@ export default (props) => {
                     </Tooltip>
                   
                 </Grid>
-                <Grid item xs={3} md={1}>
+                
+                <Grid item xs={2} md={1}>
                     
                     <Tooltip title="Select All Rows" aria-label="select all rows" placement="top">  
                         <IconButton variant="contained" 
@@ -129,7 +169,24 @@ export default (props) => {
                     </Tooltip>
                   
                   </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={2} md={1}>
+                    
+                    <Tooltip title="Import Excel Data" aria-label="Import Excel Data" placement="top"> 
+                        <IconButton
+                            aria-label="show more"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleMenuOpen}
+                            variant="contained" 
+                            color="primary"
+                            >
+                            <MoreVert />
+                        </IconButton>
+
+                    </Tooltip>
+                  
+                  </Grid>
+                <Grid item xs={12} md={3}>
 
 
                         <Grid container>
@@ -221,6 +278,8 @@ export default (props) => {
                 dataSetHeaders={dataSetHeaders}
             />
  
+                            
+            {renderMenu}
 
         </div>
     );

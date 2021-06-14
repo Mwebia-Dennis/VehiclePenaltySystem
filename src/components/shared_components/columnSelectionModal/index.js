@@ -82,8 +82,13 @@ export default function AlertDialogSlide(props) {
         const newDataSet = dataSet.map((data_item)=>{
             const __dataSet = {}
             let selected = selectedData.split(',')
-            selected = (selected["0"] === "" && selected.length === 1)?[]:selected
-            selected.map((item) => __dataSet[item] = data_item[item].toString())
+            if(selected["0"] === "") {
+                selected.splice(0,1)
+            }
+            selected.forEach((item) => {
+                console.log(item)
+                __dataSet[item] = data_item[item].toString()
+            })
             return __dataSet
         })
         

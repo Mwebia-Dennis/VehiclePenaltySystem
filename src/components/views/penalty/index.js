@@ -163,7 +163,6 @@ export default (props) => {
     }
     
     function checkIfDataExists(data) {
-        console.log(selectedData.split(','))
         return selectedData.split(',').includes(data.toString())
     }
     function formatData(data){

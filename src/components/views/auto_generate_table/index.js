@@ -54,7 +54,8 @@ export default (props) => {
         dispatch(getMenuInfo(menu_id))
         dispatch(getMenuData(menu_id,sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
-    }, [sortingValues, menu_id])
+    }, [menu_id, sortingValues])
+
 
     
     const handleEditDataModalOpen = (data) => {
@@ -250,27 +251,34 @@ export default (props) => {
 
         <div>
             <BreadCrumb links={links} />
-            <MainActionContainer 
-                // data={menuReducer.singleMenuData.name} 
-                data={{
-                    type: menuReducer.singleMenuData.name,
-                    menu_id: menuReducer.singleMenuData.id,
-                    sortByOptions: [
-                        "created_at",
-                        "updated_at"
-                    ]
-                }}
-                dataSet={formatData(formatExcelData( menuData.data))}
-                dataSetHeaders={getTableHeaders(formatData( menuData.data))}
-                handleSearching = {handleSearching}
-                handleRefreshPage={handleRefreshPage}
-                sortingValues={sortingValues}
-                handleSearching = {handleSearching}
-                handleRefreshPage={handleRefreshPage}
-                handleLimitEntriesChange={handleLimitEntriesChange}
-                handleSortByChange={handleSortByChange}
-                toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
-            />
+
+            {
+                ("name" in menuReducer.singleMenuData)?
+
+                    <MainActionContainer 
+                        // data={menuReducer.singleMenuData.name} 
+                        data={{
+                            type: menuReducer.singleMenuData.name,
+                            menu_id: menuReducer.singleMenuData.id,
+                            sortByOptions: [
+                                "created_at",
+                                "updated_at"
+                            ]
+                        }}
+                        dataSet={formatData(formatExcelData( menuData.data))}
+                        dataSetHeaders={getTableHeaders(formatData( menuData.data))}
+                        handleSearching = {handleSearching}
+                        handleRefreshPage={handleRefreshPage}
+                        sortingValues={sortingValues}
+                        handleSearching = {handleSearching}
+                        handleRefreshPage={handleRefreshPage}
+                        handleLimitEntriesChange={handleLimitEntriesChange}
+                        handleSortByChange={handleSortByChange}
+                        toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+                    />
+                :<></>
+            }
+            
 
             {
                 menuDataReducer.loading?

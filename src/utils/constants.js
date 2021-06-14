@@ -37,6 +37,12 @@ export const pageType = {
     },
 }
 
+
+export const excelFileType = {
+    //attached to excel to identify page type. for menu data, the added menu will be used as file type 
+    vehicle: "VEHICLE",
+    penalty: "PENALTY",
+}
 export const paymentStatus = ['Pending','Settled',]
 
 export const signUpTextfields  = [

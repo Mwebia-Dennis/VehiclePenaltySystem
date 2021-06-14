@@ -6,6 +6,8 @@ import { penaltyReducer } from './penalty/penalty.reducer'
 import { menuReducer } from './menu/menu.reducer'
 import { menuDataReducer } from './menu_data/menu_data.reducer'
 import { statisticsReducer } from './statistics/statistics.reducer'
+import { excelFileReducer } from './excel_files/excelFiles.reducer'
+
 export default combineReducers({
 
     authReducer: authReducer,
@@ -15,4 +17,5 @@ export default combineReducers({
     menuReducer: menuReducer,
     menuDataReducer: menuDataReducer,
     statisticsReducer: statisticsReducer,
+    excelFileReducer: excelFileReducer,
 });

@@ -64,7 +64,9 @@ export default (props) => {
     }
 
     const handleTextFieldChange = (event) => {
-        setTextFieldValue(event.target.value)
+        if(event.target.value != '') {
+            setTextFieldValue(event.target.value)
+        }
     }
 
 
