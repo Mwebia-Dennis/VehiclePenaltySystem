@@ -19,7 +19,7 @@ function App() {
 
 
   function getVerified () {
-    return ("verified" in authReducer.data)?authReducer.data.verified:-1
+    return ("verified" in authReducer.data)?authReducer.data.verified:1
   }
   function getEmail () {
     return ("email" in authReducer.data)?authReducer.data.email:""
@@ -35,7 +35,7 @@ function App() {
   return (
   <SnackbarProvider maxSnack={3}>
     {
-
+      
       routing
       
     }
