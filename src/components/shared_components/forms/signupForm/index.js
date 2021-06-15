@@ -34,6 +34,11 @@ export default (props) => {
           dispatch(signUpUser(data, navigate))
       }
 
+      
+    if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
+        navigate('/home')
+    }
+
       if(authState.message) {
         showSnackBar(authState.message, 'success');
         dispatch({ type: CLEAR_MESSAGE})

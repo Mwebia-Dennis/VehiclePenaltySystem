@@ -21,7 +21,6 @@ const setAuthorizationHeader = () => {
 };
 
 export const loginUser = (userData, navigate) => (dispatch) => {
-
     dispatch({ type: LOADING_USER })
     axios.post('auth/login', userData)
     .then((res)=>{
@@ -30,6 +29,7 @@ export const loginUser = (userData, navigate) => (dispatch) => {
         setAuthorizationHeader()
         dispatch({ type: CLEAR_ERROR})
         dispatch({ type: SET_AUTHENTICATED})
+        dispatch(getUserDetails())
         dispatch({
             type: SET_MESSAGE,
             payload: "successful login"
@@ -63,7 +63,7 @@ export const signUpUser = (userData, navigate, isSignUp = true) => (dispatch) =>
         })
 
         if(isSignUp) {
-            navigate('/auth/verify-email')
+            navigate('/auth/verify-email/'+userData.email)
         }else {
             
             navigate('/users')
@@ -213,6 +213,31 @@ export const forgotPassword = (data, navigate) => (dispatch) => {
 
 }
 
+
+export const resendEmailLink = (email) => (dispatch) => {
+
+    setAuthorizationHeader()
+    dispatch({ type: LOADING_USER })
+    axios.get('auth/verification-resend?email='+email)
+    .then((res)=>{
+        
+        dispatch({ type: CLEAR_ERROR})
+        dispatch({
+            type: SET_MESSAGE,
+            payload: res.data.message
+        })
+
+    })
+    .catch((error)=> {
+        
+        dispatch({
+            type: SET_ERROR,
+            payload: error.response.data
+        })
+        dispatch({ type: SET_UNAUTHENTICATED})
+    })
+
+}
 
 export const logOut = (navigate) => (dispatch) => {
 
