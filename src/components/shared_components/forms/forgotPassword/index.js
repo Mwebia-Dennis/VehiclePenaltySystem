@@ -6,29 +6,22 @@ import {useStyles} from '../loginForm/style'
 import { useDispatch,useSelector } from 'react-redux'
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 import { useSnackbar } from 'notistack';
-import { forgotPasswordPageType } from '../../../../utils/constants'
 import { useParams, useNavigate } from 'react-router-dom';
 import { forgotPassword, checkEmail } from '../../../../store/reducers/auth/auth.actions';
 
 export default (props) => {
 
-    const { page_type } = useParams()
     const classes = useStyles()
     const navigate = useNavigate()
-    const [formInputData, setFormInputData] = useState({})
+    const [emailInput, setEmailInput] = useState('')
     const dispatch = useDispatch()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const authState = useSelector((state) => state.authReducer)
     const email = localStorage.getItem("email")
     console.log(email)
 
-    if(page_type == forgotPasswordPageType["1"] && !email) {
-        navigate('auth/login')
-        return
-    }
 
-
-    const textFields1 = [
+    const textFields = [
         
         {
             
@@ -38,49 +31,21 @@ export default (props) => {
 
         }
     ]
-    const textFields2 = [
-        
-        {
-            
-            placeholder: "New Password",
-            name: "new_password",
-            type: "password"
-
-        }
-    ]
-
-    const textFields = (page_type == forgotPasswordPageType["0"])?textFields1:textFields2
 
 
-    const handleInputChange = (inputName, inputValue)=> {
-        const data = formInputData
-        data[inputName] = inputValue
-        setFormInputData(data)
+    const handleInputChange = (e)=> {
+        setEmailInput(e.target.value)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(formInputData)
-        if(formInputData == {}) {
-            showSnackBar("All fields are required", "error")
+        if(emailInput == '') {
+            showSnackBar("Email field is required", "error")
             return
         }
-        if(page_type == forgotPasswordPageType["0"]) {
 
-            //checking email
-            const formData = new FormData()
-            formData.append('email', formInputData.email)
-            localStorage.setItem('email', formInputData.email)
-            dispatch(checkEmail(formData, navigate))
-
-        }else if(page_type == forgotPasswordPageType["1"]) {
-            
-            //updating password
-            const formData = new FormData()
-            formData.append('email', email)
-            formData.append('new_password', formInputData.new_password)
-            dispatch(forgotPassword(formData, navigate))
-        }
+        //checking email
+        dispatch(checkEmail(emailInput, navigate))
 
     }
 
@@ -114,10 +79,6 @@ export default (props) => {
         })
     }
 
-    
-    const getTextInputValue = (name)=> {
-        return (formInputData != null && formInputData != undefined)?formInputData[name]:''
-    }
 
     return (
 
@@ -127,7 +88,7 @@ export default (props) => {
 
                 <Typography className={classes.header}>Vehicle Penalty</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">
-                    {(page_type == forgotPasswordPageType["0"])?"Enter Email To Continue":"Enter New Password"}
+                    Enter Email To Continue
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
@@ -152,8 +113,8 @@ export default (props) => {
                                             type={item.type}
                                             name={item.name}
                                             className= {classes.textfield}
-                                            defaultValue={getTextInputValue(item.name)}
-                                            onChange={(e)=>handleInputChange(item.name, e.target.value)}
+                                            value={emailInput}
+                                            onChange={handleInputChange}
                                             fullWidth
                                         />
                                     </Grid>

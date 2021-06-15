@@ -28,15 +28,15 @@ export default (props) => {
     const summaryCardItems = SummaryCardItems.map((item)=>{
 
         if(item.id === 'vehicle') {
-            const total = statisticsReducer.todayTotalVehicles
+            const total = statisticsReducer.data.todayTotalVehicles
             item.value = total?total:0
             return item
         }else if(item.id === 'penalties') {
-            const total = statisticsReducer.todayTotalPenalties
+            const total = statisticsReducer.data.todayTotalPenalties
             item.value = total?total:0
             return item
         }else if(item.id === 'users') {
-            const total = statisticsReducer.users
+            const total = statisticsReducer.data.todayTotalUsers
             item.value = total?total:0
             return item
         }
