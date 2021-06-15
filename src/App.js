@@ -13,13 +13,13 @@ function App() {
   const dispatch = useDispatch()
   const authReducer = useSelector((state) => state.authReducer)
   const routing = useRoutes(routes(authReducer.authenticated, getVerified(), getEmail()));
-  // axios.defaults.baseURL = 'http://127.0.0.1:8000/api/'
-  axios.defaults.baseURL = 'https://vehicle-penalty-api.herokuapp.com/api/'
+  axios.defaults.baseURL = 'http://127.0.0.1:8000/api/'
+  // axios.defaults.baseURL = 'https://vehicle-penalty-api.herokuapp.com/api/'
 
 
 
   function getVerified () {
-    return ("verified" in authReducer.data)?authReducer.data.verified:-1
+    return ("verified" in authReducer.data)?authReducer.data.verified:1
   }
   function getEmail () {
     return ("email" in authReducer.data)?authReducer.data.email:""
@@ -35,7 +35,7 @@ function App() {
   return (
   <SnackbarProvider maxSnack={3}>
     {
-
+      
       routing
       
     }
