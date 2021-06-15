@@ -63,7 +63,7 @@ export const signUpUser = (userData, navigate, isSignUp = true) => (dispatch) =>
         })
 
         if(isSignUp) {
-            navigate('/auth/login')
+            navigate('/auth/verify-email')
         }else {
             
             navigate('/users')
@@ -157,11 +157,11 @@ export const editProfile = (userData, user_id) => (dispatch) => {
 }
 
 
-export const checkEmail = (data, navigate) => (dispatch) => {
+export const checkEmail = (email, navigate) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER })
-    axios.post('auth/check-account', data)
+    axios.get('auth/check-account?email='+email)
     .then((res)=>{
         
         dispatch({ type: CLEAR_ERROR})
@@ -169,7 +169,8 @@ export const checkEmail = (data, navigate) => (dispatch) => {
             type: SET_MESSAGE,
             payload: res.data.message
         })
-        navigate('/auth/forgot-password/'+forgotPasswordPageType["1"])
+
+        navigate('/auth/login')
 
 
     })

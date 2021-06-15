@@ -12,6 +12,7 @@ import AutoGenerateTable from '../views/auto_generate_table';
 import { formTypes } from '../../utils/constants'
 import { Navigate } from 'react-router';
 import PageNotFound from '../views/page_not_found';
+import VerifyEmail from '../views/verify_email';
 
 export const routes = (isLoggedIn) => [
 
@@ -48,8 +49,9 @@ export const routes = (isLoggedIn) => [
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },
             {path: 'login', element: <FormContainer formType={ formTypes.login } />},
             {path: 'signup', element: <FormContainer formType={ formTypes.signUp } />},
-            {path: 'forgot-password/:page_type', element: <FormContainer formType={ formTypes.forgotPassword } />},
-            {path: 'new-password', element: <FormContainer formType={ formTypes.newPassword } />},
+            {path: 'forgot-password', element: <FormContainer formType={ formTypes.forgotPassword } />},
+            {path: 'new-password/:token', element: <FormContainer formType={ formTypes.newPassword } />},
+            {path: 'verify-email', element: <VerifyEmail />},
             // {path: '/forgot-password', element: <Dashboard />},
             { path: '*', element: <Navigate to="/404" replace /> },
         ]
