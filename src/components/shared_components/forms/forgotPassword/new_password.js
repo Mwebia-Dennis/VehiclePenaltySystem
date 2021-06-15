@@ -8,6 +8,7 @@ import { useSnackbar } from 'notistack';
 import { useParams, useNavigate } from 'react-router-dom';
 import { forgotPassword, checkEmail } from '../../../../store/reducers/auth/auth.actions';
 import { Close } from '@material-ui/icons';
+import ProgressLoader from '../../ProgressBarSpinner'
 
 export default (props) => {
 
@@ -156,7 +157,7 @@ export default (props) => {
                     >
                         <Grid item xs={8}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                Submit
+                                {authState.loading ? <ProgressLoader />:"Submit"}
                             </Button>
 
                         </Grid>

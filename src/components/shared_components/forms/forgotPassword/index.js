@@ -8,6 +8,7 @@ import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth
 import { useSnackbar } from 'notistack';
 import { useParams, useNavigate } from 'react-router-dom';
 import { forgotPassword, checkEmail } from '../../../../store/reducers/auth/auth.actions';
+import ProgressLoader from '../../ProgressBarSpinner'
 
 export default (props) => {
 
@@ -49,6 +50,13 @@ export default (props) => {
 
     }
 
+    if(parseInt(("verified" in authState.data) && authState.data.verified) === 0 && authState.authenticated) {
+        navigate('/auth/verify-email/'+authState.data.email)
+    }
+    if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
+        navigate('/home')
+    }
+    
     if(authState.message) {
         showSnackBar(authState.message, 'success');
         dispatch({ type: CLEAR_MESSAGE})
@@ -131,7 +139,7 @@ export default (props) => {
                     >
                         <Grid item xs={8}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                Submit
+                                {authState.loading ? <ProgressLoader />:"Submit"}
                             </Button>
 
                         </Grid>

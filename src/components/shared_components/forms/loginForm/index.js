@@ -29,11 +29,16 @@ export default (props) => {
         dispatch(loginUser(data, navigate))
     }
     
-
+    if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
+        navigate('/home')
+    }
     
     if(authState.message) {
         showSnackBar(authState.message, 'success');
         dispatch({ type: CLEAR_MESSAGE})
+        if(parseInt(("verified" in authState.data) && authState.data.verified) === 0 && authState.authenticated) {
+            navigate('/auth/verify-email/'+authState.data.email)
+        }
     }
 
     if(authState.error) {

@@ -78,6 +78,7 @@ export const authReducer = (state = initialState, action)=> {
                 ...state,
                 authenticated: false,
                 loading: false,
+                data: {},
             };
         
         default:

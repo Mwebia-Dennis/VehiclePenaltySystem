@@ -14,12 +14,27 @@ import { Navigate } from 'react-router';
 import PageNotFound from '../views/page_not_found';
 import VerifyEmail from '../views/verify_email';
 
-export const routes = (isLoggedIn) => [
+
+const loggedInHandler = (verified, email)=> {
+    console.log(parseInt(verified))
+    console.log(("verified"))
+    if(parseInt(verified) === 1) {
+        return (<Home />)
+    }else if(parseInt(verified) === 0) {
+        return (<Navigate to={"/auth/verify-email/"+email} />)
+    }else {
+        return (<Navigate to={"/auth/login"} />)
+    }
+}
+
+
+
+export const routes = (isLoggedIn, verified, email) => [
 
     {
      
         path: '/',
-        element : isLoggedIn?<Home />:<Navigate to="/auth/login" />,
+        element : isLoggedIn?loggedInHandler(verified, email):<Navigate to="/auth/login" />,
         children: [
 
             
@@ -43,7 +58,7 @@ export const routes = (isLoggedIn) => [
     {
      
         path: 'auth',
-        element : /*isLoggedIn ==true ?<Navigate to="/home" />:*/<Auth />,
+        element : <Auth />,
         children: [
 
             {path: 'auth', element: <Navigate to="/auth/login" replace /> },
@@ -51,7 +66,7 @@ export const routes = (isLoggedIn) => [
             {path: 'signup', element: <FormContainer formType={ formTypes.signUp } />},
             {path: 'forgot-password', element: <FormContainer formType={ formTypes.forgotPassword } />},
             {path: 'new-password/:token', element: <FormContainer formType={ formTypes.newPassword } />},
-            {path: 'verify-email', element: <VerifyEmail />},
+            {path: 'verify-email/:email', element: <VerifyEmail />},
             // {path: '/forgot-password', element: <Dashboard />},
             { path: '*', element: <Navigate to="/404" replace /> },
         ]
