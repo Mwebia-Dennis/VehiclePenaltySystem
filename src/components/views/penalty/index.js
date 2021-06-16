@@ -5,7 +5,8 @@ import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
-import { pageType,formTypes }  from '../../../utils/constants'
+import { penaltyTextFields, formTypes, pageType }  from '../../../utils/constants'
+import { getPlaceHolderName } from '../../../utils/functions'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox, Chip, FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
@@ -170,7 +171,7 @@ export default (props) => {
         let formattedData = {}
         for(const key in data) { 
 
-            formattedData['select'] = <FormControlLabel control={
+            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -181,20 +182,22 @@ export default (props) => {
 
                     if(header.trim() == 'pdf_url') {
                     
-                        formattedData['pdf'] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
+                        formattedData['pdf'.toUpperCase()] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
                                 <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                             </IconButton>
                     }else {
-                        formattedData[header] = data[key][header]
+
+                        
+                        const placeholder = getPlaceHolderName(header, penaltyTextFields)
+                        formattedData[placeholder] = data[key][header]
                     }
-                    
-                    formattedData['plate_number'] = data[key]['vehicle']['plate_number']
                 }
+                formattedData['Plaka No'.toUpperCase()] = data[key]['vehicle']['plate_number']
 
                 
             }
             
-            formattedData["action"] = <>
+            formattedData["AKSİYON".toUpperCase()] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>

@@ -18,6 +18,7 @@ import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/ve
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
 import { setNewPenalty, updatePenalty } from '../../../../store/reducers/penalty/penalty.actions';
 import { handleUpdateData, formatDate } from '../../../../utils/functions'
+import { penaltyTextFields } from '../../../../utils/constants'
 
 export default (props) => {
 
@@ -50,6 +51,8 @@ export default (props) => {
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
     const authReducer = useSelector((state) => state.authReducer)
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
+    const textFields = penaltyTextFields
+
 
 
     useEffect(() => {
@@ -73,74 +76,6 @@ export default (props) => {
         
     ]
 
-    const textFields = [
-        {
-            placeholder: "MAKBUZ-NO",
-            name: "receipt_number",
-            type: "text"
-
-        },
-        {
-            placeholder: "CEZA MADDE",
-            name: "penalty_article",
-            type: "text"
-
-        },
-        {
-            placeholder: "CEZATUTAR ",
-            name: "penalty",
-            type: "text"
-
-        },
-        {
-            placeholder: "NOT ",
-            name: "note",
-            type: "text"
-
-        },
-        {
-            placeholder: "ÖDEME YAPAN",
-            name: "paying",
-            type: "text"
-
-        },
-        {
-            placeholder: "KAYNAK ",
-            name: "source",
-            type: "text"
-
-        },
-        {
-            placeholder: "BİRİM  ",
-            name: "unit",
-            type: "text"
-
-        },
-        {
-            placeholder: "İADE ID  ",
-            name: "return_id",
-            type: "text"
-
-        },
-        {
-            placeholder: "PESİNTUTAR ",
-            name: "pesintutar",
-            type: "text"
-
-        },
-        {
-            placeholder: "İDAYSİSID",
-            name: "daysisid",
-            type: "text"
-
-        },
-        {
-            placeholder: "DAYSİSONAY",
-            name: "daysisonay",
-            type: "text"
-
-        },
-    ]
 
     const ExampleCustomInput = forwardRef(
         ({ value, onClick, name}, ref) => (

@@ -71,3 +71,158 @@ export const signUpTextfields  = [
 
     },
 ]
+
+
+export const vehicleTextFields = [
+    {
+        placeholder: "Plaka No",
+        name: "plate_number"
+
+    },
+    {
+        placeholder: "Araç Grubu",
+        name: "vehicle_group"
+
+    },
+    {
+        placeholder: "Marka-Model",
+        name: "brand_model"
+
+    },
+    {
+        placeholder: "Şase No",
+        name: "chassis_number"
+    },
+    {
+        placeholder: "Motor No",
+        name: "motor_number"
+    },
+    {
+        placeholder: "Model Yılı",
+        name: "model_year"
+    },
+    {
+        placeholder: "Renk",
+        name: "color"
+    },
+    {
+        placeholder: "Dosya No",
+        name: "file_number"
+    },
+    {
+        placeholder: "Künye",
+        name: "tag"
+    },
+    {
+        placeholder: "Alım Tipi",
+        name: "reception_type"
+    },
+    {
+        placeholder: "Demirbaş No",
+        name: "asset_number"
+    }
+]
+export const penaltyTextFields = [
+    {
+        placeholder: "MAKBUZ-NO",
+        name: "receipt_number",
+        type: "text"
+
+    },
+    {
+        placeholder: "CEZA MADDE",
+        name: "penalty_article",
+        type: "text"
+
+    },
+    {
+        placeholder: "CEZATUTAR ",
+        name: "penalty",
+        type: "text"
+
+    },
+    {
+        placeholder: "NOT ",
+        name: "note",
+        type: "text"
+
+    },
+    {
+        placeholder: "ÖDEME YAPAN",
+        name: "paying",
+        type: "text"
+
+    },
+    {
+        placeholder: "KAYNAK ",
+        name: "source",
+        type: "text"
+
+    },
+    {
+        placeholder: "BİRİM  ",
+        name: "unit",
+        type: "text"
+
+    },
+    {
+        placeholder: "İADE ID  ",
+        name: "return_id",
+        type: "text"
+
+    },
+    {
+        placeholder: "PESİNTUTAR ",
+        name: "pesintutar",
+        type: "text"
+
+    },
+    {
+        placeholder: "İDAYSİSID",
+        name: "daysisid",
+        type: "text"
+
+    },
+    {
+        placeholder: "DAYSİSONAY",
+        name: "daysisonay",
+        type: "text"
+
+    },
+]
+
+
+export const otherFields = [
+    {
+        name: 'delivery_date',
+        placeholder: 'teslim tarihi'
+    },
+    {
+        name: 'updated_at',
+        placeholder: 'güncellendi'
+    },
+    {
+        name: 'created_at',
+        placeholder: 'oluşturulduğunda'
+    },
+    {
+        name: 'notification_date',
+        placeholder: 'TEBLİG TARİHİ'
+    },
+    {
+        name: 'status',
+        placeholder: 'ÖDEME DURUMU'
+    },
+    {
+        name: 'payment_date',
+        placeholder: 'ÖDEME TARİHİ'
+    },
+    {
+        name: 'penalty_date',
+        placeholder: 'CEZA TARİHİ'
+    },
+    {
+        name: 'penalty_hour',
+        placeholder: 'CEZA-SAAT'
+    },
+]

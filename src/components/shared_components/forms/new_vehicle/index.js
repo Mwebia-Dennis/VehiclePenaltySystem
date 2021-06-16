@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { setNewVehicle, updateVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { handleUpdateData, formatDate } from '../../../../utils/functions'
+import { vehicleTextFields } from '../../../../utils/constants'
 import { CLEAR_VEHICLE_ERROR, CLEAR_VEHICLE_MESSAGE } from '../../../../store/reducers/vehicle/vehicle.types';
 
 export default (props) => {
@@ -31,6 +32,7 @@ export default (props) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
     const authReducer = useSelector((state) => state.authReducer)
+    const textFields = vehicleTextFields
 
 
     const links = [
@@ -49,55 +51,6 @@ export default (props) => {
         
     ]
 
-    const textFields = [
-        {
-            placeholder: "Plaka No",
-            name: "plate_number"
-
-        },
-        {
-            placeholder: "Araç Grubu",
-            name: "vehicle_group"
-
-        },
-        {
-            placeholder: "Marka-Model",
-            name: "brand_model"
-
-        },
-        {
-            placeholder: "Şase No",
-            name: "chassis_number"
-        },
-        {
-            placeholder: "Motor No",
-            name: "motor_number"
-        },
-        {
-            placeholder: "Model Yılı",
-            name: "model_year"
-        },
-        {
-            placeholder: "Renk",
-            name: "color"
-        },
-        {
-            placeholder: "Dosya No",
-            name: "file_number"
-        },
-        {
-            placeholder: "Künye",
-            name: "tag"
-        },
-        {
-            placeholder: "Alım Tipi",
-            name: "reception_type"
-        },
-        {
-            placeholder: "Demirbaş No",
-            name: "asset_number"
-        }
-    ]
 
     const handleInputChange = (inputName, inputValue)=> {
         const data = formInputData
