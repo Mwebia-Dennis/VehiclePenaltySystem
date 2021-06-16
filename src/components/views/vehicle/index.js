@@ -4,7 +4,8 @@ import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import EditDataModal from '../../shared_components/EditDataModal';
 import Paginator from '../../shared_components/Paginator';
-import { pageType, formTypes }  from '../../../utils/constants'
+import { pageType, formTypes, vehicleTextFields }  from '../../../utils/constants'
+import { getPlaceHolderName } from '../../../utils/functions'
 import { useDispatch,useSelector } from 'react-redux';
 import { deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
 import { Delete, Edit } from '@material-ui/icons';
@@ -123,7 +124,7 @@ export default (props) => {
         let formattedData = {}
         for(const key in data) {
 
-            formattedData['select'] = <FormControlLabel control={
+            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -132,13 +133,14 @@ export default (props) => {
                 
 
                 if(header != 'id' && header != 'added_by') {
-                    formattedData[header] = data[key][header]
+                    const placeholder = getPlaceHolderName(header, vehicleTextFields)
+                    formattedData[placeholder] = data[key][header]
                 }
 
                 
             }
             
-            formattedData["action"] = <>
+            formattedData["AKSİYON".toUpperCase()] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>

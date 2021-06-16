@@ -1,3 +1,6 @@
+import { otherFields } from './constants'
+
+
 export const handleUpdateData = (data)=> {
     let formattedData = {}
     for (const header in data) {
@@ -12,6 +15,8 @@ export const handleUpdateData = (data)=> {
     }
 
     return formattedData
+
+
 }
 
 
@@ -34,4 +39,27 @@ export function formatUrlName(name) {
     }
     return name
 
+}
+
+
+export const getPlaceHolderName  = (header, data) => {
+    
+    for(const item of data ){
+        if(item.name.trim().toLowerCase() == header.trim().toLowerCase()) {
+            return item.placeholder.toUpperCase()
+        }
+
+    }
+
+    //if it doesnt exist in existing fields check if it exists in other input data
+    for(const item of otherFields ){
+        if(item.name.trim().toLowerCase() == header.trim().toLowerCase()) {
+            return item.placeholder.toUpperCase()
+        }
+
+    }
+
+
+
+    return header
 }

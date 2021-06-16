@@ -16,7 +16,7 @@ import { Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
 import { formTypes }  from '../../../utils/constants'
-import { formatUrlName }  from '../../../utils/functions'
+import { formatUrlName, getPlaceHolderName }  from '../../../utils/functions'
 
 export default (props) => {
 
@@ -196,7 +196,7 @@ export default (props) => {
         for(const key in data) {
 
             const __data = JSON.parse(data[key].data)
-            formattedData['select'] = <FormControlLabel control={
+            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -205,7 +205,7 @@ export default (props) => {
                 
                 if(header.trim() == 'pdf') {
                     
-                    formattedData['pdf'] = <IconButton onClick={handleModalOpen}> 
+                    formattedData['pdf'.toUpperCase()] = <IconButton onClick={handleModalOpen}> 
                             <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                         </IconButton>
                 }else if(header.trim() == 'plate_number') {
@@ -216,11 +216,11 @@ export default (props) => {
 
                 
             }
-            formattedData["plate_number"] = data[key].vehicle.plate_number
-            formattedData["created_at"] = data[key].created_at
-            formattedData["updated_at"] = data[key].updated_at
+            formattedData['Plaka No'.toUpperCase()] = data[key].vehicle.plate_number
+            formattedData[getPlaceHolderName("created_at", [])] = data[key].created_at
+            formattedData[getPlaceHolderName("updated_at", [])] = data[key].updated_at
             
-            formattedData["action"] = <>
+            formattedData["AKSİYON".toUpperCase()] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
