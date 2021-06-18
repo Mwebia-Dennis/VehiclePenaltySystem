@@ -15,7 +15,6 @@ export const useStyles = makeStyles((theme) => ({
     },
     link: {
 
-        color: '#595959',
         textDecoration: 'none',
         listStyleType: 'none',
         display: 'block',

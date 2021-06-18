@@ -18,7 +18,7 @@ import EditDataModal from '../../shared_components/EditDataModal';
 import { formTypes }  from '../../../utils/constants'
 import { formatUrlName, getPlaceHolderName }  from '../../../utils/functions'
 
-export default (props) => {
+export default function AutoGenerateTable(props) {
 
 
     
@@ -49,12 +49,6 @@ export default (props) => {
         navigate('/404')
     }
 
-    useEffect(() => {
-        
-        dispatch(getMenuInfo(menu_id))
-        dispatch(getMenuData(menu_id,sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
-
-    }, [menu_id, sortingValues])
 
 
     
@@ -71,6 +65,20 @@ export default (props) => {
             open:false,
         });
     };
+    
+    useEffect(() => {
+        
+        dispatch(getMenuInfo(menu_id))
+        dispatch(getMenuData(menu_id,sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
+
+    }, [menu_id, sortingValues])
+
+
+    useEffect(() => {
+        
+        handleEditDataModalClose()
+
+    }, [menuDataReducer.data])
     
     const handlePagination = (page) => {
         setSortingValues({
@@ -105,7 +113,7 @@ export default (props) => {
     
     const handleSearching = (data)=> {
 
-        if(data.query != '') {
+        if(data.query !== '') {
             data.menu_id = menu_id
             dispatch(searchMenuData_data(data))
         }else {
@@ -121,7 +129,6 @@ export default (props) => {
     }
 
     function handleModalOpen(){
-        console.log('clicked')
       setOpen(true);
     };
     const handleModalClose = () => {
@@ -174,7 +181,6 @@ export default (props) => {
     }
     
     function checkIfDataExists(data) {
-        console.log(selectedData.split(','))
         return selectedData.split(',').includes(data.toString())
     }
     const formatExcelData = (data) => {
@@ -183,11 +189,7 @@ export default (props) => {
         if(!Array.isArray(data)) {
             return []
         }
-        return data.filter((item)=> {
-            if(selected.includes(item.id.toString())) {
-                return item;
-            }
-        })
+        return data.filter((item)=> selected.includes(item.id.toString()))
     }
 
     function formatData(data){
@@ -196,19 +198,19 @@ export default (props) => {
         for(const key in data) {
 
             const __data = JSON.parse(data[key].data)
-            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
+            formattedData['select'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
             for (const header in __data) {
 
                 
-                if(header.trim() == 'pdf') {
+                if(header.trim() === 'pdf') {
                     
                     formattedData['pdf'.toUpperCase()] = <IconButton onClick={handleModalOpen}> 
                             <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                         </IconButton>
-                }else if(header.trim() == 'plate_number') {
+                }else if(header.trim() === 'plate_number') {
                     continue
                 }else {
                     formattedData[header] = __data[header]
@@ -270,8 +272,6 @@ export default (props) => {
                         handleSearching = {handleSearching}
                         handleRefreshPage={handleRefreshPage}
                         sortingValues={sortingValues}
-                        handleSearching = {handleSearching}
-                        handleRefreshPage={handleRefreshPage}
                         handleLimitEntriesChange={handleLimitEntriesChange}
                         handleSortByChange={handleSortByChange}
                         toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}

@@ -2,7 +2,7 @@ import { Divider, Paper } from '@material-ui/core'
 import React from 'react'
 import { useStyles } from './style';
 
-export default (props) => {
+export default function DashboardCard (props) {
     
     const classes = useStyles();
 

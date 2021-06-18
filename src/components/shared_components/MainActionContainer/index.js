@@ -1,12 +1,11 @@
-import { Button, FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Tooltip, Typography } from '@material-ui/core'
-import { Add, CheckBox, Folder, Print, Publish, Refresh, Settings } from '@material-ui/icons';
+import {  FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Select, Tooltip, Typography } from '@material-ui/core'
+import { Add, CheckBox, Print,  Refresh } from '@material-ui/icons';
 import React, { useState } from 'react'
-import { useStyles,ActionButton,BootstrapInput } from './style';
+import { useStyles,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
 import { useNavigate } from 'react-router-dom';
 import ColumnSelectionModal from '../columnSelectionModal';
 import SearchBar from "material-ui-search-bar";
-import { useDispatch } from 'react-redux';
 import SearchIcon from '@material-ui/icons/Search';
 import { formatUrlName } from '../../../utils/functions'
 import { excelFileType } from '../../../utils/constants'
@@ -16,7 +15,7 @@ import MoreVert from '@material-ui/icons/MoreVert';
 
 
 
-export default (props) => {
+export default function MainActionContainer(props) {
 
     const { 
         data, 
@@ -30,7 +29,6 @@ export default (props) => {
         toggleCheckingAllCheckboxes
     } = props;
     const classes = useStyles();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState(null);
     const [columnSelectionOpen, setColumnSelectionOpen] = useState(false);
@@ -40,7 +38,6 @@ export default (props) => {
     const isMenuOpen = Boolean(anchorEl);
 
 
-    console.log(data)
     const handleFormOpen = () => {
 
         //data
@@ -202,7 +199,7 @@ export default (props) => {
                             
                             {
 
-                                searchQueryValue != ''?
+                                searchQueryValue !== ''?
                                     <Grid item xs={1}>
     
                                         <IconButton
@@ -210,9 +207,9 @@ export default (props) => {
                                             // aria-controls={mobileMenuId}
                                             aria-haspopup="true"
                                             onClick={handleSearchButtonClick}
-                                            color="inherit"
                                             className={classes.iconButton}
-                                            variant="contained" color="primary"
+                                            variant="contained" 
+                                            color="primary"
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -227,7 +224,6 @@ export default (props) => {
                 <Grid item xs={12} md={2}>
                     <div className={classes.entries}>
                     
-                        <Typography variant="small">Showing</Typography>
                         <Select
                             labelId="demo-customized-select-label"
                             id="demo-customized-select"
@@ -242,13 +238,13 @@ export default (props) => {
                                 
                                 }
                         </Select>
-                        <Typography variant="small">Entries</Typography> 
+                        <Typography variant="small">Giriş Gösteriliyor</Typography> 
                     </div> 
                 </Grid>
                 <Grid item xs={12} md={2}>
                 
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-simple-select-label">Sort by:</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Göre Sırala:</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"

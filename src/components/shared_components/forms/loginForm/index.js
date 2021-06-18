@@ -12,7 +12,7 @@ import { Close } from '@material-ui/icons';
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 import ProgressLoader from '../../ProgressBarSpinner'
 
-export default (props) => {
+export default function LoginForm(props) {
 
     const classes = useStyles();
     const dispatch = useDispatch()

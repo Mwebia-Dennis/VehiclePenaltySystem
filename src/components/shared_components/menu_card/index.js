@@ -1,7 +1,6 @@
-import { Avatar, Box, Button, Divider, Grid, IconButton, Typography } from '@material-ui/core'
+import {  Box, Button, Divider, Grid, IconButton, Typography } from '@material-ui/core'
 import { Close, Delete } from '@material-ui/icons';
 import React from 'react';
-import Profile from '../../../images/profile.jpeg';
 import { useStyles } from './style';
 import { useDispatch, useSelector } from 'react-redux';
 import ProgressSpinner from '../ProgressBarSpinner'
@@ -9,7 +8,7 @@ import { deleteMenu } from '../../../store/reducers/menu/menu.actions';
 import { useSnackbar } from 'notistack';
 import { CLEAR_MENU_ERROR, CLEAR_MENU_MESSAGE } from '../../../store/reducers/menu/menu.types';
 
-export default (props) => {
+export default function MenuCard(props) {
 
     const classes = useStyles();
     const {menu_id, menu_name, created_at} = props
@@ -53,7 +52,7 @@ export default (props) => {
                 <Grid xs={7} md={8} item className={classes.content}>
                     <Box>
                         <Typography className={classes.notifHeader} >{menu_name}</Typography>
-                        <Typography className={classes.notifTime}>created at: {created_at} </Typography>
+                        <Typography className={classes.notifTime}>oluşturulduğunda: {created_at} </Typography>
                     </Box>
                 </Grid>
                 <Grid xs={2} md={3} item >
@@ -74,7 +73,7 @@ export default (props) => {
                                 startIcon={menuReducer.loading? "": <Delete /> }
                                 onClick={handleMenuDelete}
                             >
-                                {menuReducer.loading?<ProgressSpinner/> : "Delete"}
+                                {menuReducer.loading?<ProgressSpinner/> : "Sil"}
                             </Button>
 
                         </Grid>

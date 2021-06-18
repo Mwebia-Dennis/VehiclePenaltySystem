@@ -37,7 +37,6 @@ export default (props) => {
         navigate('/auth/login')
     }
 
-    console.log(authState)
     if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
         navigate('/home')
     }

@@ -1,16 +1,16 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress, IconButton } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, IconButton } from '@material-ui/core';
 import React, { useState } from 'react'
 import {useStyles} from '../loginForm/style'
 import { useDispatch,useSelector } from 'react-redux'
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 import { useSnackbar } from 'notistack';
 import { useParams, useNavigate } from 'react-router-dom';
-import { forgotPassword, checkEmail } from '../../../../store/reducers/auth/auth.actions';
+import { forgotPassword } from '../../../../store/reducers/auth/auth.actions';
 import { Close } from '@material-ui/icons';
 import ProgressLoader from '../../ProgressBarSpinner'
 
-export default (props) => {
+export default function NewPassword(props) {
 
     const { token } = useParams()
     const classes = useStyles();

@@ -1,5 +1,5 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Divider, Backdrop, CircularProgress, Link, IconButton } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, Link, IconButton } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,24 +13,17 @@ import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth
 import { signUpUser } from '../../../../store/reducers/auth/auth.actions';
 import ProgressLoader from '../../ProgressBarSpinner'
 
-export default (props) => {
+export default function SignUpForm(props) {
 
     const classes = useStyles();
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
     const dispatch = useDispatch()
     const { register, handleSubmit, formState:{ errors } } = useForm()
     const navigate = useNavigate()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const authState = useSelector((state) => state.authReducer)
 
-    const handleBackdropClose = () => {
-        setOpenBackdrop(false);
-      };
-      const handleBackdropToggle = () => {
-        setOpenBackdrop(!openBackdrop);
-      };
+    
       const onSubmit = (data)=> {
-          //handleBackdropToggle()
           dispatch(signUpUser(data, navigate))
       }
 
@@ -140,9 +133,6 @@ export default (props) => {
                     </Grid>
                 </form>
             </Paper>
-            <Backdrop className={classes.backdrop} open={openBackdrop} onClick={handleBackdropClose}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </>
     );
 

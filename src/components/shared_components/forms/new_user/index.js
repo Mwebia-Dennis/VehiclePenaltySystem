@@ -1,5 +1,5 @@
 
-import { Button, Divider, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
+import { Button,  Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
 import React from 'react'
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 import { Close } from '@material-ui/icons';
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 
-export default (props) => {
+export default function NewUserForm(props) {
 
     const classes = useStyles();
     const dispatch = useDispatch()

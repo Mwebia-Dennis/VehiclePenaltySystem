@@ -1,5 +1,5 @@
 
-import { Button,  Paper, Grid, TextField, Typography, IconButton, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, IconButton, FormControl } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useStyles} from '../new_vehicle/style'
@@ -10,21 +10,19 @@ import {DropzoneArea} from 'material-ui-dropzone'
 import BreadCrumb from '../../BreadCrump';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
-import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions';
 import { setNewMenuData, updateMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
 import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
-import { handleUpdateData } from '../../../../utils/functions'
 
-export default (props) => { 
+
+export default function TemplateForm (props) { 
 
     const { isUpdate, title, data } = props;
     const incomingData = data?data:{}
     const classes = useStyles();
     const defaultInputData = ("data" in incomingData)?JSON.parse(incomingData.data):{}
-    console.log(defaultInputData)
     const [formInputData, setFormInputData] = useState({})
     const [plateNumber, setPlateNumber] = useState(
         ("vehicle" in incomingData)?{
@@ -49,7 +47,7 @@ export default (props) => {
         
         dispatch(getAllVehiclesPlateNumber())
         dispatch(getAllMenuEntries(menu_id))
-    }, [''])
+    })
 
 
     useEffect(() => {
@@ -57,7 +55,7 @@ export default (props) => {
             showSnackBar('Sorry invalid data provided, contact admin for more info', 'error')
             navigate('/home')
         }
-    }, [''])
+    })
     
 
     const handleFileChange = (files) => {
@@ -94,7 +92,7 @@ export default (props) => {
             return
         }
 
-        if(plateNumber == '') {
+        if(plateNumber === '') {
             showSnackBar("Plate Number is required", "error")
             return
         }
@@ -104,7 +102,7 @@ export default (props) => {
 
         if(!isUpdate) {
 
-            if( uploadedPdf != null) {
+            if( uploadedPdf !== null) {
 
                 if(("name" in uploadedPdf)) {
                     formData = new FormData()
@@ -209,16 +207,6 @@ export default (props) => {
 
     }
 
-    function formatInputName(name) {
-
-        //some turkish words have dots, so remove dots to avoid javasript error
-        const nameParts = name.split(".")
-        if(nameParts.length > 0) {
-            return nameParts.join('___')
-        }
-        return name
-
-    }
 
     function formatDataHeaders(data) {
         const newData = {}
@@ -238,7 +226,7 @@ export default (props) => {
     
     
     const getTextInputValue = (name)=> {
-        return (defaultInputData != null && defaultInputData !== {})?defaultInputData[name.trim().toString()]:''
+        return (defaultInputData !== null && defaultInputData !== {})?defaultInputData[name.trim().toString()]:''
     }
 
 
@@ -306,9 +294,9 @@ export default (props) => {
                         {
                             menuReducer.loading?<ProgressSpinner />
                             :
-                            menuReducer.menuEntries.map((item)=>{
+                            menuReducer.menuEntries.forEach((item)=>{
                             
-                                if(item.name != "plate_number" && item.name != "pdf") {
+                                if(item.name !== "plate_number" && item.name !== "pdf") {
                                     return (
 
                                         <Grid 

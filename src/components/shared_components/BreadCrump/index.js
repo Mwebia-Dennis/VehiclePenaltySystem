@@ -5,7 +5,6 @@ import { useStyles } from './style';
 
 function handleClick(event) {
   event.preventDefault();
-  console.info('You clicked a breadcrumb.');
 }
 
 export default function Breadcrumb(props) {
@@ -22,7 +21,7 @@ export default function Breadcrumb(props) {
         
         links.map((item, index)=>{
 
-          if(index == (links.length - 1)){
+          if(index === (links.length - 1)){
             return (
               <Link
                 color="textPrimary"

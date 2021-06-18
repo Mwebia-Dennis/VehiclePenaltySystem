@@ -1,5 +1,5 @@
 import {  Button, Chip, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
-import { Add, ArrowBack, Close, CloudUpload } from '@material-ui/icons';
+import { Add, Close, CloudUpload } from '@material-ui/icons';
 import React, { useState } from 'react'
 import {useStyles} from '../new_vehicle/style';
 import BreadCrumb from '../../BreadCrump';
@@ -10,9 +10,9 @@ import ProgressSpinner from '../../ProgressBarSpinner'
 import { CLEAR_MENU_ERROR, CLEAR_MENU_MESSAGE } from '../../../../store/reducers/menu/menu.types';
 import { setNewMenuEntries } from '../../../../store/reducers/menu/menu.actions';
 
-export default (props) => {
+export default function NewMenuFields(props) {
 
-    const { menu, handlePageType, menu_id } = props
+    const { menu, menu_id } = props
     const classes = useStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [fields, setFields] = useState(null);
@@ -38,7 +38,6 @@ export default (props) => {
 
     const handleSaveBtnClick = () => {
 
-        console.log(fields)
         const data = {
             menu_id: menu_id,
             name: fields
@@ -64,11 +63,16 @@ export default (props) => {
     }
 
     const handleTextFieldChange = (event) => {
-        if(event.target.value != '') {
+        if(event.target.value !== '') {
             setTextFieldValue(event.target.value)
         }
     }
 
+    const handleKeyDown = (e)=> {
+        if (e.key === 'Enter') {
+            handleAddField()
+        }
+    }
 
     const handleRemoveField = (value) => {
         
@@ -141,6 +145,7 @@ export default (props) => {
                             fullWidth
                             onChange={handleTextFieldChange}
                             value={textFieldValue}
+                            onKeyPress={handleKeyDown}
                         />
                         
                     </Grid>  

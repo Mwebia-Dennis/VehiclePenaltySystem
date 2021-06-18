@@ -1,10 +1,6 @@
-import React, {   Fragment, } from 'react';
-import Button from '@material-ui/core/Button';
+import React from 'react';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
 import { StyledMenu,StyledMenuItem,MoreButton } from './style'
 import { ExpandMore } from '@material-ui/icons';
 import { useStyles } from './style'
@@ -40,7 +36,7 @@ export default function CustomizedMenus(props) {
         startIcon={<ExpandMore />}
 
       >
-        More Pages
+        Daha Fazla Sayfa
       </MoreButton>
       <StyledMenu
         id="customized-menu"

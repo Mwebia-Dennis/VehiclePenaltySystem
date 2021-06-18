@@ -1,7 +1,7 @@
 import { CircularProgress, Grid } from '@material-ui/core'
 import React from 'react'
 
-export default () => {
+export default function ProgressBarSpinner () {
     
     return (
         <Grid 

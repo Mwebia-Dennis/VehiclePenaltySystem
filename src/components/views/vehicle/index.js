@@ -26,7 +26,7 @@ export default (props) => {
         open: false,
         data: {},
     })
-    
+     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
         limitEntries:25,
@@ -38,6 +38,12 @@ export default (props) => {
         dispatch(getAllVehicles(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
 
     }, [sortingValues])
+    
+    useEffect(() => {
+        
+        handleEditDataModalClose()
+
+    }, [vehicleReducer.data])
 
 
     const handleEditDataModalOpen = (data) => {
@@ -119,12 +125,12 @@ export default (props) => {
     }
 
     
-    function formatData(data){
+    function formatData(data, isTurkish = true){
         const allData = []
         let formattedData = {}
         for(const key in data) {
 
-            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
+            formattedData['select'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -133,14 +139,15 @@ export default (props) => {
                 
 
                 if(header != 'id' && header != 'added_by') {
-                    const placeholder = getPlaceHolderName(header, vehicleTextFields)
+                    const placeholder = isTurkish?getPlaceHolderName(header, vehicleTextFields):header
                     formattedData[placeholder] = data[key][header]
                 }
 
                 
             }
             
-            formattedData["AKSİYON".toUpperCase()] = <>
+            const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
+            formattedData[placeholder] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
@@ -170,7 +177,9 @@ export default (props) => {
 
     const formatSortHeaders = () => {
 
-        const headers = getTableHeaders(formatData( vehicleData.data))
+        const headers = getTableHeaders(formatData( vehicleData.data, false))
+        console.log("headers")
+        console.log(headers)
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');

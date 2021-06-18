@@ -9,16 +9,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { useStyles } from './style';
-import { Avatar, Button, Divider, Drawer, Link, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Avatar, Button, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { SideMenuItems } from '../../data/sideMenuItems';
 import { useNavigate } from 'react-router-dom';
-import { Close } from '@material-ui/icons';
+import { AcUnitRounded, Close, Flare, Star, Stars } from '@material-ui/icons';
 import DropDownMenu from './drop_down_menu'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMenus } from '../../../store/reducers/menu/menu.actions';
 import { logOut } from '../../../store/reducers/auth/auth.actions';
 import CategoryIcon from '@material-ui/icons/Category';
-import axios from 'axios';
 
 
 export default function PrimarySearchAppBar() {
@@ -34,22 +33,22 @@ export default function PrimarySearchAppBar() {
   const isLoggedIn = authState.authenticated;
   const loggedOutMenu = [
     {
-        name:"Login",
+        name:"Oturum Aç",
         url: "auth/login"
     },
     {
-        name:"Sign Up",
+        name:"Kaydol",
         url: "auth/signup"
     },
   ];
   const loggedInMenu = [
     {
-        name:"Edit Profile",
+        name:"Profili Düzenle",
         url: "/profile/current-user",
         onclick: null,
     },
     {
-        name:"Logout",
+        name:"Cıkış Yap",
         url: "",
         onclick:{handleLogout}
     },
@@ -60,12 +59,20 @@ export default function PrimarySearchAppBar() {
 
   if(Array.isArray(menuReducer.data)) {
 
+    const icons = [
+      <CategoryIcon />,
+      <Star />,
+      <Stars />,
+      <Flare />,
+      <AcUnitRounded />
+    ]
     menuReducer.data.forEach((item)=>{
 
+        const rand = Math.floor(Math.random() * icons.length)
         const menu = {
           item: item.name,
           url: '/auto/data/'+item.id,
-          icon: <CategoryIcon />
+          icon: icons[rand]
         }
         if(!containsMenu(menu, SideMenuItems)) {
           SideMenuItems.push(menu)
@@ -78,7 +85,7 @@ export default function PrimarySearchAppBar() {
   useEffect(() => {
     
     dispatch(getAllMenus())
-  }, [''])
+  }, [])
 
 
   const isMenuOpen = Boolean(anchorEl);
@@ -95,7 +102,7 @@ export default function PrimarySearchAppBar() {
   const handleMenuClose = (url) => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    if(url != ''){
+    if(url !== ''){
       navigate(url)
     }
   };
@@ -179,7 +186,7 @@ export default function PrimarySearchAppBar() {
         >
           {("profile_img" in authState.data)?<Avatar src={authState.data.profile_img}/> :<AccountCircle />}
         </IconButton>
-        <p>Profile</p>
+        <p>profil</p>
       </MenuItem>
     </Menu>
   );
@@ -212,7 +219,11 @@ export default function PrimarySearchAppBar() {
                                 {item.item}
                             </Button>
                         )
-                    }})
+                        
+                    }
+                    return (<></>)
+                  })
+                    
                 }
 
                 <DropDownMenu menuItems={SideMenuItems.filter((item, index) => index >= 4)} />

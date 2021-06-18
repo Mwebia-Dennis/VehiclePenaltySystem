@@ -16,8 +16,6 @@ import VerifyEmail from '../views/verify_email';
 
 
 const loggedInHandler = (verified, email)=> {
-    console.log(parseInt(verified))
-    console.log(("verified"))
     if(parseInt(verified) === 1) {
         return (<Home />)
     }else if(parseInt(verified) === 0) {

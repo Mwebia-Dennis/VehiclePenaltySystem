@@ -52,7 +52,6 @@ export const getMenuInfo = (menu_id) => (dispatch) => {
     axios.get('menu/'+menu_id)
     .then((res)=>{
         
-        console.log(res)
         dispatch({ type: CLEAR_MENU_ERROR})
         dispatch({
             type: SET_SINGLE_MENU_DATA,
@@ -62,8 +61,7 @@ export const getMenuInfo = (menu_id) => (dispatch) => {
 
     })
     .catch((error)=> {
-        
-        console.log(error.response.data)
+
         dispatch({
             type: SET_MENU_ERROR,
             payload: error.response.data
@@ -127,7 +125,6 @@ export const setNewMenuEntries = (newData, user_id,navigate) => (dispatch) => {
     axios.post('users/'+user_id+'/menu-item', newData)
     .then((res)=>{
         
-        console.log(res)
         dispatch({ type: CLEAR_MENU_ERROR})
         dispatch({
             type: SET_MENU_MESSAGE,

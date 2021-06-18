@@ -7,7 +7,7 @@ import { useStyles } from './style'
 import { useDispatch } from 'react-redux';
 import { getUserDetails } from '../../../store/reducers/auth/auth.actions'
 
-export default (props) => {
+export default function Home(props) {
 
     const classes = useStyles()
     const dispatch = useDispatch()
@@ -16,7 +16,7 @@ export default (props) => {
         
         dispatch(getUserDetails())
 
-    }, [])
+    }, [''])
     
     return (
         <>

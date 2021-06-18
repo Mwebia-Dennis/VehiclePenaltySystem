@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import Form from '../../shared_components/forms'
 
-export default (props) => {
+export default function AutoGeneratePage(props) {
 
     
     const { page_type } = useParams();
