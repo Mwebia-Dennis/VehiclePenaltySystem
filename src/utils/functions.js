@@ -7,7 +7,7 @@ export const handleUpdateData = (data)=> {
 
             
 
-        if(header != 'id' && header != 'added_by' && header != 'created_at' && header != 'updated_at') {
+        if(header !== 'id' && header !== 'added_by' && header !== 'created_at' && header !== 'updated_at') {
             formattedData[header] = data[header]
         }
 
@@ -16,6 +16,19 @@ export const handleUpdateData = (data)=> {
 
     return formattedData
 
+
+}
+
+
+
+export function formatInputName(name) {
+
+    //some turkish words have dots, so remove dots to avoid javasript error
+    const nameParts = name.split(".")
+    if(nameParts.length > 0) {
+        return nameParts.join('___')
+    }
+    return name
 
 }
 
@@ -45,7 +58,7 @@ export function formatUrlName(name) {
 export const getPlaceHolderName  = (header, data) => {
     
     for(const item of data ){
-        if(item.name.trim().toLowerCase() == header.trim().toLowerCase()) {
+        if(item.name.trim().toLowerCase() === header.trim().toLowerCase()) {
             return item.placeholder.toUpperCase()
         }
 
@@ -53,7 +66,7 @@ export const getPlaceHolderName  = (header, data) => {
 
     //if it doesnt exist in existing fields check if it exists in other input data
     for(const item of otherFields ){
-        if(item.name.trim().toLowerCase() == header.trim().toLowerCase()) {
+        if(item.name.trim().toLowerCase() === header.trim().toLowerCase()) {
             return item.placeholder.toUpperCase()
         }
 

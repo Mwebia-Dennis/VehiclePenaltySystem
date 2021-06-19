@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import {Tooltip, TextField, Button, DialogActions,
-    Dialog,DialogContent, DialogContentText,DialogTitle,
-    Box, CircularProgress, IconButton, MenuItem, Typography
+import {Button, DialogActions,
+    Dialog,DialogContent, DialogTitle, IconButton, MenuItem
 } from '@material-ui/core';
 import { Close, PhotoCamera, Publish } from '@material-ui/icons';
 import { DropzoneArea } from 'material-ui-dropzone';
@@ -12,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import { CLEAR_EXCEL_FILE_ERROR, CLEAR_EXCEL_FILE_MESSAGE } from '../../../store/reducers/excel_files/excelFiles.types';
 
 
-export default (props) => {
+export default function ImportExcelData(props) {
 
     const { excelFileType } = props
     const [open, setOpen] = useState(false)

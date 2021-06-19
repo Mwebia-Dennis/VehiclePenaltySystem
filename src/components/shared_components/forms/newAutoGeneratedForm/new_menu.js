@@ -11,7 +11,7 @@ import { CLEAR_MENU_ERROR, CLEAR_MENU_MESSAGE } from '../../../../store/reducers
 import { setNewMenu } from '../../../../store/reducers/menu/menu.actions';
 
 
-export default (props) => {
+export default function NewMenuForm(props) {
 
     const classes = useStyles();
     const { handlePageType } = props
@@ -40,8 +40,6 @@ export default (props) => {
         setOpenBackdrop(false);
       };
       const onSubmit = (data) => {
-
-        console.log(data)
         setMenuName(data.name)
         if('id' in authReducer.data) {
 
@@ -54,7 +52,7 @@ export default (props) => {
     if(menuReducer.message) {
         showSnackBar(menuReducer.message.message, 'success');
         dispatch({ type: CLEAR_MENU_MESSAGE})
-        if(menuName.trim() != ''){
+        if(menuName.trim() !== ''){
             handlePageType(
                 {
                     pageType: 'new_menu_fields',

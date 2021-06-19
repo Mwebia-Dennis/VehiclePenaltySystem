@@ -12,7 +12,7 @@ import {
 
 
 const setAuthorizationHeader = () => {
-    if(localStorage.getItem('access_token') && localStorage.getItem('access_token') != '') {
+    if(localStorage.getItem('access_token') && localStorage.getItem('access_token') !== '') {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('access_token');
 
     }

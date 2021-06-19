@@ -1,16 +1,16 @@
 
-import { Button,  Paper, Grid, TextField, Typography, Divider, IconButton } from '@material-ui/core';
+import { Button,  Paper, Grid, TextField, Typography, IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import React, { useState} from 'react'
 import {useStyles} from '../loginForm/style'
 import { useDispatch,useSelector } from 'react-redux'
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../../store/reducers/auth/auth.types';
 import { useSnackbar } from 'notistack';
-import { useParams, useNavigate } from 'react-router-dom';
-import { forgotPassword, checkEmail } from '../../../../store/reducers/auth/auth.actions';
+import {  useNavigate } from 'react-router-dom';
+import {  checkEmail } from '../../../../store/reducers/auth/auth.actions';
 import ProgressLoader from '../../ProgressBarSpinner'
 
-export default (props) => {
+export default function ForgotPassword (props) {
 
     const classes = useStyles()
     const navigate = useNavigate()
@@ -18,8 +18,6 @@ export default (props) => {
     const dispatch = useDispatch()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const authState = useSelector((state) => state.authReducer)
-    const email = localStorage.getItem("email")
-    console.log(email)
 
 
     const textFields = [
@@ -40,7 +38,7 @@ export default (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if(emailInput == '') {
+        if(emailInput === '') {
             showSnackBar("Email field is required", "error")
             return
         }

@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import styled from 'styled-components'
 import { Button } from '@material-ui/core';
 
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles((theme) => ({
 

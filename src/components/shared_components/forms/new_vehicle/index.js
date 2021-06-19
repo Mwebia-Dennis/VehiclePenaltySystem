@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
+import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import React, {forwardRef, useState} from 'react'
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
@@ -8,19 +8,19 @@ import { Close } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { setNewVehicle, updateVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { handleUpdateData, formatDate } from '../../../../utils/functions'
+import { vehicleSelectFields } from '../../../../utils/constants'
 import { vehicleTextFields } from '../../../../utils/constants'
 import { CLEAR_VEHICLE_ERROR, CLEAR_VEHICLE_MESSAGE } from '../../../../store/reducers/vehicle/vehicle.types';
 
-export default (props) => {
+export default function NewVehicleForm(props) {
 
     const { isUpdate, data } = props;
     const classes = useStyles();
     const dispatch = useDispatch()
-    const defaultInputData = (data != null && data != undefined)?data:{}
+    const defaultInputData = (data !== null && data !== undefined)?data:{}
     const [formInputData, setFormInputData] = useState({})
     // const { register, handleSubmit, formState:{ errors } } = useForm({
     //     defaultValues: handleUpdateData(defaultInputData)
@@ -64,7 +64,6 @@ export default (props) => {
         if(data === {} && defaultInputData !== {}){
             showSnackBar("No data has been editted", "info")
             return
-            data = defaultInputData
         }else if(data !== {} && defaultInputData !== {}){
 
             //if the state is not empty and there are default values, 
@@ -85,8 +84,6 @@ export default (props) => {
 
         data["delivery_date"] = formatDate(new Date(deliveryDate))
         if('id' in authReducer.data) {
-
-            console.log( handleUpdateData(data) )
 
             if(isUpdate) {
                 dispatch(updateVehicle(data, authReducer.data.id, defaultInputData.id))
@@ -120,7 +117,7 @@ export default (props) => {
 
 
     const getTextInputValue = (name)=> {
-        return (data != null && data != undefined)?data[name]:''
+        return (data !== null && data !== undefined)?data[name]:''
     }
     function showSnackBar(msg, variant = 'info'){
         enqueueSnackbar(msg, {
@@ -197,6 +194,43 @@ export default (props) => {
                             }
 
                             
+                            {
+
+
+                                vehicleSelectFields.map((item, index)=>(
+
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        >
+                                            <FormControl style={{width: '100%'}}>
+                                                <InputLabel id="demo-simple-select-label">{item.label}</InputLabel>
+                                                <Select
+                                                    name={item.name}
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"                                         
+                                                    onChange={(e)=>handleInputChange(item.name, e.target.value)}
+                                                    value={formInputData.status}
+                                                    defaultValue={getTextInputValue(item.name)}  
+                                                >
+
+                                                    {
+                                                        item.menuItem.map((element,index)=>(
+                                                            <MenuItem key={index} value={element.value}>{element.value}</MenuItem>
+                                                        ))
+                                                    }
+                                                </Select>
+                                                {/* {errors["status"] && <span>This field is required</span>} */}
+                                            </FormControl>
+                                    </Grid>
+
+
+                                ))
+
+
+                            }
+
+
                             <Grid
                                 item 
                                 xs={12} 
@@ -210,6 +244,9 @@ export default (props) => {
                                         name="delivery_date"
                                     />
                             </Grid>
+                            
+                            
+
                             
 
                     </Grid>

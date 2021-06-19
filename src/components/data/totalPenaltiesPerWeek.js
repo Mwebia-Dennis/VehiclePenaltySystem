@@ -5,7 +5,7 @@ export const State = {
       
     datasets: [
       {
-        label: 'Total Penalties',
+        label: 'Toplam Cezalar',
         fill: true,
         lineTension: 0.5,
         backgroundColor: '#ff9999',
@@ -17,7 +17,7 @@ export const State = {
       },
       
       {
-        label: 'Total Vehicles',
+        label: 'Toplam Araç',
         fill: true,
         lineTension: 0.5,
         pointRadius: 4,

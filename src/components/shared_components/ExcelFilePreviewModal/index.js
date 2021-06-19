@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Tooltip, TextField, Button, DialogActions,
-    Dialog,DialogContent, DialogContentText,DialogTitle,
-    Box, CircularProgress, IconButton, MenuItem, Typography, Card, CardContent, CardActions, Avatar, Grid
+import { Button, DialogActions,
+    Dialog,DialogContent, DialogTitle, IconButton, MenuItem, Typography, Card, CardContent, CardActions, Avatar, Grid
 } from '@material-ui/core';
-import { Close, CloudDownload, Folder, FontDownload, PhotoCamera, Publish } from '@material-ui/icons';
+import { Close, CloudDownload, Folder } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { downloadFile, getAllFiles, setExcelFiles } from '../../../store/reducers/excel_files/excelFiles.actions';
 import ProgressLoader from '../ProgressBarSpinner'
@@ -15,7 +14,7 @@ import axios from 'axios';
 import fileDownload from 'js-file-download';
 
 
-export default (props) => {
+export default function ExcelFileModal(props){
 
     const { excelFileType } = props
     const [open, setOpen] = useState(false)
@@ -64,7 +63,7 @@ export default (props) => {
 
             showSnackBar(excelFileReducer.error.error, 'error');
         }
-        // dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
+         dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
     }
 
       function showSnackBar(msg, variant = 'info'){

@@ -8,7 +8,7 @@ import Modal from '../../shared_components/modal';
 import { penaltyTextFields, formTypes, pageType }  from '../../../utils/constants'
 import { getPlaceHolderName } from '../../../utils/functions'
 import pdf_logo from '../../../images/pdf_logo.jpg'
-import { Avatar, Checkbox, Chip, FormControlLabel, IconButton } from "@material-ui/core";
+import { Avatar, Checkbox,  FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
@@ -16,14 +16,13 @@ import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
 
-export default (props) => {
+export default function Penalty(props) {
 
     
     const [pdfOpen, setPdfOpen] = useState({
         open: false,
         pdf: null,
     });
-    const [page, setPage] = useState(1);
     const [selectedData, setSelectedData] = useState('')
     const dispatch = useDispatch()
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
@@ -41,7 +40,6 @@ export default (props) => {
 
 
     function handleModalOpen(pdf){
-        console.log('clicked')
         setPdfOpen({
             pdf: pdf,
             open : true,
@@ -55,11 +53,6 @@ export default (props) => {
     };
     
     
-    useEffect(() => {
-        
-        dispatch(getAllPenalties(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
-
-    }, [sortingValues])
 
 
     const handleEditDataModalOpen = (data) => {
@@ -75,6 +68,18 @@ export default (props) => {
             open:false,
         });
     };
+
+    useEffect(() => {
+        
+        dispatch(getAllPenalties(sortingValues.sortBy, sortingValues.page, sortingValues.limitEntries))
+
+    }, [sortingValues])
+    
+    useEffect(() => {
+        
+        handleEditDataModalClose()
+
+    }, [penaltyReducer.data])
 
     const handlePagination = (page) => {
         setSortingValues({
@@ -127,7 +132,7 @@ export default (props) => {
     }
     const handleSearching = (data)=> {
 
-        if(data.query != '') {
+        if(data.query !== '') {
             const formData = new FormData()
             formData.append('value', data.query.toLowerCase())
 
@@ -166,38 +171,40 @@ export default (props) => {
     function checkIfDataExists(data) {
         return selectedData.split(',').includes(data.toString())
     }
-    function formatData(data){
+    function formatData(data, isTurkish = true){
         const allData = []
         let formattedData = {}
         for(const key in data) { 
 
-            formattedData['seç'.toUpperCase()] = <FormControlLabel control={
+            formattedData['select'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
             for (const header in data[key]) {
 
                 
-                if(header != 'id' && header != 'added_by' && header != 'vehicle' && header != 'vehicle_id') {
+                if(header !== 'id' && header !== 'added_by' && header !== 'vehicle' && header !== 'vehicle_id') {
 
-                    if(header.trim() == 'pdf_url') {
+                    if(header.trim() === 'pdf_url') {
                     
-                        formattedData['pdf'.toUpperCase()] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
+                        const placeholder = isTurkish?'pdf'.toUpperCase():'pdf'
+                        formattedData[placeholder] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
                                 <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                             </IconButton>
                     }else {
 
                         
-                        const placeholder = getPlaceHolderName(header, penaltyTextFields)
+                        const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
                         formattedData[placeholder] = data[key][header]
                     }
                 }
-                formattedData['Plaka No'.toUpperCase()] = data[key]['vehicle']['plate_number']
+                const placeholder = isTurkish?'Plaka No'.toUpperCase():"plate_number"
+                formattedData[placeholder] = data[key]['vehicle']['plate_number']
 
                 
             }
-            
-            formattedData["AKSİYON".toUpperCase()] = <>
+            const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
+            formattedData[placeholder] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
@@ -228,7 +235,7 @@ export default (props) => {
 
     const formatMoreData = () => {
 
-        const headers = getTableHeaders(formatData( penaltyData.data))
+        const headers = getTableHeaders(formatData( penaltyData.data, false))
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');
@@ -283,11 +290,7 @@ export default (props) => {
         if(!Array.isArray(data)) {
             return []
         }
-        return data.filter((item)=> {
-            if(selected.includes(item.id.toString())) {
-                return item;
-            }
-        })
+        return data.filter((item)=> (selected.includes(item.id.toString())))
     }
 
 

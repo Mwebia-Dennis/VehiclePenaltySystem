@@ -24,7 +24,7 @@ export default function CustomizedTables(props) {
               {
                   tableHeader.map((item, index)=> {
 
-                    const align = (index == 0)?'':"center";
+                    const align = (index === 0)?'':"center";
                     return <StyledTableCell align={align} >{item}</StyledTableCell>
                   })
               }
@@ -38,7 +38,7 @@ export default function CustomizedTables(props) {
                 let i = 0
                 for (const key in item) {
                   
-                  if(i == 1) {
+                  if(i === 1) {
                     
                     cellsData.push(<StyledTableCell  component="th" scope="row" align="center">{index + 1}</StyledTableCell>)
                   }

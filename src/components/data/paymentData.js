@@ -1,10 +1,10 @@
 export const PaymentData = { 
     labels: [
-        "Settled Payments",
-        "Pending Payments"
+        "Ödenen Ödemeler",
+        "Bekleyen ödemeler"
     ],
     datasets: [{
-        label: 'Settled Payments',
+        label: 'Ödenen Ödemeler',
         data: [50,50],
         backgroundColor: [
             '#36a2eb',

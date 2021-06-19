@@ -78,7 +78,6 @@ export const downloadFile = (file_id) => (dispatch) => {
     axios.get('excel-file/'+file_id)
     .then((res)=>{
         
-        console.log(res)
         // dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
         // dispatch({
         //     type: SET_EXCEL_FILE_DATA,
@@ -89,7 +88,6 @@ export const downloadFile = (file_id) => (dispatch) => {
     })
     .catch((error)=> {
         
-        console.log(error.response.data)
         dispatch({
             type: SET_EXCEL_FILE_ERROR,
             payload: error.response.data

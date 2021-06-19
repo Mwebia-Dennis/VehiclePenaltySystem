@@ -50,7 +50,6 @@ export const setNewMenuData = (newData, user_id, navigate) => (dispatch) => {
     axios.post('users/'+user_id+'/menu-data', newData)
     .then((res)=>{
         
-        console.log(res)
         dispatch({ type: CLEAR_MENU_DATA_ERROR})
         dispatch({
             type: SET_MENU_DATA_MESSAGE,

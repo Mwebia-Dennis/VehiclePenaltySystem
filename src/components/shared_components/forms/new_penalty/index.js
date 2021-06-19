@@ -1,5 +1,5 @@
 
-import { Button, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
+import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
 import React, { forwardRef, useEffect, useState } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete';   
 import {useStyles} from './style'
@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { Close } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
-import { useForm } from "react-hook-form";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
@@ -20,11 +19,11 @@ import { setNewPenalty, updatePenalty } from '../../../../store/reducers/penalty
 import { handleUpdateData, formatDate } from '../../../../utils/functions'
 import { penaltyTextFields } from '../../../../utils/constants'
 
-export default (props) => {
+export default function NewPenaltyForm(props) {
 
     const { isUpdate, data } = props;
     const classes = useStyles();
-    const defaultInputData = (data != null && data != undefined)?data:{}
+    const defaultInputData = (data !== null && data !== undefined)?data:{}
     const [formInputData, setFormInputData] = useState({})
     const [plateNumber, setPlateNumber] = useState(
         ("vehicle" in defaultInputData)?{
@@ -45,7 +44,6 @@ export default (props) => {
     const [fileError, setFileError] = useState('')
     const [uploadedPdf, setUploadedPdf] = useState(null)
     const dispatch = useDispatch()
-    const { register,handleSubmit, formState:{ errors } } = useForm()
     const navigate = useNavigate()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const penaltyReducer = useSelector((state) => state.penaltyReducer)
@@ -58,7 +56,7 @@ export default (props) => {
     useEffect(() => {
         
         dispatch(getAllVehiclesPlateNumber())
-    }, [''])
+    }, [])
 
     const links = [
         {
@@ -110,7 +108,6 @@ export default (props) => {
         if(data === {} && defaultInputData !== {}){
             showSnackBar("No data has been editted", "info")
             return
-            data = defaultInputData
         }else if(data !== {} && defaultInputData !== {}){
 
             //if the state is not empty and there are default values, 
@@ -128,7 +125,7 @@ export default (props) => {
             return
         }
 
-        if(plateNumber == '') {
+        if(plateNumber === '') {
             showSnackBar("Plate Number is required", "error")
             return
         }
@@ -147,7 +144,7 @@ export default (props) => {
 
         if(!isUpdate) {
 
-            if( uploadedPdf != null) {
+            if( uploadedPdf !== null) {
 
                 if(("name" in uploadedPdf)) {
     
@@ -211,7 +208,7 @@ export default (props) => {
     }
 
     const getTextInputValue = (name)=> {
-        return (data != null && data != undefined)?data[name]:''
+        return (data !== null && data !== undefined)?data[name]:''
     }
  
     return (
@@ -384,9 +381,9 @@ export default (props) => {
                                                 ))
                                             }
                                         </Select>
-                                        {errors["status"] && <span>This field is required</span>}
+                                        {/* {errors["status"] && <span>This field is required</span>} */}
                                     </FormControl>
-                                </Grid>
+                            </Grid>
 
 
                                 {

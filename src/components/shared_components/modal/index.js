@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTheme, withStyles } from '@material-ui/core/styles';
+import {  withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -9,8 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { styles, DialogContent,DialogActions } from './style'
 import { Document, Page, pdfjs } from "react-pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-import PDFFile from '../../../images/demo.pdf'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
+// import PDFFile from '../../../images/demo.pdf'
+// import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 // pdfjs.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js";
@@ -37,7 +37,7 @@ export default function CustomizedDialogs(props) {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
 
-  const theme = useTheme();
+  // const theme = useTheme();
   // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onDocumentLoadSuccess = ({ numPages }) => {

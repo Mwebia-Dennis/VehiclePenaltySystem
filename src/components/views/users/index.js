@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect,  useState } from 'react'
 import Table from '../../shared_components/table';
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
@@ -6,8 +6,9 @@ import Paginator from '../../shared_components/Paginator';
 import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllUsersData, searchUsersData } from '../../../store/reducers/users/user.actions';
-import { Avatar, Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { Avatar, Checkbox, FormControlLabel } from '@material-ui/core';
+import { getPlaceHolderName } from '../../../utils/functions'
+import { signUpTextfields } from '../../../utils/constants'
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 
@@ -67,7 +68,7 @@ export default (props) => {
         
     ]
 
-    function formatData(data){
+    function formatData(data, isTurkish = true){
         const allData = []
         let formattedData = {}
         for(const key in data) {
@@ -80,11 +81,17 @@ export default (props) => {
 
                 
 
-                if(header != 'id' && header != 'email_verified_at') {
-                    if(header.trim().toLowerCase() == 'profile_img') {
-                        formattedData['profile_img'] = <Avatar alt={data[key]['name']} src={data[key][header]} />
+                if(header !== 'id' && header !== 'email_verified_at' && header !== 'verification_token') {
+                    if(header.trim().toLowerCase() === 'verified') {
+                        const placeholder = isTurkish?'Eposta Doğrulama':'verified'
+                        formattedData[placeholder] =  (data[key]['verified'])?"doğrulandı": "Doğrulanmadı"
+                    }else if(header.trim().toLowerCase() === 'profile_img') {
+                        const placeholder = isTurkish?'profil resmi':'profile_img'
+                        formattedData[placeholder] = <Avatar alt={data[key]['name']} src={data[key][header]} />
                     }else {
-                        formattedData[header] = data[key][header]
+
+                        const placeholder = isTurkish?getPlaceHolderName(header, signUpTextfields):header
+                        formattedData[placeholder] = data[key][header]
                     }
                 }
 
@@ -119,7 +126,7 @@ export default (props) => {
     }
     const handleSearching = (data)=> {
 
-        if(data.query != '') {
+        if(data.query !== '') {
             const formData = new FormData()
             formData.append('value', data.query.toLowerCase())
 
@@ -157,12 +164,11 @@ export default (props) => {
     }
     
     function checkIfDataExists(data) {
-        console.log(selectedData.split(','))
         return selectedData.split(',').includes(data.toString())
     }
     const formatSortHeaders = () => {
 
-        const headers = getTableHeaders(formatData( userData.data))
+        const headers = getTableHeaders(formatData( userData.data, false))
         // removing unwanted cols
         if(headers.includes('#')) {
             const index = headers.indexOf('#');
@@ -172,6 +178,12 @@ export default (props) => {
         }
         if(headers.includes('pdf')) {
             const index = headers.indexOf('pdf');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('profile_img')) {
+            const index = headers.indexOf('profile_img');
             if (index > -1) {
                 headers.splice(index, 1);
             }

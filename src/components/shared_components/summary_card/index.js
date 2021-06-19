@@ -1,10 +1,9 @@
-import { Box, Divider, Grid, Typography } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 import React from 'react'
 import { Card,IconBox, useStyles,NumberHeader } from './style';
-import ArrowForwardOutlinedIcon from '@material-ui/icons/ArrowForwardOutlined';
 import { Link } from 'react-router-dom';
 
-export default (props) => {
+export default function SummaryCard (props) {
     
     const classes = useStyles();
     const { color,title,value,url, icon } = props;
@@ -49,7 +48,7 @@ export default (props) => {
                 </Grid>
 
                 <Divider className={classes.divider} />
-                <Link to={url} className={classes.link}>View More</Link>
+                <Link to={url} className={classes.link}>daha fazla göster</Link>
             </Card>
         </Grid>
 

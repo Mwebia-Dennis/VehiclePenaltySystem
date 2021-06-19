@@ -3,7 +3,7 @@ import React from 'react'
 import Pagination from '@material-ui/lab/Pagination';
 import { useStyles } from './style';
 
-export default (props) => {
+export default function Paginator (props) {
     
     const classes = useStyles();
     const { page,paginationCount, handlePagination } = props

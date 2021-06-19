@@ -1,5 +1,5 @@
 import { Avatar, Button, Divider, FormControl, Grid, InputLabel, Link, OutlinedInput, Paper, Typography, IconButton } from '@material-ui/core';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useStyles } from './style'
 import MailIcon from '@material-ui/icons/Mail';
 import { PhotoCamera } from '@material-ui/icons';
@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { CLEAR_ERROR, CLEAR_MESSAGE } from '../../../store/reducers/auth/auth.types';
 
 
-export default (props) => {
+export default function ProfileBanner (props) {
     
     const classes = useStyles();
     const { id } = props;
@@ -21,8 +21,8 @@ export default (props) => {
     const { register, handleSubmit, formState:{ errors } } = useForm()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const authState = useSelector((state) => state.authReducer)
-    const reducer = (id.trim().toLowerCase() == 'current-user')?useSelector((state) => state.authReducer):
-            useSelector((state) => state.userReducer);
+    const userReducer = useSelector((state) => state.userReducer)
+    const reducer = (id.trim().toLowerCase() === 'current-user')?authState:userReducer;
 
             
       const onSubmit = (data)=> {
@@ -91,7 +91,7 @@ export default (props) => {
     ]
     useEffect(() => {
 
-        if(id.trim().toLowerCase() == 'current-user') {
+        if(id.trim().toLowerCase() === 'current-user') {
             //get CURRENT authenticated user details
             dispatch(getUserDetails())
         }else if(!isNaN(id.trim().toLowerCase())) {
@@ -100,7 +100,7 @@ export default (props) => {
             dispatch(getUserData(id))
         }
 
-    }, [''])
+    }, [])
 
 
     return (
@@ -152,7 +152,7 @@ export default (props) => {
                                 
                                 {
 
-                                    (id.trim().toLowerCase() == 'current-user')?
+                                    (id.trim().toLowerCase() === 'current-user')?
 
                                         <>
                                             <input
@@ -189,7 +189,7 @@ export default (props) => {
 
                     {
                         
-                        (id.trim().toLowerCase() == 'current-user')?
+                        (id.trim().toLowerCase() === 'current-user')?
 
                             <div className={classes.root2}>
                                 <Paper className={classes.editContainer}>

@@ -3,11 +3,9 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import ReactExport from "react-export-excel";
-import { pageType } from '../../../utils/constants'
 import { Checkbox, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -16,7 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide(props) {
 
-    const { open, handleClose,dataSetHeaders,dataSet} = props;
+    const { open, handleClose,dataSet} = props;
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -47,6 +45,12 @@ export default function AlertDialogSlide(props) {
     }
     if(dataSetHeadersIds.includes('action')) {
         const index = dataSetHeadersIds.indexOf('action');
+        if (index > -1) {
+            dataSetHeadersIds.splice(index, 1);
+        }
+    }
+    if(dataSetHeadersIds.includes('AKSİYON')) {
+        const index = dataSetHeadersIds.indexOf('AKSİYON');
         if (index > -1) {
             dataSetHeadersIds.splice(index, 1);
         }
@@ -86,7 +90,6 @@ export default function AlertDialogSlide(props) {
                 selected.splice(0,1)
             }
             selected.forEach((item) => {
-                console.log(item)
                 __dataSet[item] = data_item[item].toString()
             })
             return __dataSet
@@ -97,7 +100,7 @@ export default function AlertDialogSlide(props) {
                 filename={"report"}
                 element={
                     <Button variant="contained" color="primary" 
-                        disabled={(selectedData.split(',').length ==1 && selectedData.split(',')["0"] === "" )}
+                        disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}
                         onClick={handleClose}
                     > Export to Excel</Button>
                     }

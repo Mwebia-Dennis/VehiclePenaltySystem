@@ -47,25 +47,25 @@ export const paymentStatus = ['Pending','Settled',]
 
 export const signUpTextfields  = [
     {
-        placeholder: "Name",
+        placeholder: "Isim",
         name: "name",
         type: "text"
 
     },
     {
-        placeholder: "Surname",
+        placeholder: "Soyadı",
         name: "surname",
         type: "text"
 
     },
     {
-        placeholder: "Email",
+        placeholder: "E-post",
         name: "email",
         type: "email"
 
     },
     {
-        placeholder: "password",
+        placeholder: "Parola",
         name: "password",
         type: "password"
 
@@ -122,6 +122,94 @@ export const vehicleTextFields = [
         name: "asset_number"
     }
 ]
+
+export const vehicleSelectFields = [
+
+    {
+        name: "unit_garage_status",
+        label: "Birim Garaj Sayisi",
+        menuItem: [
+
+            {
+                value: "İstaç A.Ş"
+            },
+            {
+                value: "İgdaş A.Ş"
+            },
+            {
+                value: "Avrupa yakası Zabıta",
+            },
+            {
+                value: "Avrupa yakası Mezarlıklar",
+            },
+            {
+                value: "Makine ikmal",
+            },
+            {
+                value: "Destek Hizmetleri",
+            }, 
+            {
+                value: "İsbak A.Ş",
+            },
+            {
+                value: "Anadolu yakası Zabıta",
+            },
+            {
+                value: "Anadolu yakası Mezarlıklar",
+            },
+            {
+                value: "Ağaç A.Ş",
+            },
+            {
+                value: "İsfalt A.Ş",
+            },
+            
+        ]
+    },
+    {
+        name: "vehicle_status",
+        label: "araç durum",
+        menuItem: [
+            {
+                value: 'Serviste',
+            },
+            {
+                value : 'zimmetli',
+            },
+            {
+                value : 'bakimda',
+            },
+            {
+                value : 'zimmetli degil',
+            }
+        ]
+    },
+    {
+        name: "vehicle_type",
+        label: "araç tipi",
+        menuItem: [
+        
+            {
+                value: "kiralik"
+            },
+            {
+                value: "resmi"
+            },
+            {
+                value: "ihale yolu"
+            },
+            {
+                value: "Protokol"
+            },
+            {
+                value: "yedek"
+            },
+        ]
+    },
+
+]
+
+
 export const penaltyTextFields = [
     {
         placeholder: "MAKBUZ-NO",
@@ -225,4 +313,22 @@ export const otherFields = [
         name: 'penalty_hour',
         placeholder: 'CEZA-SAAT'
     },
+    {
+        name: 'role',
+        placeholder: 'rol'
+    },
+    {
+        name: "vehicle_type",
+        placeholder: "Araç Tipi",
+    },
+    {
+        
+        name: "unit_garage_status",
+        placeholder: "Birim Garaj Sayisi",
+    },
+    {
+        
+        name: "vehicle_status",
+        placeholder: "araç durum",
+    }
 ]

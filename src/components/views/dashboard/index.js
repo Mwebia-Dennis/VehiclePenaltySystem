@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { Divider, Grid, Paper, Typography } from '@material-ui/core';
 import SummaryCards from '../../shared_components/summary_card';
 import { SummaryCardItems } from '../../data/summaryCardItems';
-import {Line,Doughnut } from 'react-chartjs-2';
+import {Line,Doughnut, Bar } from 'react-chartjs-2';
 import { State } from '../../data/totalPenaltiesPerWeek';
 import { PaymentData } from '../../data/paymentData';
+import { garage_status_state } from '../../data/vehicle_unit_garage_status';
 import { useStyles } from './style';
 import MenuCard from '../../shared_components/menu_card';
 import Calendar from 'react-calendar';
@@ -16,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllStatistics } from '../../../store/reducers/statistics/statistics.actions';
 import ProgressSpinner from '../../shared_components/ProgressBarSpinner'
 
-export default (props) => {
+export default function Dashboard(props) {
     
     
     const [calendarDate, setCalendarDate] = useState(new Date());
@@ -67,6 +68,135 @@ export default (props) => {
         return data
     }
 
+    const getVehicleUnitGarageChartData = ()=> {
+
+        const ___data = []
+          const labels = []
+        if("vehicle_unit_garage_status" in statisticsReducer.data) {
+
+            const unit_data = statisticsReducer.data.vehicle_unit_garage_status
+            for(const key in  unit_data) {
+                labels.push(key)
+                ___data.push(unit_data[key])
+            }
+
+            return ({
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'Birim Garaj Sayisi',
+                    backgroundColor: [
+                        '#00cc99',
+                        '#b3ffb3',
+                        '#000000',
+                        '#ff1a75',
+                        '#ff9966',
+                        '#0000ff',
+                        'rgba(75,192,192,1)',
+                        '#66b3ff',
+                        '#668cff',
+                        '#ff3300',
+                        '#ff9999',
+                    ],
+                    borderColor: [
+                        '#00cc99',
+                        '#b3ffb3',
+                        '#000000',
+                        '#ff1a75',
+                        '#ff9966',
+                        '#0000ff',
+                        'rgba(75,192,192,1)',
+                        '#66b3ff',
+                        '#668cff',
+                        '#ff3300',
+                        '#ff9999',
+                    ],
+                    borderWidth: 2,
+                    data: ___data
+                  }
+                ]
+              }
+            )
+        }
+
+        return garage_status_state
+    }
+    const getvehicleTypeStats = ()=> {
+
+        const ___data = []
+          const labels = []
+        if("vehicle_type" in statisticsReducer.data) {
+
+            const vehicle_type = statisticsReducer.data.vehicle_type
+            for(const key in  vehicle_type) {
+                labels.push(key)
+                ___data.push(vehicle_type[key])
+            }
+
+            return ({
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'Birim Garaj Sayisi',
+                    backgroundColor: [
+                        'rgba(75,192,192,1)',
+                        '#66b3ff',
+                        '#ff6666',
+                        '#0000ff',
+                        '#00cc99',
+                        '#00e600'
+                    ],
+                    borderColor: [
+                        'rgba(75,192,192,1)',
+                        '#66b3ff',
+                        '#ff6666',
+                        '#0000ff',
+                        '#00cc99',
+                        '#00e600'
+                    ],
+                    borderWidth: 2,
+                    data: ___data
+                  }
+                ]
+              }
+            )
+        }
+
+    }
+
+
+    const getVehicleStatusStats = () => {
+        
+        const ___data = []
+          const labels = []
+        if("vehicle_status" in statisticsReducer.data) {
+
+            const vehicle_status = statisticsReducer.data.vehicle_status
+            for(const key in  vehicle_status) {
+                labels.push(key)
+                ___data.push(vehicle_status[key])
+            }
+
+            return ({
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'Arac Durum',
+                    backgroundColor: [
+                        '#36a2eb',
+                        '#00cc66',
+                        "#ff0000",
+                        "#ff9900"
+                    ],
+                    hoverOffset: 4,
+                    data: ___data
+                  }
+                ]
+              }
+            )
+        }
+    }
+
     useEffect(() => {
         
         dispatch(getAllStatistics())
@@ -103,7 +233,7 @@ export default (props) => {
                     
                     <Paper style={{margin: '15px 0'}}>
 
-                        <Typography className={classes.header}>Total penalties and vehicles</Typography>
+                        <Typography className={classes.header}>Toplam cezalar ve araçlar</Typography>
                         <Divider style={{margin: '15px 0',}}/>
                         <div  className={classes.chartCanvas}>
                             <Line
@@ -114,7 +244,7 @@ export default (props) => {
                                     maintainAspectRatio: false,
                                     title:{
                                         display:true,
-                                        text:'Total Penalties issued this week',
+                                        text:'Bu hafta verilen toplam cezalar',
                                         fontSize:12
                                     },
                                     legend:{
@@ -130,13 +260,16 @@ export default (props) => {
 
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)} color="#00cc66" dataType="Users"/>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)}
+                                 color="#00cc66" dataType="Kullanıcılar"/>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} color="#36a2eb" dataType="Penalties" />
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} 
+                                color="#36a2eb" dataType="Cezalar" />
                         </Grid>
                         <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)} color="#ffcc00" dataType="Vehicles"/>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)}
+                             color="#ffcc00" dataType="Araçlar"/>
                         </Grid>
                     </Grid>
 
@@ -146,7 +279,7 @@ export default (props) => {
                         
                         <Grid item xs={12} md={4}>
 
-                            <DashboardCard header="Payments Report" >
+                            <DashboardCard header="Ödemeler Raporu" >
                                 <Doughnut 
 
                                     
@@ -173,7 +306,7 @@ export default (props) => {
                         </Grid>
                         <Grid item xs={12} md={4}>
 
-                            <DashboardCard header="All Menu Categories" >
+                            <DashboardCard header="Tüm Menü Kategorileri" >
                                 
                                 { 
                                     menuReducer.loading?
@@ -194,8 +327,90 @@ export default (props) => {
                         </Grid>
 
                         <Grid item xs={12} md={4}>
+
+                            <DashboardCard header="Arac Sayisi" >
+                                <Doughnut 
+
+                                    
+                                    data={getVehicleStatusStats()}
+                                    options={{
+                                        
+                                        responsive:true,
+                                        maintainAspectRatio: true,
+                                        legend:{
+                                            display:true,
+                                            position: 'right',
+                                        },
+                                    }}
+                                
+                                />
+                            </DashboardCard>
+
+                        </Grid>
+                        
+                    </Grid>
+
+
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <Paper style={{margin: '15px 0'}}>
+
+                                <Typography className={classes.header}>Birim Garaj Sayisi</Typography>
+                                <Divider style={{margin: '15px 0',}}/>
+                                <div  className={classes.chartCanvas}>
+                                    <Bar
+                                        data={getVehicleUnitGarageChartData()}
+                                        options={{
+                                            
+                                            responsive:true,
+                                            maintainAspectRatio: false,
+                                            title:{
+                                                display:true,
+                                                text:'Birim Garaj Sayisi',
+                                                fontSize:12
+                                            },
+                                            legend:{
+                                                display:true,
+                                                position: 'right',
+                                            },
+                                        }}
+                                    />
+
+                                </div>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Paper style={{margin: '15px 0'}}>
+
+                                <Typography className={classes.header}>Birim Garaj Sayisi</Typography>
+                                <Divider style={{margin: '15px 0',}}/>
+                                <div  className={classes.chartCanvas}>
+                                    <Bar
+                                        data={getvehicleTypeStats()}
+                                        options={{
+                                            
+                                            responsive:true,
+                                            maintainAspectRatio: false,
+                                            title:{
+                                                display:true,
+                                                text:'Arac Durum',
+                                                fontSize:12
+                                            },
+                                            legend:{
+                                                display:true,
+                                                position: 'right',
+                                            },
+                                        }}
+                                    />
+
+                                </div>
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={12} md={4}>
                             
-                            <DashboardCard header="Calendar">
+                            <DashboardCard header="Takvim">
 
                             <Calendar
                                             onChange={setCalendarDate}
