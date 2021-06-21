@@ -16,7 +16,7 @@ import ProgressSpinner from '../../ProgressBarSpinner'
 import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/vehicle.actions';
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
 import { setNewPenalty, updatePenalty } from '../../../../store/reducers/penalty/penalty.actions';
-import { handleUpdateData, formatDate } from '../../../../utils/functions'
+import { handleUpdateData, formatDate, removeNulls } from '../../../../utils/functions'
 import { penaltyTextFields } from '../../../../utils/constants'
 
 export default function NewPenaltyForm(props) {
@@ -61,15 +61,15 @@ export default function NewPenaltyForm(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/penalty", 
-            name: "Penalties"
+            name: "Ceza"
         },
         {
             url:"/new-penalty", 
-            name: "Add-New-Penalty"
+            name: "Yeni Ceza Ekle"
         }
         
     ]
@@ -121,7 +121,7 @@ export default function NewPenaltyForm(props) {
 
             }
         }else if(data === {} && defaultInputData === {}){
-            showSnackBar("All fields are required", "error")
+            showSnackBar("Cannot add empty data", "error")
             return
         }
 
@@ -149,15 +149,7 @@ export default function NewPenaltyForm(props) {
                 if(("name" in uploadedPdf)) {
     
                     formData.append('pdf', uploadedPdf,uploadedPdf.name)
-                }else {
-    
-                    setFileError('This field is required')
-                    return
                 }
-            }else {
-    
-                setFileError('This field is required')
-                return
             }
         }
 
@@ -165,7 +157,7 @@ export default function NewPenaltyForm(props) {
         if('id' in authReducer.data) {
     
             if(isUpdate) {
-                dispatch(updatePenalty(data, authReducer.data.id, defaultInputData.id))
+                dispatch(updatePenalty(removeNulls(data), authReducer.data.id, defaultInputData.id))
             }else {
                 dispatch(setNewPenalty(formData, authReducer.data.id, navigate))
             }
@@ -225,7 +217,7 @@ export default function NewPenaltyForm(props) {
 
                 
                 <form onSubmit={onSubmit}>
-                    <Typography className={classes.header}>Yeni Metin Belgesi</Typography>
+                    <Typography className={classes.header}>YENI CEZA EKLE</Typography>
                     <Grid 
                         container 
                         spacing={2}
@@ -276,7 +268,6 @@ export default function NewPenaltyForm(props) {
                                         key={index}                                
                                     >
                                         <TextField 
-                                            required 
                                             label={item.placeholder} 
                                             placeholder={item.placeholder}
                                             name={item.name}

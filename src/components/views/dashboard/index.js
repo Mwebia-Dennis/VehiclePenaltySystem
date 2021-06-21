@@ -84,7 +84,7 @@ export default function Dashboard(props) {
                 labels: labels,
                 datasets: [
                   {
-                    label: 'Birim Garaj Sayisi',
+                    label: 'Birim',
                     backgroundColor: [
                         '#00cc99',
                         '#b3ffb3',
@@ -137,7 +137,7 @@ export default function Dashboard(props) {
                 labels: labels,
                 datasets: [
                   {
-                    label: 'Birim Garaj Sayisi',
+                    label: 'Arac Sayisi',
                     backgroundColor: [
                         'rgba(75,192,192,1)',
                         '#66b3ff',
@@ -230,53 +230,95 @@ export default function Dashboard(props) {
                         }
                     </Grid>
 
-                    
-                    <Paper style={{margin: '15px 0'}}>
 
-                        <Typography className={classes.header}>Toplam cezalar ve araçlar</Typography>
-                        <Divider style={{margin: '15px 0',}}/>
-                        <div  className={classes.chartCanvas}>
-                            <Line
-                                data={getGraphData(State)}
-                                options={{
-                                    
-                                    responsive:true,
-                                    maintainAspectRatio: false,
-                                    title:{
-                                        display:true,
-                                        text:'Bu hafta verilen toplam cezalar',
-                                        fontSize:12
-                                    },
-                                    legend:{
-                                        display:true,
-                                        position: 'right',
-                                    },
-                                }}
-                            />
 
-                        </div>
-                    </Paper>
 
 
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)}
-                                 color="#00cc66" dataType="Kullanıcılar"/>
+                        <Grid item xs={12} md={6}>
+                            <Paper style={{margin: '15px 0'}}>
+
+                                <Typography className={classes.header}>Birim</Typography>
+                                <Divider style={{margin: '15px 0',}}/>
+                                <div  className={classes.chartCanvas}>
+                                    <Bar
+                                        data={getVehicleUnitGarageChartData()}
+                                        options={{
+                                            
+                                            responsive:true,
+                                            maintainAspectRatio: false,
+                                            title:{
+                                                display:true,
+                                                text:'Birim',
+                                                fontSize:12
+                                            },
+                                            legend:{
+                                                display:true,
+                                                position: 'right',
+                                            },
+                                        }}
+                                    />
+
+                                </div>
+                            </Paper>
                         </Grid>
-                        <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} 
-                                color="#36a2eb" dataType="Cezalar" />
+                        <Grid item xs={12} md={6}>
+                            <Paper style={{margin: '15px 0'}}>
+
+                                <Typography className={classes.header}>Arac Sayisi</Typography>
+                                <Divider style={{margin: '15px 0',}}/>
+                                <div  className={classes.chartCanvas}>
+                                    <Bar
+                                        data={getvehicleTypeStats()}
+                                        options={{
+                                            
+                                            responsive:true,
+                                            maintainAspectRatio: false,
+                                            title:{
+                                                display:true,
+                                                text:'Arac Sayisi',
+                                                fontSize:12
+                                            },
+                                            legend:{
+                                                display:true,
+                                                position: 'right',
+                                            },
+                                        }}
+                                    />
+
+                                </div>
+                            </Paper>
                         </Grid>
-                        <Grid item xs={12} md={4}>
-                            <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)}
-                             color="#ffcc00" dataType="Araçlar"/>
-                        </Grid>
+
                     </Grid>
+
+
 
 
                     <Grid container spacing={2} className={classes.notificationCard}>
 
                         
+                        <Grid item xs={12} md={4}>
+
+                            <DashboardCard header="Arac Durum">
+                                <Doughnut 
+
+                                    
+                                    data={getVehicleStatusStats()}
+                                    options={{
+                                        
+                                        responsive:true,
+                                        maintainAspectRatio: true,
+                                        legend:{
+                                            display:true,
+                                            position: 'right',
+                                        },
+                                    }}
+                                
+                                />
+                            </DashboardCard>
+
+                            </Grid>
                         <Grid item xs={12} md={4}>
 
                             <DashboardCard header="Ödemeler Raporu" >
@@ -326,115 +368,53 @@ export default function Dashboard(props) {
                             </DashboardCard>
                         </Grid>
 
-                        <Grid item xs={12} md={4}>
-
-                            <DashboardCard header="Arac Sayisi" >
-                                <Doughnut 
-
-                                    
-                                    data={getVehicleStatusStats()}
-                                    options={{
-                                        
-                                        responsive:true,
-                                        maintainAspectRatio: true,
-                                        legend:{
-                                            display:true,
-                                            position: 'right',
-                                        },
-                                    }}
-                                
-                                />
-                            </DashboardCard>
-
-                        </Grid>
                         
                     </Grid>
 
 
-
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                            <Paper style={{margin: '15px 0'}}>
-
-                                <Typography className={classes.header}>Birim Garaj Sayisi</Typography>
-                                <Divider style={{margin: '15px 0',}}/>
-                                <div  className={classes.chartCanvas}>
-                                    <Bar
-                                        data={getVehicleUnitGarageChartData()}
-                                        options={{
-                                            
-                                            responsive:true,
-                                            maintainAspectRatio: false,
-                                            title:{
-                                                display:true,
-                                                text:'Birim Garaj Sayisi',
-                                                fontSize:12
-                                            },
-                                            legend:{
-                                                display:true,
-                                                position: 'right',
-                                            },
-                                        }}
-                                    />
-
-                                </div>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Paper style={{margin: '15px 0'}}>
-
-                                <Typography className={classes.header}>Birim Garaj Sayisi</Typography>
-                                <Divider style={{margin: '15px 0',}}/>
-                                <div  className={classes.chartCanvas}>
-                                    <Bar
-                                        data={getvehicleTypeStats()}
-                                        options={{
-                                            
-                                            responsive:true,
-                                            maintainAspectRatio: false,
-                                            title:{
-                                                display:true,
-                                                text:'Arac Durum',
-                                                fontSize:12
-                                            },
-                                            legend:{
-                                                display:true,
-                                                position: 'right',
-                                            },
-                                        }}
-                                    />
-
-                                </div>
-                            </Paper>
-                        </Grid>
-
                         <Grid item xs={12} md={4}>
-                            
-                            <DashboardCard header="Takvim">
-
-                            <Calendar
-                                            onChange={setCalendarDate}
-                                            defaultValue={calendarDate}
-                                            value={calendarDate}
-                                            className={classes.calendar}
-                                        />
-                                <Grid 
-                                    container            
-                                    direction="column"
-                                    alignItems="center"
-                                    justify="center"
-                                >
-
-                                    <Grid item xs={12} sm={12} md={8}>
-                                        
-                                        
-
-                                    </Grid>
-
-                                </Grid>
-                            </DashboardCard>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.usersMonthlyIncrease)}
+                                 color="#00cc66" dataType="Kullanıcılar"/>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.penaltiesMonthlyIncrease)} 
+                                color="#36a2eb" dataType="Cezalar" />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <DataProgressRateCard value={Math.round(statisticsReducer.data.vehicleMonthlyIncrease)}
+                             color="#ffcc00" dataType="Araçlar"/>
                         </Grid>
                     </Grid>
+
+                    <Paper style={{margin: '15px 0'}}>
+
+                        <Typography className={classes.header}>Toplam cezalar ve araçlar</Typography>
+                        <Divider style={{margin: '15px 0',}}/>
+                        <div  className={classes.chartCanvas}>
+                            <Line
+                                data={getGraphData(State)}
+                                options={{
+                                    
+                                    responsive:true,
+                                    maintainAspectRatio: false,
+                                    title:{
+                                        display:true,
+                                        text:'Bu hafta verilen toplam cezalar',
+                                        fontSize:12
+                                    },
+                                    legend:{
+                                        display:true,
+                                        position: 'right',
+                                    },
+                                }}
+                            />
+
+                        </div>
+                    </Paper>
+
+
+
                 </>
                 
             }

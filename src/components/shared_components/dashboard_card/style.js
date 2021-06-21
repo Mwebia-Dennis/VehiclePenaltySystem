@@ -9,10 +9,12 @@ export const useStyles = makeStyles((theme) => ({
         marginTop: '15px',
         borderTopLeftRadius: '10px',
         borderTopRightRadius: '10px',
-        height: '450px',
+        height: '500px',
         width: '100%',
         overflowY: 'auto',
+        overflowX: 'hidden',
         [theme.breakpoints.down('sm')]: {
+            minHeight: '300px',
             height: 'auto',
             maxHeight: '450px',
         }

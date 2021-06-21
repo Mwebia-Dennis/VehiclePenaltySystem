@@ -117,11 +117,11 @@ export default function Penalty(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/penalty", 
-            name: "Penalty"
+            name: "Ceza ekle"
         }
         
     ]
@@ -176,7 +176,7 @@ export default function Penalty(props) {
         let formattedData = {}
         for(const key in data) { 
 
-            formattedData['select'] = <FormControlLabel control={
+            formattedData['seç'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -188,9 +188,14 @@ export default function Penalty(props) {
                     if(header.trim() === 'pdf_url') {
                     
                         const placeholder = isTurkish?'pdf'.toUpperCase():'pdf'
-                        formattedData[placeholder] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
-                                <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
-                            </IconButton>
+                        if(data[key][header] === ''){
+                            formattedData[placeholder] = ''
+                        }else {
+                            formattedData[placeholder] = <IconButton onClick={()=>handleModalOpen(data[key][header])}> 
+                                    <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
+                                </IconButton>
+
+                        }
                     }else {
 
                         
@@ -269,6 +274,12 @@ export default function Penalty(props) {
         }
         if(headers.includes('select')) {
             const index = headers.indexOf('select');
+            if (index > -1) {
+                headers.splice(index, 1);
+            }
+        }
+        if(headers.includes('seç')) {
+            const index = headers.indexOf('seç');
             if (index > -1) {
                 headers.splice(index, 1);
             }

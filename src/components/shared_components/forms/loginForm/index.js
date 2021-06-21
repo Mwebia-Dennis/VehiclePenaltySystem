@@ -70,13 +70,13 @@ export default function LoginForm(props) {
     const textFields = [
         
         {
-            placeholder: "Email",
+            placeholder: "E-posta",
             name: "email",
             type: "email"
 
         },
         {
-            placeholder: "password",
+            placeholder: "Parola",
             name: "password",
             type: "password"
 
@@ -89,8 +89,8 @@ export default function LoginForm(props) {
             
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">Login to Continue</Typography>
+                <Typography className={classes.header}>OGZ CEZA SISTEMI</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Devam etmek için giriş yapın</Typography>
 
                 <form  onSubmit={handleSubmit(onSubmit)}>
 
@@ -137,19 +137,19 @@ export default function LoginForm(props) {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                {authState.loading ? <ProgressLoader />: "Login"}
+                                {authState.loading ? <ProgressLoader />: "Oturum aç"}
                             </Button>
 
                         </Grid>
                         <Grid item xs={12}>
                             <Typography  className={classes.bottomLinks} style={{marginTop: '20px',}}>
-                                <Link href={"/auth/forgot-password"}>Forgot Password</Link>
+                                <Link href={"/auth/forgot-password"}>Parolanızı mı unuttunuz</Link>
 
                             </Typography>
-                            <Typography className={classes.bottomLinks}>Not A member yet?</Typography>
+                            <Typography className={classes.bottomLinks}>Henüz üye değil misiniz?</Typography>
                             <Typography  className={classes.bottomLinks}>
                                 
-                                <Link href="/auth/signup">Sign Up</Link>
+                                <Link href="/auth/signup">Kaydol</Link>
 
                             </Typography>
 

@@ -100,7 +100,6 @@ export const getAllMenuEntries = (menu_id) => (dispatch) => {
     dispatch({ type: LOADING_MENU_DATA })
     axios.get('menu/'+menu_id+'/menu-item')
     .then((res)=>{
-        
         dispatch({ type: CLEAR_MENU_ERROR})
         dispatch({
             type: SET_MENU_ENTRIES_DATA,

@@ -62,7 +62,7 @@ export default function NewUserForm(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/users", 

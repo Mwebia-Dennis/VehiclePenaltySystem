@@ -11,12 +11,12 @@ export const SideMenuItems = [
         icon: <BarChartIcon />
     },
     {
-        item: 'Araç',
+        item: 'Araç Ekle',
         url: '/vehicle',
         icon: <CommuteIcon />
     },
     {
-        item: 'Ceza',
+        item: 'Ceza Ekle',
         url: '/penalty',
         icon: <GavelIcon />
     },
@@ -26,7 +26,7 @@ export const SideMenuItems = [
         icon: <LibraryAdd />
     },
     {
-        item: 'Kullanıcılar',
+        item: 'kullanıcı ekle',
         url: '/users',
         icon: <GroupIcon />
     },

@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ProgressSpinner from '../../ProgressBarSpinner'
 import { setNewVehicle, updateVehicle } from '../../../../store/reducers/vehicle/vehicle.actions';
-import { handleUpdateData, formatDate } from '../../../../utils/functions'
+import { handleUpdateData, formatDate,removeNulls } from '../../../../utils/functions'
 import { vehicleSelectFields } from '../../../../utils/constants'
 import { vehicleTextFields } from '../../../../utils/constants'
 import { CLEAR_VEHICLE_ERROR, CLEAR_VEHICLE_MESSAGE } from '../../../../store/reducers/vehicle/vehicle.types';
@@ -38,15 +38,15 @@ export default function NewVehicleForm(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/vehicle", 
-            name: "Vehicle"
+            name: "araç"
         },
         {
             url:"/new-vehicle", 
-            name: "Add-New-Vehicle"
+            name: "yeni araç ekle"
         }
         
     ]
@@ -77,16 +77,19 @@ export default function NewVehicleForm(props) {
 
             }
         }else if(data === {} && defaultInputData === {}){
-            showSnackBar("All fields are required", "error")
+            showSnackBar("Cannot add empty fields ", "error")
             return
         }
 
 
-        data["delivery_date"] = formatDate(new Date(deliveryDate))
+        if(deliveryDate != "") {
+            data["delivery_date"] = formatDate(new Date(deliveryDate))
+        }
+
         if('id' in authReducer.data) {
 
             if(isUpdate) {
-                dispatch(updateVehicle(data, authReducer.data.id, defaultInputData.id))
+                dispatch(updateVehicle(removeNulls(data), authReducer.data.id, defaultInputData.id))
             }else {
                 dispatch(setNewVehicle(data, authReducer.data.id, navigate))
             }
@@ -135,7 +138,6 @@ export default function NewVehicleForm(props) {
         ({ value, onClick, name}, ref) => (
 
             <TextField 
-                required 
                 ref={ref}
                 value={value}
                 onClick={onClick}
@@ -177,7 +179,6 @@ export default function NewVehicleForm(props) {
                                     >
                                         <TextField
                                             type="text"
-                                            required 
                                             label={item.placeholder} 
                                             placeholder={item.placeholder}
                                             name={item.name}
@@ -263,7 +264,7 @@ export default function NewVehicleForm(props) {
                                     vehicleReducer.loading?
                                         <ProgressSpinner />
 
-                                    :"Add Vehicle"
+                                    :"araç ekle"
                                 }
                                 
                             </Button>
