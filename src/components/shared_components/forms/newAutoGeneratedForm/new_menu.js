@@ -27,11 +27,11 @@ export default function NewMenuForm(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/category/data", 
-            name: "New Menu Entry"
+            name: "Menü Ekle"
         },
         
     ]
@@ -100,8 +100,8 @@ export default function NewMenuForm(props) {
             <BreadCrumb links={links} />
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">Add Menu</Typography>
+                <Typography className={classes.header}>OGZ CEZA SISTEMI</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Menü Ekle</Typography>
 
                 <form  onSubmit={handleSubmit(onSubmit)}>
                     <Grid
@@ -116,8 +116,8 @@ export default function NewMenuForm(props) {
                         >
                             <TextField
                                 required 
-                                label={"new_menu"} 
-                                placeholder={"new_menu"}
+                                label={"yeni menü"} 
+                                placeholder={"yeni menü"}
                                 name="name"
                                 className= {classes.textfield}
                                 fullWidth
@@ -140,7 +140,7 @@ export default function NewMenuForm(props) {
                                 {
                                     menuReducer.loading?
                                         <ProgressSpinner />
-                                    :"Submit"
+                                    :"Sunmak"
                                 }
                             </Button>
 

@@ -23,7 +23,11 @@ export default function AutoGenerateTable(props) {
 
     
     const { menu_id } = useParams();
-    const [open, setOpen] = useState(false);
+    
+    const [pdfOpen, setPdfOpen] = useState({
+        open: false,
+        pdf: null,
+    });
     const [selectedData, setSelectedData] = useState('')
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -128,17 +132,23 @@ export default function AutoGenerateTable(props) {
 
     }
 
-    function handleModalOpen(){
-      setOpen(true);
+    function handleModalOpen(pdf){
+        setPdfOpen({
+            pdf: pdf,
+            open : true,
+        });
     };
     const handleModalClose = () => {
-      setOpen(false);
-    };    
+      setPdfOpen({
+          ...pdfOpen,
+          open: false
+      });
+    };   
 
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         }
         
     ]
@@ -198,7 +208,7 @@ export default function AutoGenerateTable(props) {
         for(const key in data) {
 
             const __data = JSON.parse(data[key].data)
-            formattedData['select'] = <FormControlLabel control={
+            formattedData['seç'] = <FormControlLabel control={
                 <Checkbox name={data[key].id} value={data[key].id} checked={checkIfDataExists(data[key].id)} 
                     onChange={handleCheckBoxChange}/>
             } />
@@ -206,10 +216,14 @@ export default function AutoGenerateTable(props) {
 
                 
                 if(header.trim() === 'pdf') {
-                    
-                    formattedData['pdf'.toUpperCase()] = <IconButton onClick={handleModalOpen}> 
-                            <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
-                        </IconButton>
+                    if(__data[header.trim()] === ''){
+                        formattedData['pdf'.toUpperCase()] = ''
+                    }else {
+                        formattedData['pdf'.toUpperCase()] = <IconButton onClick={()=>handleModalOpen(data[header.trim()])}> 
+                                <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
+                            </IconButton>
+
+                    }
                 }else if(header.trim() === 'plate_number') {
                     continue
                 }else {
@@ -309,7 +323,7 @@ export default function AutoGenerateTable(props) {
                             :
                             <Alert severity="info">0 results found</Alert>
                         }
-                        <Modal handleClose={handleModalClose} open={open} />
+                        <Modal handleClose={handleModalClose} open={pdfOpen.open} pdf={pdfOpen.pdf} />
 
                     </>
                 :

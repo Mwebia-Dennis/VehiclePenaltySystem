@@ -15,6 +15,7 @@ import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/ve
 import { getAllMenuEntries } from '../../../../store/reducers/menu/menu.actions';
 import { setNewMenuData, updateMenuData } from '../../../../store/reducers/menu_data/menu_data.actions';
 import { CLEAR_MENU_DATA_ERROR, CLEAR_MENU_DATA_MESSAGE } from '../../../../store/reducers/menu_data/menu_data.types';
+import { removeNulls } from '../../../../utils/functions'
 
 
 export default function TemplateForm (props) { 
@@ -42,20 +43,22 @@ export default function TemplateForm (props) {
     const menuDataReducer = useSelector((state) => state.menuDataReducer)
     const menu_id = localStorage.getItem("menu_id")
 
+    useEffect(() => {
+        
+        dispatch(getAllMenuEntries(menu_id))
+    }, [true])
 
     useEffect(() => {
         
         dispatch(getAllVehiclesPlateNumber())
-        dispatch(getAllMenuEntries(menu_id))
-    })
-
+    }, [true])
 
     useEffect(() => {
         if(!menu_id) {
             showSnackBar('Sorry invalid data provided, contact admin for more info', 'error')
             navigate('/home')
         }
-    })
+    }, [true])
     
 
     const handleFileChange = (files) => {
@@ -65,7 +68,7 @@ export default function TemplateForm (props) {
 
     const handleInputChange = (inputName, inputValue)=> {
         const data = formInputData
-        data[inputName] = inputValue
+        data[inputName.trim()] = inputValue
         setFormInputData(data)
     }
     const onSubmit = (e)=> {
@@ -107,22 +110,14 @@ export default function TemplateForm (props) {
                 if(("name" in uploadedPdf)) {
                     formData = new FormData()
                     formData.append("vehicle_id", plateNumber.id)
-                    formData.append('data', JSON.stringify(formatDataHeaders(data)) )
+                    formData.append('data', JSON.stringify(removeNulls(formatDataHeaders(data))) )
                     formData.append('pdf', uploadedPdf,uploadedPdf.name)
                     formData.append('menu_id', menu_id)
-                }else {
-    
-                    setFileError('This field is required')
-                    return
                 }
-            }else {
-    
-                setFileError('This field is required')
-                return
             }
         }else {
             formData['vehicle_id'] = plateNumber.id
-            formData['data'] =  JSON.stringify(formatDataHeaders(data))
+            formData['data'] =  JSON.stringify(removeNulls(formatDataHeaders(data)))
         }
 
         
@@ -148,7 +143,7 @@ export default function TemplateForm (props) {
     }
 
     if(menuDataReducer.error) {
-
+ 
         if("errors" in menuDataReducer.error) {
             
             for (const key in menuDataReducer.error.errors) {
@@ -183,7 +178,7 @@ export default function TemplateForm (props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/auto/data/"+menu_id, 
@@ -191,7 +186,7 @@ export default function TemplateForm (props) {
         },
         {
             url:"/auto/form/"+title, 
-            name: "add new "+ reverseUrlName(title)
+            name: "yeni ekle "+ reverseUrlName(title)
         }
         
     ]
@@ -242,8 +237,8 @@ export default function TemplateForm (props) {
             }
             <Paper className={isUpdate?classes.root1:classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">add new {reverseUrlName(title)}</Typography>
+                <Typography className={classes.header}> OGZ CEZA SISTEMI </Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">yeni ekle {reverseUrlName(title)}</Typography>
 
                 
                 <form onSubmit={onSubmit}>
@@ -294,7 +289,7 @@ export default function TemplateForm (props) {
                         {
                             menuReducer.loading?<ProgressSpinner />
                             :
-                            menuReducer.menuEntries.forEach((item)=>{
+                            menuReducer.menuEntries.map((item)=>{
                             
                                 if(item.name !== "plate_number" && item.name !== "pdf") {
                                     return (
@@ -305,7 +300,6 @@ export default function TemplateForm (props) {
                                             key={item.id}                                
                                         >
                                             <TextField 
-                                                required 
                                                 label={item.name} 
                                                 placeholder={item.name}
                                                 name={item.name}
@@ -319,6 +313,8 @@ export default function TemplateForm (props) {
                                         </Grid>
                                     )
                                 }
+
+                                return <></>
 
                             })
                         }    
@@ -335,7 +331,7 @@ export default function TemplateForm (props) {
                                     xs={12}
                                 >
 
-                                    <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+                                    <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF belgesi</Typography>
                                     <DropzoneArea
                                         acceptedFiles={['application/pdf']}
                                         showPreviews={true}
@@ -343,7 +339,7 @@ export default function TemplateForm (props) {
                                         showPreviewsInDropzone={false}
                                         maxFileSize={5000000}
                                         filesLimit={1}
-                                        dropzoneText="Drag And Drop PDF document here"
+                                        dropzoneText="PDF belgesini buraya sürükleyip bırakın"
                                         onChange={handleFileChange}
                                     />
                                     <span>{fileError}</span>
@@ -361,7 +357,7 @@ export default function TemplateForm (props) {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                {menuDataReducer.loading ?<ProgressSpinner /> :"Submit"}
+                                {menuDataReducer.loading ?<ProgressSpinner /> :"Sunmak"}
                             </Button>
 
                         </Grid>

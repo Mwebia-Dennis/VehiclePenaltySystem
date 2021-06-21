@@ -26,11 +26,11 @@ export default function NewMenuFields(props) {
     const links = [
         {
             url:"/home", 
-            name: "Home"
+            name: "Anasayfa"
         },
         {
             url:"/category/data", 
-            name: "New Menu Entry"
+            name: "Menü Ekle"
         },
         
     ]
@@ -124,8 +124,8 @@ export default function NewMenuFields(props) {
             <BreadCrumb links={links} />
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Add Menu Queries</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">{"Menu:  "+menu}</Typography>
+                <Typography className={classes.header}>Menü sorguları ekle</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">{"Menü:  "+menu}</Typography>
                 <Grid
                     container 
                     spacing={2}
@@ -138,8 +138,8 @@ export default function NewMenuFields(props) {
                     >
                         <TextField
                             required 
-                            label={"new_menu_item"} 
-                            placeholder={"new_menu_item"}
+                            label={"yeni menü öğesi"} 
+                            placeholder={"yeni menü öğesi"}
                             name="new_menu_item"
                             className= {classes.textfield}
                             fullWidth
@@ -187,7 +187,7 @@ export default function NewMenuFields(props) {
                         <Button startIcon={<Add />} variant="contained" color="secondary" 
                             onClick={()=>{handleAddField()}} className={classes.submitBtn} 
                         >
-                            Add To Queries
+                            Sorgulara Ekle
                         </Button>
 
                         <Button startIcon={<CloudUpload />} 
@@ -195,7 +195,7 @@ export default function NewMenuFields(props) {
                             variant="contained" color="primary" className={classes.submitBtn} >
 
                                 {
-                                    menuReducer.loading?<ProgressSpinner />:"Save"
+                                    menuReducer.loading?<ProgressSpinner />:"Kayıt etmek"
                                 }
                             
                         </Button>

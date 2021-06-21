@@ -114,10 +114,6 @@ export const vehicleTextFields = [
         name: "tag"
     },
     {
-        placeholder: "Alım Tipi",
-        name: "reception_type"
-    },
-    {
         placeholder: "Demirbaş No",
         name: "asset_number"
     }
@@ -127,7 +123,7 @@ export const vehicleSelectFields = [
 
     {
         name: "unit_garage_status",
-        label: "Birim Garaj Sayisi",
+        label: "Birim",
         menuItem: [
 
             {
@@ -291,7 +287,7 @@ export const otherFields = [
     },
     {
         name: 'created_at',
-        placeholder: 'oluşturulduğunda'
+        placeholder: 'oluşturulma tarihi'
     },
     {
         name: 'notification_date',
@@ -324,7 +320,7 @@ export const otherFields = [
     {
         
         name: "unit_garage_status",
-        placeholder: "Birim Garaj Sayisi",
+        placeholder: "Birim",
     },
     {
         

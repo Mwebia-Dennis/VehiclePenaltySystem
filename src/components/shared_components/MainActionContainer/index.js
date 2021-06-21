@@ -118,7 +118,7 @@ export default function MainActionContainer(props) {
             <Grid container spacing={1}>
                 <Grid item xs={2} md={1}>
                     
-                    <Tooltip title="Add New Data" aria-label="add" placement="top">
+                    <Tooltip title="Yeni ekle" aria-label="add" placement="top">
                             
                         <IconButton 
                             variant="contained" 
@@ -130,7 +130,7 @@ export default function MainActionContainer(props) {
                 
                 <Grid item xs={2} md={1}>
                      
-                    <Tooltip title="Export To Excel" aria-label="export" placement="top">
+                    <Tooltip title="Excel Yazdir" aria-label="export" placement="top">
                         <IconButton variant="contained" 
                             color="primary" 
                             onClick={handleColumnSelectionOpen}
@@ -142,7 +142,7 @@ export default function MainActionContainer(props) {
                 </Grid>
                 <Grid item xs={2} md={1}>
                     
-                    <Tooltip title="Refresh Page" aria-label="refresh page" placement="top">   
+                    <Tooltip title="Yenile" aria-label="refresh page" placement="top">   
                         <IconButton variant="contained" 
                             color="primary" 
                             onClick={handleRefreshPage}
@@ -155,7 +155,7 @@ export default function MainActionContainer(props) {
                 
                 <Grid item xs={2} md={1}>
                     
-                    <Tooltip title="Select All Rows" aria-label="select all rows" placement="top">  
+                    <Tooltip title="Tümünü Seç" aria-label="select all rows" placement="top">  
                         <IconButton variant="contained" 
                             color="primary" 
                             onClick={toggleCheckingAllCheckboxes}
@@ -168,7 +168,7 @@ export default function MainActionContainer(props) {
                   </Grid>
                 <Grid item xs={2} md={1}>
                     
-                    <Tooltip title="Import Excel Data" aria-label="Import Excel Data" placement="top"> 
+                    <Tooltip title="Upload Excel" aria-label="Import Excel Data" placement="top"> 
                         <IconButton
                             aria-label="show more"
                             aria-controls={menuId}
@@ -193,7 +193,7 @@ export default function MainActionContainer(props) {
                                     value={searchQueryValue}
                                     onChange={(newValue) => handleSearchBarChange(newValue)}
                                     onRequestSearch={handleSearchButtonClick}
-                                    placeholder={"Search... "}
+                                    placeholder={"Arama... "}
                                 />
                             </Grid>
                             

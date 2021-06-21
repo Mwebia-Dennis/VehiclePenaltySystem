@@ -207,7 +207,7 @@ export default function PrimarySearchAppBar() {
                 <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" noWrap>
-                Vehicle Penalty
+                OGZ CEZA SISTEMI
             </Typography>
             <div className={classes.menu_items_container}>
 
@@ -264,8 +264,8 @@ export default function PrimarySearchAppBar() {
             
             <div className={classes.list}>
 
-                <Typography variant="h6" className={classes.sideMenuHeader}>
-                    Vehicle Penalty
+                <Typography variant="h6" style={{fontSize: '18px'}} className={classes.sideMenuHeader}>
+                    {"OGZ CEZA SISTEMI".toLowerCase()}
                     <IconButton onClick={toggleDrawer} className={classes.closeIcon} >
                         <Close />
                     </IconButton>

@@ -70,8 +70,8 @@ export default function SignUpForm(props) {
             
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">Sign Up To Start Working</Typography>
+                <Typography className={classes.header}>OGZ CEZA SISTEMI</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Çalışmaya Başlamak için Kaydolun</Typography>
 
                 
                 <form  onSubmit={handleSubmit(onSubmit)}>
@@ -114,18 +114,18 @@ export default function SignUpForm(props) {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary"  className={classes.submitBtn} >
-                                {authState.loading ? <ProgressLoader />: "Sign Up"}
+                                {authState.loading ? <ProgressLoader />: "Kaydol"}
                             </Button>
 
                         </Grid>
                         
                         <Grid item xs={12}>
                             <Typography className={classes.bottomLinks} style={{marginTop: '20px',}}>
-                                Already a member?
+                                Zaten bir üye misiniz?
                             </Typography>
                             <Typography  className={classes.bottomLinks}>
                                 
-                                <Link href="/auth/login">Login</Link>
+                                <Link href="/auth/login">oturum aç</Link>
 
                             </Typography>
 

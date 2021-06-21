@@ -76,3 +76,19 @@ export const getPlaceHolderName  = (header, data) => {
 
     return header
 }
+
+export const removeNulls = (data)=> {
+
+    for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+
+            if(data[key] === "" || data[key] === null) {
+                delete data[key]
+            }
+            
+        }
+    }
+
+    return data
+
+}
