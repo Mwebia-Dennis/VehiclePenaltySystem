@@ -66,11 +66,11 @@ export default function NewUserForm(props) {
         },
         {
             url:"/users", 
-            name: "Users"
+            name: "Kullanıcılar"
         },
         {
             url:"/new-user", 
-            name: "Add-New-User"
+            name: "Yeni Kullanıcı Ekle"
         }
         
     ]
@@ -83,7 +83,7 @@ export default function NewUserForm(props) {
             <BreadCrumb links={links} />
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Add New User</Typography>
+                <Typography className={classes.header}>Yeni Kullanıcı Ekle</Typography>
 
                 
                 <form  onSubmit={handleSubmit(onSubmit)}>
@@ -112,7 +112,7 @@ export default function NewUserForm(props) {
                                             type={item.type}
                                             {...register(item.name, { required: true })}
                                         />
-                                        {errors[item.name] && <span>This field is required</span>}
+                                        {errors[item.name] && <span>Bu alan gereklidir</span>}
                                     </Grid>
                                 ))
                             }
@@ -128,7 +128,7 @@ export default function NewUserForm(props) {
                     >
                         <Grid item xs={8}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                    Submit
+                                Sunmak
                             </Button>
 
                         </Grid>

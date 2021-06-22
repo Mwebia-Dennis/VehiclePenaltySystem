@@ -326,5 +326,10 @@ export const otherFields = [
         
         name: "vehicle_status",
         placeholder: "araç durum",
+    },
+    {
+        
+        name: "equipment",
+        placeholder: "araç ekipmanları",
     }
 ]

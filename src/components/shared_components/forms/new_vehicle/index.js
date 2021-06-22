@@ -1,4 +1,7 @@
-import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@material-ui/core';
+import { 
+    Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, TextField, Typography,
+    Checkbox,FormControlLabel,FormGroup, FormLabel
+ } from '@material-ui/core';
 import React, {forwardRef, useState} from 'react'
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
@@ -22,9 +25,9 @@ export default function NewVehicleForm(props) {
     const dispatch = useDispatch()
     const defaultInputData = (data !== null && data !== undefined)?data:{}
     const [formInputData, setFormInputData] = useState({})
-    // const { register, handleSubmit, formState:{ errors } } = useForm({
-    //     defaultValues: handleUpdateData(defaultInputData)
-    // })
+    const [equipments, setEquipments] = useState(
+        ("equipment" in defaultInputData)?defaultInputData.equipment:""
+    )
     const [deliveryDate, setDeliveryDate] = useState(
         ("delivery_date" in defaultInputData)?new Date(defaultInputData.delivery_date):new Date()
     );
@@ -52,11 +55,52 @@ export default function NewVehicleForm(props) {
     ]
 
 
+    const checkboxInput = [
+        "equipment1","equipment2","equipment3","equipment4","equipment5","equipment6"
+    ]
+
+
     const handleInputChange = (inputName, inputValue)=> {
         const data = formInputData
         data[inputName] = inputValue
         setFormInputData(data)
     }
+
+    const handleCheckBoxChange = (e)=>{
+
+        const value = e.target.value.trim()
+        let equipment__ = equipments
+        if(equipment__ !== "") {
+
+            const __equipmentsArray =  equipment__.split(',')
+            //if value is in data remove else add to data
+            if(__equipmentsArray.includes(value)) {
+
+                const index = __equipmentsArray.indexOf(value)
+                if (index > -1) {
+                    __equipmentsArray.splice(index, 1)
+                }
+            }else {
+
+                __equipmentsArray.push(value)
+            }
+            equipment__ = __equipmentsArray.join()
+        }else {
+            equipment__ = [value].join()
+        }
+        setEquipments(equipment__)
+
+    }
+
+    const isCheckBoxChecked = (value)=> {
+
+        console.log(value)
+        console.log(equipments)
+        return equipments.split(',').includes(value)
+
+    }
+
+
     const onSubmit = (e)=> {
         e.preventDefault()
         let data = formInputData
@@ -82,8 +126,11 @@ export default function NewVehicleForm(props) {
         }
 
 
-        if(deliveryDate != "") {
+        if(deliveryDate !== "") {
             data["delivery_date"] = formatDate(new Date(deliveryDate))
+        }
+        if(equipments !== "") {
+            data["equipment"] = equipments
         }
 
         if('id' in authReducer.data) {
@@ -160,7 +207,7 @@ export default function NewVehicleForm(props) {
             }
             <Paper className={isUpdate?classes.root1:classes.root} >
 
-                <Typography className={classes.header}>{isUpdate? "Edit ": "Add New "} Vehicle</Typography>
+                <Typography className={classes.header}>{isUpdate? "aracı düzenle".toUpperCase(): "yeni araç ekle".toUpperCase()}</Typography>
 
                 <form  onSubmit={onSubmit}>
                     <Grid 
@@ -200,6 +247,7 @@ export default function NewVehicleForm(props) {
 
                                 vehicleSelectFields.map((item, index)=>(
 
+                                    
                                     <Grid
                                         item
                                         xs={12}
@@ -230,7 +278,37 @@ export default function NewVehicleForm(props) {
 
 
                             }
+                            
 
+                            <Grid item xs={12}>
+
+                                <FormControl component="fieldset">
+                                    <FormLabel component="legend">Araç ekipmanları</FormLabel>
+                                    <FormGroup row>
+
+
+                                        {
+
+                                            checkboxInput.map((item, index)=>(
+                                                <FormControlLabel
+                                                    key={index}
+                                                    control={
+                                                        <Checkbox
+                                                            value={item}
+                                                            name={"checked"+index} 
+                                                            onChange={handleCheckBoxChange}
+                                                            checked={isCheckBoxChecked(item)}
+                                                        />
+                                                    }
+                                                    label={item}
+                                                />
+                                            ))
+
+                                        }
+                                    </FormGroup>
+                                </FormControl>
+
+                            </Grid>
 
                             <Grid
                                 item 
