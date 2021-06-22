@@ -238,7 +238,7 @@ export default function TemplateForm (props) {
             <Paper className={isUpdate?classes.root1:classes.root} >
 
                 <Typography className={classes.header}> OGZ CEZA SISTEMI </Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">yeni ekle {reverseUrlName(title)}</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">yeni {reverseUrlName(title)}</Typography>
 
                 
                 <form onSubmit={onSubmit}>
@@ -357,7 +357,7 @@ export default function TemplateForm (props) {
                     >
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                {menuDataReducer.loading ?<ProgressSpinner /> :"Sunmak"}
+                                {menuDataReducer.loading ?<ProgressSpinner /> :"Kaydet"}
                             </Button>
 
                         </Grid>

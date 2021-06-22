@@ -396,7 +396,7 @@ export default function NewPenaltyForm(props) {
                                                     showPreviewsInDropzone={false}
                                                     maxFileSize={5000000}
                                                     filesLimit={1}
-                                                    dropzoneText="Drag And Drop PDF document here"
+                                                    dropzoneText="PDF belgesini buraya sürükleyip bırakın"
                                                     onChange={handleFileChange}
                                                 />
                                                 <span>{fileError}</span>
@@ -420,7 +420,7 @@ export default function NewPenaltyForm(props) {
                     <Grid item xs={8}>
                         <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
                             
-                            {penaltyReducer.loading ? <ProgressSpinner />: "Submit"}
+                            {penaltyReducer.loading ? <ProgressSpinner />: "Kaydet"}
                         </Button>
 
                     </Grid>

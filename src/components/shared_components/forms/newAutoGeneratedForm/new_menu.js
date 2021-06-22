@@ -140,7 +140,7 @@ export default function NewMenuForm(props) {
                                 {
                                     menuReducer.loading?
                                         <ProgressSpinner />
-                                    :"Sunmak"
+                                    :"Ekle"
                                 }
                             </Button>
 
