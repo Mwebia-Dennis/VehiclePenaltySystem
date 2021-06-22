@@ -87,13 +87,16 @@ export default (props) => {
                 justify="center"
             >
                 <Grid item xs={4} className={classes.root} >
-                    <Typography variant="h2" className={classes.title}>Welcome To Vehicle Penalty</Typography>
+                    <Typography variant="h2" className={classes.title}>
+                        
+                        Ogz Ceza Sistemi hoşgeldiniz
+                    </Typography>
                     <Typography variant="h6" className={classes.title}>
-                        Hello, to continue you need to verify your email. check your email for verification link
+                        Luften email adresinize gonderilen onay linkini kontrol ediniz
                     </Typography>
                     <Typography variant="h6" className={classes.title} style={{margin: '30px 0'}}>
                         <Button variant="contained" color="primary" onClick={handleResendLink}>
-                            {authState.loading?<ProgressLoader />:"Resend Link"}</Button>
+                            {authState.loading?<ProgressLoader />:"E-posta Bağlantısını yeniden gönder"}</Button>
                     </Typography>
                 </Grid>
             </Grid>

@@ -137,7 +137,7 @@ export default function ForgotPassword (props) {
                     >
                         <Grid item xs={8}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                {authState.loading ? <ProgressLoader />:"Submit"}
+                                {authState.loading ? <ProgressLoader />:"Kaydet"}
                             </Button>
 
                         </Grid>

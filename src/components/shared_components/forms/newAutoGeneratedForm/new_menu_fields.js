@@ -88,9 +88,18 @@ export default function NewMenuFields(props) {
       const handleAddField = () => {
             
         const _fields = (fields != null)?fields.split(','):[]
-        _fields.push(textFieldValue.trim().toLowerCase());
-        setTextFieldValue('')
-        setFields(_fields.join());
+
+        if(!_fields.includes(textFieldValue.trim().toLowerCase())) {
+            _fields.push(textFieldValue.trim().toLowerCase());
+            setTextFieldValue('')
+            setFields(_fields.join());
+        }else {
+
+            showSnackBar("Bu alan zaten eklendi", "error")
+            setTextFieldValue('')
+            
+        }
+       
 
       };
 
@@ -195,7 +204,7 @@ export default function NewMenuFields(props) {
                             variant="contained" color="primary" className={classes.submitBtn} >
 
                                 {
-                                    menuReducer.loading?<ProgressSpinner />:"Kayıt etmek"
+                                    menuReducer.loading?<ProgressSpinner />:"Kaydet"
                                 }
                             
                         </Button>

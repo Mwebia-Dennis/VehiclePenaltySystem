@@ -128,7 +128,7 @@ export default function NewUserForm(props) {
                     >
                         <Grid item xs={8}>
                             <Button type="submit" variant="contained" color="primary" className={classes.submitBtn} >
-                                Sunmak
+                                Kaydet
                             </Button>
 
                         </Grid>
