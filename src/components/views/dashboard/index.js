@@ -40,6 +40,10 @@ export default function Dashboard(props) {
             const total = statisticsReducer.data.todayTotalUsers
             item.value = total?total:0
             return item
+        }else if(item.id === 'total_vehicles') {
+            const total = statisticsReducer.data.totalVehicles
+            item.value = total?total:0
+            return item
         }
         return item
 

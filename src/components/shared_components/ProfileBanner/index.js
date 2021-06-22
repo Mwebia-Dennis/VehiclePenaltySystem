@@ -75,14 +75,14 @@ export default function ProfileBanner (props) {
   }
     const editTextField =  [
         {
-            placeholder: "Name",
+            placeholder: "Isim",
             name: "name",
             type: "text",
             defaultValue: ("name" in reducer.data)?reducer.data.name: '', 
         },
         
         {
-            placeholder: "Surname",
+            placeholder: "Soyadı",
             name: "surname",
             type: "text",
             defaultValue: ("surname" in reducer.data)?reducer.data.surname: '', 
@@ -146,7 +146,7 @@ export default function ProfileBanner (props) {
                                     startIcon={<MailIcon className={classes.icon} />}
                                 >
                                     <Link href={"mailto:"+reducer.data.email} className={classes.btnLink}>
-                                        Send A Mail
+                                        Posta Gönder
                                     </Link>
                                 </Button>
                                 
@@ -171,7 +171,7 @@ export default function ProfileBanner (props) {
                                                     component="span"
                                                     startIcon={<PhotoCamera className={classes.icon} />}
                                                 >
-                                                    Upload New Image
+                                                    Yeni Resim Yükle
                                                 </Button>
                                             </label>
                                         </>
@@ -195,14 +195,14 @@ export default function ProfileBanner (props) {
                                 <Paper className={classes.editContainer}>
 
                                     <Typography variant="h6"  className={classes.editTitle}>
-                                        Edit Account
+                                        Hesabı düzenlemek
                                     </Typography>
                                     <Divider  className={classes.editDivider} />
                                     
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} md={4}>
                                             <Typography className={classes.editContent}>
-                                                Enter your account info.Your username and email will be viewed publicly.
+                                                Hesap bilgilerinizi girin. Kullanıcı adınız ve e-postanız herkese açık olarak görüntülenecektir.
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
@@ -223,13 +223,13 @@ export default function ProfileBanner (props) {
                                                                 defaultValue={item.defaultValue}
                                                                 {...register(item.name, { required: true })}
                                                             />
-                                                            {errors[item.name] && <span>This field is required</span>}
+                                                            {errors[item.name] && <span>Bu alan gereklidir</span>}
                                                         </FormControl>
 
                                                     ))
                                                 }
                                                 <Button type="submit" color="primary" variant="contained" className={classes.editBtn}>
-                                                    Edit Profile
+                                                    Profili Düzenle
                                                 </Button>
                                             
                                                 

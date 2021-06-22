@@ -17,7 +17,7 @@ export const SummaryCardItems = [
     {
         id: 'vehicle',
         color: '#0066ff',
-        title: 'Yeni araçlar',
+        title: 'Günümüzün yeni araçları',
         value: '0',
         url: '/vehicle', 
         icon: <CommuteOutlinedIcon style={SummaryIconsStyle} />
@@ -25,7 +25,7 @@ export const SummaryCardItems = [
     {
         id: 'penalties',
         color: '#ff0000',
-        title: 'Yeni cezalar',
+        title: 'Bugünün yeni cezaları',
         value: '0',
         url: '/penalty', 
         icon: <GavelIcon style={SummaryIconsStyle}/>
@@ -33,17 +33,17 @@ export const SummaryCardItems = [
     {
         id: 'users',
         color: '#009933',
-        title: 'Yeni kullanıcılar',
+        title: 'Bugünün yeni kullanıcıları',
         value: '0',
         url: '/users', 
         icon: <GroupIcon style={SummaryIconsStyle} />
     },
     {
-        id: 'penalties',
+        id: 'total_vehicles',
         color: '#ffcc00',
-        title: 'Yeni cezalar',
+        title: 'Toplam araç',
         value: '0',
-        url: '/penalty', 
+        url: '/vehicle', 
         icon: <ReceiptIcon style={SummaryIconsStyle} />
     }
 
