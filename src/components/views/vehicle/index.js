@@ -145,6 +145,8 @@ export default (props) => {
 
                 
             }
+            const placeholder1 = isTurkish?'Tarafından eklendi'.toUpperCase():"added_by"
+            formattedData[placeholder1] = data[key]['added_by']['name'] + " " + data[key]['added_by']['surname']
             
             const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
             formattedData[placeholder] = <>

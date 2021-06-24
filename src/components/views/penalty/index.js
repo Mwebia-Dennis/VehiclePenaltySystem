@@ -39,6 +39,7 @@ export default function Penalty(props) {
     })
 
 
+
     function handleModalOpen(pdf){
         setPdfOpen({
             pdf: pdf,
@@ -143,11 +144,14 @@ export default function Penalty(props) {
     }
 
     const toggleCheckingAllCheckboxes = ()=> {
-
-        if(selectedData.split(',').length  === penaltyData.data.length) {
+        const selected_data = selectedData === ''?[]:selectedData.split(',')
+        if(selected_data.length  === penaltyData.data.length) {
+            console.log("1111")
             setSelectedData([''].join())
         }else {
+            console.log("sdfdsfds")
             const selected = penaltyData.data.map((item)=>item.id)
+            console.log(selected.join())
             setSelectedData(selected.join())
         }
 
@@ -196,6 +200,17 @@ export default function Penalty(props) {
                                 </IconButton>
 
                         }
+                    }else if(header.trim() === 'image_url') {
+                    
+                        const placeholder = isTurkish?'resmi'.toUpperCase():'image'
+                        if(data[key][header] === ''){
+                            formattedData[placeholder] = ''
+                        }else {
+                            formattedData[placeholder] = <IconButton > 
+                                    <Avatar alt="pdf logo" variant="square" src={data[key][header]} />
+                                </IconButton>
+
+                        }
                     }else {
 
                         
@@ -205,9 +220,15 @@ export default function Penalty(props) {
                 }
                 const placeholder = isTurkish?'Plaka No'.toUpperCase():"plate_number"
                 formattedData[placeholder] = data[key]['vehicle']['plate_number']
-
+                
                 
             }
+
+            
+            const placeholder1 = isTurkish?'Tarafından eklendi'.toUpperCase():"added_by"
+            formattedData[placeholder1] = data[key]['added_by']['name'] + " " + data[key]['added_by']['surname']
+
+
             const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
             formattedData[placeholder] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>

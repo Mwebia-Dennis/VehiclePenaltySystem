@@ -14,6 +14,7 @@ import { SideMenuItems } from '../../data/sideMenuItems';
 import { useNavigate } from 'react-router-dom';
 import { AcUnitRounded, Close, Flare, Star, Stars } from '@material-ui/icons';
 import DropDownMenu from './drop_down_menu'
+import ActionMenu from './action_drop_down'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMenus } from '../../../store/reducers/menu/menu.actions';
 import { logOut } from '../../../store/reducers/auth/auth.actions';
@@ -228,6 +229,7 @@ export default function PrimarySearchAppBar() {
 
                 <DropDownMenu menuItems={SideMenuItems.filter((item, index) => index >= 4)} />
 
+
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
@@ -284,6 +286,9 @@ export default function PrimarySearchAppBar() {
                         </ListItem>
                         ))
                     }
+
+
+                  <ActionMenu isNavBar={false}/>
                 </List>
             </div>
 

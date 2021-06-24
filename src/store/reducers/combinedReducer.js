@@ -7,6 +7,8 @@ import { menuReducer } from './menu/menu.reducer'
 import { menuDataReducer } from './menu_data/menu_data.reducer'
 import { statisticsReducer } from './statistics/statistics.reducer'
 import { excelFileReducer } from './excel_files/excelFiles.reducer'
+import { pdfFileReducer } from './pdf_files/pdf.reducer'
+
 
 export default combineReducers({
 
@@ -18,4 +20,5 @@ export default combineReducers({
     menuDataReducer: menuDataReducer,
     statisticsReducer: statisticsReducer,
     excelFileReducer: excelFileReducer,
+    pdfFileReducer: pdfFileReducer
 });

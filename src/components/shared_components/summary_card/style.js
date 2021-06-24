@@ -33,7 +33,6 @@ export const useStyles = makeStyles((theme) => ({
     },
     icons: {
         color: '#fff',
-        fontSize: '50px',
         textAlign: 'center',
     }
 

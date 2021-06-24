@@ -5,6 +5,7 @@ import { StyledMenu,StyledMenuItem,MoreButton } from './style'
 import { ExpandMore } from '@material-ui/icons';
 import { useStyles } from './style'
 import { useNavigate } from 'react-router-dom';
+import ActionMenu from '../action_drop_down'
 
 
 export default function CustomizedMenus(props) {
@@ -60,6 +61,9 @@ export default function CustomizedMenus(props) {
             ))
 
           }
+
+
+          <ActionMenu isNavBar={true}/>
       </StyledMenu>
     </>
   );

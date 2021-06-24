@@ -71,7 +71,7 @@ export const setNewPenalty = (newData, user_id, navigate) => (dispatch) => {
 export const updatePenalty = (newData, user_id, penalty_id) => (dispatch) => {
 
     dispatch({ type: LOADING_PENALTY_DATA })
-    axios.put('users/'+user_id+'/penalty/'+penalty_id, newData)
+    axios.post('users/'+user_id+'/penalty/'+penalty_id, newData)
     .then((res)=>{
         
         dispatch({ type: CLEAR_PENALTY_ERROR})

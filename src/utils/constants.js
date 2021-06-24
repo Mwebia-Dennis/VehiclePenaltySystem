@@ -43,7 +43,9 @@ export const excelFileType = {
     vehicle: "VEHICLE",
     penalty: "PENALTY",
 }
-export const paymentStatus = ['Pending','Settled',]
+export const paymentStatus = ['Odendi','Beklemende',]
+
+export const cancelationStatus = ["İPTAL EDİLDİ", "BEKLEMEDE"]
 
 export const signUpTextfields  = [
     {
@@ -208,38 +210,44 @@ export const vehicleSelectFields = [
 
 export const penaltyTextFields = [
     {
-        placeholder: "MAKBUZ-NO",
+        placeholder: "MAKBUZ",
         name: "receipt_number",
         type: "text"
 
     },
     {
-        placeholder: "CEZA MADDE",
-        name: "penalty_article",
+        placeholder: "CEZA TARİHİ",
+        name: "penalty_date",
         type: "text"
 
     },
     {
-        placeholder: "CEZATUTAR ",
+        placeholder: "CEZA SAATİ ",
+        name: "penalty_hour",
+        type: "text"
+
+    },
+    {
+        placeholder: "TEBLİĞ TARİHİ ",
+        name: "notification_date",
+        type: "text"
+
+    },
+    {
+        placeholder: "CEZA TUTAR",
         name: "penalty",
         type: "text"
 
     },
     {
-        placeholder: "NOT ",
-        name: "note",
+        placeholder: "PESİN TUTAR ",
+        name: "payment_amount",
         type: "text"
 
     },
     {
-        placeholder: "ÖDEME YAPAN",
-        name: "paying",
-        type: "text"
-
-    },
-    {
-        placeholder: "KAYNAK ",
-        name: "source",
+        placeholder: "CEZA MADDESİ ",
+        name: "penalty_article",
         type: "text"
 
     },
@@ -250,26 +258,68 @@ export const penaltyTextFields = [
 
     },
     {
-        placeholder: "İADE ID  ",
-        name: "return_id",
+        placeholder: "İSİM-SOYİSİM ",
+        name: "name",
         type: "text"
 
     },
     {
-        placeholder: "PESİNTUTAR ",
-        name: "pesintutar",
+        placeholder: "İBB KAYIT TARİHİ ",
+        name: "registration_date",
         type: "text"
 
     },
     {
-        placeholder: "İDAYSİSID",
-        name: "daysisid",
+        placeholder: "BİRİME GELİŞ TARİHİ",
+        name: "arrival_date",
         type: "text"
 
     },
     {
-        placeholder: "DAYSİSONAY",
-        name: "daysisonay",
+        placeholder: "İBB NO",
+        name: "imm_no",
+        type: "text"
+
+    },
+    {
+        placeholder: "TALEP NO",
+        name: "request_no",
+        type: "text"
+
+    },
+    {
+        placeholder: "BİRİM NO",
+        name: "unit_no",
+        type: "text"
+
+    },
+    {
+        placeholder: "FİRMA",
+        name: "company",
+        type: "text"
+
+    },
+    {
+        placeholder: "KARAR TARİHİ",
+        name: "decision_date",
+        type: "text"
+
+    },
+    {
+        placeholder: "ÖDEME TARİHİ",
+        name: "payment_date",
+        type: "text"
+
+    },
+    {
+        placeholder: "ÖDEME YAPAN",
+        name: "paying",
+        type: "text"
+
+    },
+    {
+        placeholder: "NOT ",
+        name: "note",
         type: "text"
 
     },
@@ -331,5 +381,102 @@ export const otherFields = [
         
         name: "equipment",
         placeholder: "araç ekipmanları",
+    },
+    {
+        
+        name: "cancelation_status",
+        placeholder: "İptal durum",
+    },
+    {
+        name:'image_url',
+        placeholder: 'resim'
     }
+    
+]
+
+export const __Dates = [
+    {
+        
+        name: "Monday",
+        placeholder: "Pazartesi",
+    },
+    {
+        
+        name: "Tuesday",
+        placeholder: "Salı",
+    },
+    {
+        
+        name: "Wednesday",
+        placeholder: "Çarşamba",
+    },
+    {
+        
+        name: "Thursday",
+        placeholder: "Perşembe",
+    },
+    {
+        
+        name: "Friday",
+        placeholder: "Cuma",
+    },
+    {
+        
+        name: "Saturday",
+        placeholder: "Cumartesi",
+    },
+    {
+        
+        name: "Sunday",
+        placeholder: "Pazar",
+    },
+]
+
+
+export const printData = [
+
+    {
+        name: "PLAKA",
+        placeholder: "PLAKA",
+        type: "text",
+        
+    },
+    {
+        name: "CEZA_NO",
+        placeholder: "CEZA NO",
+        type: "text",
+        
+    },
+    {
+        name: "CEZA_TARİHİ",
+        placeholder: "CEZA TARİHİ",
+        type: "text",
+        
+    },
+    {
+        name: "CEZA_SAATİ",
+        placeholder: "CEZA SAATİ",
+        type: "text",
+        
+    },
+    {
+        name: "BİRİM",
+        placeholder: "BİRİM",
+        type: "text",
+        
+    },
+    {
+        name: "TESLİM_EDEN",
+        placeholder: "TESLİM EDEN",
+        type: "text",
+        
+    },
+    {
+        name: "TESLİM_ALAN",
+        placeholder: "TESLİM ALAN",
+        type: "text",
+        
+    },
+
+
 ]
