@@ -236,6 +236,8 @@ export default function AutoGenerateTable(props) {
             formattedData[getPlaceHolderName("created_at", [])] = data[key].created_at
             formattedData[getPlaceHolderName("updated_at", [])] = data[key].updated_at
             
+            formattedData["Tarafından eklendi"] = data[key]['added_by']['name'] + " " + data[key]['added_by']['surname']
+            
             formattedData["AKSİYON".toUpperCase()] = <>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>

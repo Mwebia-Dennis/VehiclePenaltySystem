@@ -1,4 +1,4 @@
-import { otherFields } from './constants'
+import { otherFields, __Dates } from './constants'
 
 
 export const handleUpdateData = (data)=> {
@@ -90,5 +90,22 @@ export const removeNulls = (data)=> {
     }
 
     return data
+
+}
+
+
+export const translateDates = (english_date)=> {
+
+    let new_date = english_date
+    __Dates.forEach(element => {
+        
+        if(english_date.trim().toLowerCase() === element.name.trim().toLowerCase()) {
+
+            new_date = element.placeholder
+        }
+
+    });
+
+    return new_date
 
 }

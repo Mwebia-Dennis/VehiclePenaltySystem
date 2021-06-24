@@ -4,9 +4,7 @@ import React, { forwardRef, useEffect, useState } from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete';   
 import {useStyles} from './style'
 import BreadCrumb from '../../BreadCrump';
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { paymentStatus } from '../../../../utils/constants';
 import {DropzoneArea} from 'material-ui-dropzone'
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -17,13 +15,14 @@ import { getAllVehiclesPlateNumber } from '../../../../store/reducers/vehicle/ve
 import { CLEAR_PENALTY_ERROR, CLEAR_PENALTY_MESSAGE } from '../../../../store/reducers/penalty/penalty.types';
 import { setNewPenalty, updatePenalty } from '../../../../store/reducers/penalty/penalty.actions';
 import { handleUpdateData, formatDate, removeNulls } from '../../../../utils/functions'
-import { penaltyTextFields } from '../../../../utils/constants'
+import { penaltyTextFields, cancelationStatus, paymentStatus } from '../../../../utils/constants'
 
 export default function NewPenaltyForm(props) {
 
     const { isUpdate, data } = props;
     const classes = useStyles();
     const defaultInputData = (data !== null && data !== undefined)?data:{}
+    console.log(defaultInputData)
     const [formInputData, setFormInputData] = useState({})
     const [plateNumber, setPlateNumber] = useState(
         ("vehicle" in defaultInputData)?{
@@ -31,18 +30,9 @@ export default function NewPenaltyForm(props) {
             plate_number: defaultInputData.vehicle.plate_number
         }:{}
     );
-    const [penaltyDate, setPenaltyDate] = useState(
-        ("penalty_date" in defaultInputData)?new Date(defaultInputData.penalty_date):new Date()
-    );
-    const [paymentDate, setPaymentDate] = useState(
-        ("payment_date" in defaultInputData)?new Date(defaultInputData.payment_date):new Date()
-    );
-    const [notificationDate, setNotificationDate] = useState(
-        ("notification_date" in defaultInputData)?new Date(defaultInputData.notification_date):new Date()
-    );
-    const [penaltyHour, setPenaltyHour] = useState(new Date());
     const [fileError, setFileError] = useState('')
     const [uploadedPdf, setUploadedPdf] = useState(null)
+    const [penaltyImage, setPenaltyImage] = useState(null)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -96,6 +86,10 @@ export default function NewPenaltyForm(props) {
         setUploadedPdf(files["0"])
     }
 
+    const handlePenaltyImageChange = (files) => {
+        setPenaltyImage(files["0"])
+    }
+
     
     const handleInputChange = (inputName, inputValue)=> {
         const data = formInputData
@@ -133,18 +127,16 @@ export default function NewPenaltyForm(props) {
                     
         const formData = new FormData()
         formData.append("vehicle_id", plateNumber.id)
-        formData.append("penalty_date", formatDate(new Date(penaltyDate)))
-        formData.append("payment_date", formatDate(new Date(paymentDate)))
-        formData.append("notification_date", formatDate(new Date(notificationDate)))
-        formData.append("penalty_hour", (new Date(penaltyHour).toLocaleTimeString('it-IT')))
-        for (const key in data) {
-            
-            formData.append(key, data[key])
+        const __data = removeNulls(data)
+        console.log(__data)
+        for (const key in __data) {
+            if(key !== "vehicle_id" && key !== "vehicle")formData.append(key, __data[key])
         }
 
         if(!isUpdate) {
 
-            if( uploadedPdf !== null) {
+            console.log(uploadedPdf)
+            if( uploadedPdf !== null && uploadedPdf !== undefined) {
 
                 if(("name" in uploadedPdf)) {
     
@@ -153,11 +145,23 @@ export default function NewPenaltyForm(props) {
             }
         }
 
+        if(isUpdate) {
+
+            if( penaltyImage !== null && penaltyImage !== undefined) {
+
+                if(("name" in penaltyImage)) {
+                    
+                    formData.append('image', penaltyImage,penaltyImage.name)
+                }
+            }
+        }
+
         
         if('id' in authReducer.data) {
     
             if(isUpdate) {
-                dispatch(updatePenalty(removeNulls(data), authReducer.data.id, defaultInputData.id))
+
+                dispatch(updatePenalty((formData), authReducer.data.id, defaultInputData.id))
             }else {
                 dispatch(setNewPenalty(formData, authReducer.data.id, navigate))
             }
@@ -283,71 +287,27 @@ export default function NewPenaltyForm(props) {
                             }
 
                             <Grid
-                                item 
-                                xs={12} 
-                                md={6} 
+                                item
+                                xs={12}
                                 >
-                                    <Typography variant="h6" className={classes.label}>CEZA TARİHİ</Typography>
-                                    <DatePicker 
-                                        selected={penaltyDate}
-                                        customInput={<ExampleCustomInput />}
-                                        onChange={date => setPenaltyDate(date)}
-                                        label="CEZA TARİHİ"
-                                        name="penalty_date"
-                                    />
-                                    {/* {errors["penalty_date"] && <span>This field is required</span>} */}
-                            </Grid>
-                            <Grid
-                                item 
-                                xs={12}
-                                md={6}
-                            >
-                                    <Typography variant="h6" className={classes.label}>ÖDEME TARİHİ</Typography>
-                                    <DatePicker 
-                                        selected={paymentDate}
-                                        customInput={<ExampleCustomInput />}
-                                        onChange={date => setPaymentDate(date)}
-                                        label="ÖDEME TARİHİ"
-                                        placeholder="ÖDEME TARİHİ"
-                                        name="payment_date"
-                                    />
-                                    {/* {errors["payment_date"] && <span>This field is required</span>} */}
-                            </Grid>
-                            <Grid
-                                item 
-                                xs={12}
-                                md={6}
-                            >
-                                    <Typography variant="h6" className={classes.label}>TEBLİG TARİHİ</Typography>
-                                    <DatePicker 
-                                        selected={notificationDate}
-                                        customInput={<ExampleCustomInput />}
-                                        onChange={date => setNotificationDate(date)}
-                                        label="TEBLİG TARİHİ"
-                                        placeholder="TEBLİG TARİHİ"
-                                        name="notification_date"
-                                    />
-                                    {/* {errors["notification_date"] && <span>This field is required</span>} */}
-                            </Grid>
-                            <Grid
-                                item 
-                                xs={12}
-                                md={6}
-                            >
-                                    <Typography variant="h6" className={classes.label}>CEZA-SAAT</Typography>
-                                    <DatePicker 
-                                        selected={penaltyHour}
-                                        customInput={<ExampleCustomInput />}
-                                        onChange={date => setPenaltyHour(date)}
-                                        showTimeSelect
-                                        showTimeSelectOnly
-                                        timeIntervals={1}
-                                        dateFormat="hh:mm:ss "
-                                        label="CEZA-SAAT"
-                                        placeholder="CEZA-SAAT"
-                                        name="penalty_hour"
-                                    />
-                                    {/* {errors["penalty_hour"] && <span>This field is required</span>} */}
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="demo-cancelation_status-label">İPTAL DURUM</InputLabel>
+                                        <Select
+                                            name="cancelation_status"
+                                            labelId="demo-cancelation_status-label"
+                                            id="demo-cancelation_status-select"                                          
+                                            onChange={(e)=>handleInputChange('cancelation_status', e.target.value)}
+                                            value={formInputData.cancelation_status}
+                                            defaultValue={getTextInputValue('cancelation_status')}  
+                                        >
+
+                                            {
+                                                cancelationStatus.map((item,index)=>(
+                                                    <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                ))
+                                            }
+                                        </Select>
+                                    </FormControl>
                             </Grid>
 
                             <Grid
@@ -386,7 +346,7 @@ export default function NewPenaltyForm(props) {
                                             xs={12}
                                         >
 
-                                            <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+                                            <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>Upload Image</Typography>
 
 
                                                 <DropzoneArea
@@ -404,7 +364,26 @@ export default function NewPenaltyForm(props) {
 
                                         </Grid>
 
-                                    :<></>
+                                    :
+                                    
+                                    <Grid
+                                        item 
+                                        xs={12}
+                                    >
+
+                                        <Typography variant="h6" className={classes.label} style={{marginBottom: '10px'}}>PDF document</Typography>
+
+
+                                            <DropzoneArea
+                                                acceptedFiles={['image/*']}
+                                                maxFileSize={5000000}
+                                                filesLimit={1}
+                                                dropzoneText="Resmi sürükleyip bırakın"
+                                                onChange={handlePenaltyImageChange}
+                                            />
+                                        
+
+                                    </Grid>
                                 }
 
                             

@@ -61,6 +61,18 @@ export default function AlertDialogSlide(props) {
             dataSetHeadersIds.splice(index, 1);
         }
     }
+    if(dataSetHeadersIds.includes('resim'.toUpperCase())) {
+        const index = dataSetHeadersIds.indexOf('resim'.toUpperCase());
+        if (index > -1) {
+            dataSetHeadersIds.splice(index, 1);
+        }
+    }
+    if(dataSetHeadersIds.includes('pdf'.toUpperCase())) {
+        const index = dataSetHeadersIds.indexOf('pdf'.toUpperCase());
+        if (index > -1) {
+            dataSetHeadersIds.splice(index, 1);
+        }
+    }
     if(dataSetHeadersIds.includes('seç')) {
         const index = dataSetHeadersIds.indexOf('seç');
         if (index > -1) {
@@ -108,7 +120,7 @@ export default function AlertDialogSlide(props) {
                     <Button variant="contained" color="primary" 
                         disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}
                         onClick={handleClose}
-                    > Export to Excel</Button>
+                    > Excel Aktar</Button>
                     }
                 >
                 <ExcelSheet data={newDataSet} name="Report">
@@ -134,7 +146,7 @@ export default function AlertDialogSlide(props) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">Choose columns to be added to document</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">Excel'e aktarmak istedigin veiriyi sec</DialogTitle>
         <DialogContent>
 
 
@@ -149,17 +161,17 @@ export default function AlertDialogSlide(props) {
                             />
                         ))
                     :
-                    <Typography variant="small">0 results found</Typography>
+                    <Typography variant="small">0 sonuç bulundu</Typography>
                 }
             </FormGroup>
 
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSelectAll} color="secondary" variant="contained">
-            Select All
+            hepsini seç
           </Button>
           <Button onClick={handleClose} color="secondary" variant="contained">
-            Close
+            Kapat
           </Button>
           <ExportToExcelBtn />
         </DialogActions>

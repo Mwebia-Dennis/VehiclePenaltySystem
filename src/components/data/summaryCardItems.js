@@ -31,9 +31,9 @@ export const SummaryCardItems = [
         icon: <GavelIcon style={SummaryIconsStyle}/>
     },
     {
-        id: 'users',
+        id: 'total_penalties',
         color: '#009933',
-        title: 'Bugünün yeni kullanıcıları',
+        title: 'Toplam Cezalar',
         value: '0',
         url: '/users', 
         icon: <GroupIcon style={SummaryIconsStyle} />

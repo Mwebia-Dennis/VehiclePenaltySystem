@@ -9,6 +9,7 @@ export const useStyles = makeStyles((theme) => ({
         width: '40%',
         marginLeft: '30%',
         padding: '20px 50px 50px 50px',
+        backgroundColor: 'rgba(230, 245, 255, 0.5)',
         [theme.breakpoints.down('sm')]: {
             width: '100%',
             marginLeft: '0',
@@ -20,6 +21,7 @@ export const useStyles = makeStyles((theme) => ({
         marginLeft: '10%',
         padding: '10px',
         boxShadow: 'none',
+        backgroundColor: 'rgba(230, 245, 255, 0.5)',
         [theme.breakpoints.down('sm')]: {
             width: '100%',
             marginLeft: '0',

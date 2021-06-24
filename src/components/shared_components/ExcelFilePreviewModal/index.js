@@ -125,7 +125,7 @@ export default function ExcelFileModal(props){
                                                         </CardContent>
                                                         <CardActions>
                                                             <Button startIcon={<CloudDownload />} color="secondary" variant="outlined" onClick={()=>handleDownloadFile(item.file_url)}>
-                                                                Download
+                                                                İndir
                                                             </Button>
                                                         </CardActions>
                                                     </Card>
@@ -138,7 +138,7 @@ export default function ExcelFileModal(props){
                                 }
                             </Grid>
                         :
-                        <Alert severity="info">0 results found</Alert>
+                        <Alert severity="info">0 sonuç bulundu</Alert>
 
 
                 }

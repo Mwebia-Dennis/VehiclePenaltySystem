@@ -16,6 +16,7 @@ import DataProgressRateCard from '../../shared_components/DataProgressRateCard'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStatistics } from '../../../store/reducers/statistics/statistics.actions';
 import ProgressSpinner from '../../shared_components/ProgressBarSpinner'
+import { translateDates } from '../../../utils/functions'
 
 export default function Dashboard(props) {
     
@@ -36,8 +37,8 @@ export default function Dashboard(props) {
             const total = statisticsReducer.data.todayTotalPenalties
             item.value = total?total:0
             return item
-        }else if(item.id === 'users') {
-            const total = statisticsReducer.data.todayTotalUsers
+        }else if(item.id === 'total_penalties') {
+            const total = statisticsReducer.data.totalPenalties
             item.value = total?total:0
             return item
         }else if(item.id === 'total_vehicles') {
@@ -59,7 +60,7 @@ export default function Dashboard(props) {
             const allData = statisticsReducer.data.vehicleWeeklydata
             for(let i=allData.length-1; i>=0; i--) {
                 for (const key in allData[i]) {
-                    labels.push( key )
+                    labels.push( translateDates(key) )
                     vehicleData.push( allData[i][key] )
                     penaltyData.push( statisticsReducer.data.penaltyWeeklydata[i][key] )
                 }
