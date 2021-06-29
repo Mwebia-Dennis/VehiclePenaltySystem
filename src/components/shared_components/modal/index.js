@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { styles, DialogContent,DialogActions } from './style'
 import { Document, Page, pdfjs } from "react-pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+import { useSnackbar } from 'notistack';
+import { Close } from '@material-ui/icons';
 // import PDFFile from '../../../images/demo.pdf'
 // import useMediaQuery from '@material-ui/core/useMediaQuery'
 
@@ -36,28 +38,47 @@ export default function CustomizedDialogs(props) {
   const { pdf, handleClose, open } = props;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // const theme = useTheme();
   // const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  console.log(pdf)
+
+  const handlePdfError = (err)=>{
+    console.log(err)
+  }
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
   }
 
-  
-  function formatPdfLink(pdf){
-
-    if(pdf) {
-      const splitLink = pdf.split(':')
-
-      if(splitLink["0"].trim().toLowerCase() === 'http') {
-        splitLink["0"] = "https"
-      }
-      return splitLink.join(':')
+  const handleNextPage = ()=> {
+    if(pageNumber <= numPages) {
+      setPageNumber((pageNumber + 1))
+    }else {
+      showSnackBar("bu son sayfa", "error")
     }
-
-    return pdf
   }
+  
+  const handlePreviousPage = ()=> {
+    if(pageNumber > 0) {
+      setPageNumber((pageNumber - 1))
+    }else {
+      showSnackBar("geçersiz sayfa", "error")
+    }
+  }
+
+  function showSnackBar(msg, variant = 'info'){
+    enqueueSnackbar(msg, {
+        variant: variant,            
+        action: (key) => (
+            <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                <Close />
+            </IconButton>
+        ),
+    })
+}
+
 
 
   return (
@@ -70,22 +91,28 @@ export default function CustomizedDialogs(props) {
         open={open}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Report PDF
+          Pdf dosyasi yuklenemedi
         </DialogTitle>
         <DialogContent dividers>
             <Document
-                file={formatPdfLink(pdf)}
+                file={pdf}
                 onLoadSuccess={onDocumentLoadSuccess}
             >
                 <Page pageNumber={pageNumber} />
             </Document>
-            <p>Page {pageNumber} of {numPages}</p>
-
+        <p>Page {pageNumber} of {numPages}</p>
 
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
+            Kapat
+          </Button>
+          <Button autoFocus onClick={handlePreviousPage} color="secondary">
+            
+            önceki sayfa
+          </Button>
+          <Button autoFocus onClick={handleNextPage} color="secondary">
+          sonraki Sayfa
           </Button>
         </DialogActions>
       </Dialog>

@@ -43,15 +43,15 @@ export default function MainActionContainer(props) {
         //data
 
         if(data === pageType.vehicle ) {
-            navigate('/new-vehicle');
+            navigate('/arac-ekle');
         }else if(data === pageType.users ) {
-            navigate('/new-user');
+            navigate('/personel-ekle');
         }else if(data === pageType.penalty ) {
-            navigate('/new-penalty');
+            navigate('/ceza-ekle');
         }else {
 
             localStorage.setItem("menu_id", data.menu_id)
-            navigate('/auto/form/'+formatUrlName(data.type.toLowerCase()))
+            navigate('/otomatik/form/'+formatUrlName(data.type.toLowerCase()))
         }
     }
 

@@ -60,6 +60,12 @@ export default function PdfModal(props) {
     
     const formData = new FormData()
     for(const file of event.target.files){
+
+      if(file.name.length > 40) {
+        showSnackBar("dosya adı çok uzun \n"+file.name, "error")
+        return
+
+      }
         formData.append("files[]", file)
     }
     if("id" in authReducer.data){
@@ -82,6 +88,11 @@ const handleModalClose = () => {
       open: false
   });
 };
+
+
+const getPdfName = (url)=> {
+  return url.split("storage/all_pdfs/")[1];
+}
 
 
   if(pdfFileReducer.message) {
@@ -156,7 +167,7 @@ if(pdfFileReducer.error) {
 
                 <Grid container>
 
-                  <Grid item xs={9}>
+                  <Grid item xs={8} md={10}>
 
                     <SearchBar
                         value={searchQueryValue}
@@ -167,9 +178,9 @@ if(pdfFileReducer.error) {
                     />
 
                   </Grid>
-                  <Grid item xs={3}>
+                  <Grid item xs={4} md={2}>
                 
-                    <Button onClick={handleSearchButtonClick} style={{marginTop: '19px', padding: '20px auto'}} color="primary" variant="contained">
+                    <Button onClick={handleSearchButtonClick} style={{marginTop: '14px', padding: '10px'}} color="primary" variant="contained">
                         pdf ara
                     </Button>
 
@@ -196,15 +207,24 @@ if(pdfFileReducer.error) {
                                         alignItems="center"
                                         justify="center">
 
-                                        <Grid item xs={12} md={12}>
+                                        <Grid item xs={12} md={12} style={{marginBottom: '10px'}}>
 
-                                            <Card>
+                                            <Card style={{width: '98%', height: '150px'}}>
                                                 <CardContent>
-                                                    <Avatar alt="Remy Sharp" variant="square" src={pdf_logo} style={{width: '50px', height: '50px'}}/>
-                                                    <Typography variant="h6" style={{fontSize: '13px', fontWeight: 'bold'}}>{item.created_at}</Typography>
+
+
+                                                    <Grid container>
+                                                      <Grid item xs={5}>
+
+                                                        <Avatar alt="Excel file" variant="square" src={pdf_logo} style={{width: '50px', height: '50px'}}/>
+                                                      </Grid>
+                                                      <Grid item xs={7}>
+                                                        <Typography variant="h6" style={{fontSize: '13px',paddingLeft: '4px', fontWeight: 'bold'}}>{getPdfName(item.file_url)}</Typography>
+                                                      </Grid>
+                                                    </Grid>
                                                 </CardContent>
                                                 <CardActions>
-                                                    <Button onClick={()=>handleModalOpen(item.file_url)} startIcon={<Visibility />} color="secondary" variant="outlined">
+                                                    <Button onClick={()=>handleModalOpen(item.file_url)} startIcon={<Visibility />} color="secondary" component="span">
                                                       Görünüm
                                                     </Button>
                                                 </CardActions>

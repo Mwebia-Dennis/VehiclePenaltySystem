@@ -6,6 +6,7 @@ export const formTypes = {
     newVehicle: 'NEW_VEHICLE',
     newUser: 'NEW_USER',
     newPenalty: 'NEW_PENALTY',
+    newPrint: 'NEW_PRINT',
     login: 'LOGIN',
     signUp: 'SIGN_UP',
     forgotPassword: 'FORGOT_PASSWORD',
@@ -118,6 +119,11 @@ export const vehicleTextFields = [
     {
         placeholder: "Demirbaş No",
         name: "asset_number"
+    },
+    {
+        
+        placeholder: "CEZA TARİHİ",
+        name: "delivery_date"
     }
 ]
 
@@ -209,6 +215,13 @@ export const vehicleSelectFields = [
 
 
 export const penaltyTextFields = [
+    
+    {
+        placeholder: "PLAKA NO",
+        name: "plate_number",
+        type: "text"
+
+    },
     {
         placeholder: "MAKBUZ",
         name: "receipt_number",

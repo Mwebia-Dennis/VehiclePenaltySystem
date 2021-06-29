@@ -35,7 +35,7 @@ export const loginUser = (userData, navigate) => (dispatch) => {
             payload: "successful login"
         })
         
-        navigate('/home')
+        navigate('/ana-sayfa')
 
     })
     .catch((error)=> {
@@ -66,7 +66,7 @@ export const signUpUser = (userData, navigate, isSignUp = true) => (dispatch) =>
             navigate('/auth/verify-email/'+userData.email)
         }else {
             
-            navigate('/users')
+            navigate('/kullanıcı')
         }
 
     })

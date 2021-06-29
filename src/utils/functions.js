@@ -109,3 +109,12 @@ export const translateDates = (english_date)=> {
     return new_date
 
 }
+
+
+export const getTurkishDate = (date)=> {
+
+    const _date = new Date(date)
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
+    return _date.toLocaleDateString('tr-TR', options)
+}

@@ -45,7 +45,7 @@ export default function PrimarySearchAppBar() {
   const loggedInMenu = [
     {
         name:"Profili Düzenle",
-        url: "/profile/current-user",
+        url: "/profil/current-user",
         onclick: null,
     },
     {
@@ -72,7 +72,7 @@ export default function PrimarySearchAppBar() {
         const rand = Math.floor(Math.random() * icons.length)
         const menu = {
           item: item.name,
-          url: '/auto/data/'+item.id,
+          url: '/otomatik/veri/'+item.id,
           icon: icons[rand]
         }
         if(!containsMenu(menu, SideMenuItems)) {

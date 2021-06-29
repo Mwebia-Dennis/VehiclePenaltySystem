@@ -52,7 +52,7 @@ export default function ForgotPassword (props) {
         navigate('/auth/verify-email/'+authState.data.email)
     }
     if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
-        navigate('/home')
+        navigate('/ana-sayfa')
     }
     
     if(authState.message) {

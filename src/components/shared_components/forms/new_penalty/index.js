@@ -50,36 +50,22 @@ export default function NewPenaltyForm(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/penalty", 
+            url:"/ceza", 
             name: "Ceza"
         },
         {
-            url:"/new-penalty", 
+            url:"/ceza-ekle", 
             name: "Yeni Ceza Ekle"
         }
         
     ]
 
 
-    const ExampleCustomInput = forwardRef(
-        ({ value, onClick, name}, ref) => (
-
-            <TextField 
-                required 
-                ref={ref}
-                value={value}
-                onClick={onClick}
-                className= {classes.textfield}
-                fullWidth
-                name={name}
-
-            />
-        ),
-      );
+   
 
 
     const handleFileChange = (files) => {
@@ -126,11 +112,10 @@ export default function NewPenaltyForm(props) {
         
                     
         const formData = new FormData()
-        formData.append("vehicle_id", plateNumber.id)
         const __data = removeNulls(data)
         console.log(__data)
         for (const key in __data) {
-            if(key !== "vehicle_id" && key !== "vehicle")formData.append(key, __data[key])
+            formData.append(key, __data[key])
         }
 
         if(!isUpdate) {
@@ -226,41 +211,7 @@ export default function NewPenaltyForm(props) {
                         container 
                         spacing={2}
                     >
-                        <Grid 
-                            item 
-                            xs={12}                              
-                        >
-
-                            {
-
-                                vehicleReducer.loading?
-
-                                    <ProgressSpinner />
-                                
-                                :
-                                
-                                    (vehicleReducer.allVehiclePlates.length > 0)?
-                                        <FormControl className={classes.formControl}>
-                                            
-                                            <Autocomplete
-                                                id="plate_number"
-                                                options={vehicleReducer.allVehiclePlates}
-                                                getOptionLabel={(option) => option.plate_number}
-                                                style={{ width: '100%' }}
-                                                value={plateNumber}
-                                                disabled={isUpdate}
-                                                onChange={(event, newValue) => {
-                                                setPlateNumber(newValue);
-                                                }}
-                                                renderInput={(params) => <TextField required {...params} label="Plaka No" margin="normal" />}
-                                            />
-
-                                        </FormControl>
-                                    :
-                                    <div>O results found</div>
-                                
-                            }
-                        </Grid>
+                        
 
                             
                             {

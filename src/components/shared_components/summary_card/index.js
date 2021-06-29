@@ -15,7 +15,7 @@ export default function SummaryCard (props) {
             item md={3} sm={12} xs={12}
         >
 
-            <Card variant="outlined" style={{backgroundColor: color}}>
+            <Card variant="outlined" className={classes.card} style={{backgroundColor: color,}}>
 
                 <Grid
                     container            

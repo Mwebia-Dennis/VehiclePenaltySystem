@@ -92,11 +92,11 @@ export default function ImportExcelData(props) {
                 >
                 <Publish />
             </IconButton>
-            <p>Upload Excel File</p>
+            <p>excel dosyası yükle</p>
 
         </MenuItem>
         <Dialog maxWidth="md" open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Import Excel Data 
+        <DialogTitle id="form-dialog-title"> Excel Verilerini İçe Aktar
             
         </DialogTitle>
         <DialogContent>
@@ -108,7 +108,7 @@ export default function ImportExcelData(props) {
                 showPreviewsInDropzone={false}
                 maxFileSize={10000000}
                 filesLimit={10}
-                dropzoneText="Drag And Drop Excel Sheets document here"
+                dropzoneText="excel sayfasını buraya sürükleyip bırakın"
                 onChange={handleFileChange}
             />
 
@@ -116,10 +116,10 @@ export default function ImportExcelData(props) {
         </DialogContent>
         <DialogActions>
                 <Button startIcon={<Close />} onClick={handleClose} color="primary" aria-label="close" component="span">
-                    Close
+                kapat
                 </Button>
                 <Button startIcon={<PhotoCamera />} onClick={handleUploadFiles} color="secondary" aria-label="upload picture" component="span">
-                    {excelFileReducer.loading? <ProgressLoader /> :"Upload Excel Document"}
+                    {excelFileReducer.loading? <ProgressLoader /> :"Excel Belgesi Yükle"}
                 </Button>
 
         </DialogActions>

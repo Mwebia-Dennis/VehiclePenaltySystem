@@ -11,7 +11,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { StyledMenuItem } from '../AppBar1/drop_down_menu/style'
 import { useSnackbar } from 'notistack';
 import { useReactToPrint } from 'react-to-print';
-import ComponentToPrint from './componentToPrint'
 import ComponentToPrint2 from './componentToPrint2'
 import { printData } from '../../../utils/constants'
 
@@ -21,7 +20,6 @@ export default function PdfModal(props) {
   const [printableData, setPrintableData] = useState([])
   const [formInputData, setFormInputData] = useState({})
   const [rows, setRows] = useState(0)
-  const [pageType, setPageType] = useState(1)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const componentRef = useRef()
   
@@ -47,6 +45,7 @@ export default function PdfModal(props) {
 const handleAddToList = (e)=> {
 
   e.preventDefault()
+  console.log("sdfdsgsdgsdf")
     let isFormInputEmpty = true
     for(const key in formInputData) {
         if( key !== "") {
@@ -69,11 +68,6 @@ useEffect(() => {
     setFormInputData({})
 }, [printableData])
 
-useEffect(()=>{
-    setPrintableData([])
-    setFormInputData({})
-}, [pageType])
-
 
 useEffect(()=>{
   setRows(printableData.length)
@@ -85,14 +79,7 @@ const getTextInputValue = (name)=> {
 
 
 
-  const printFields = pageType !== 1? printData : [1,2,3,4,5,6].map((item)=>(
-    {
-        name: "item"+item,
-        placeholder: "item"+item,
-        type: "text",
-        
-    }
-  ))
+  const printFields = printData
 
 
   const getHeaders = ()=> {
@@ -192,30 +179,6 @@ const getTextInputValue = (name)=> {
                     spacing={2}
                 >
 
-                      <Grid item xs={12}>
-
-                        <Grid container>
-                          <Grid item xs={4} md={2}>
-                            <Chip
-                              label="Sayfa 1"
-                              clickable
-                              color={pageType === 1?"secondary":""}
-                              onClick={()=>setPageType(1)}
-                            />
-
-                          </Grid>
-                          <Grid item xs={4}>
-                            
-                            <Chip
-                              label="Sayfa 2"
-                              color={pageType === 2?"secondary":""}
-                              onClick={()=>setPageType(2)}
-                            />
-                          </Grid>
-                        </Grid>
-
-                      </Grid>
-                        
                         {
                             printFields.map((item, index)=>(
 
@@ -270,14 +233,7 @@ const getTextInputValue = (name)=> {
         </DialogActions>
             </form>
         <div style={{display: 'none'}}>
-            {
-              pageType === 1?
-              <ComponentToPrint headers={getHeaders()} data={getData()} ref={componentRef} />
-              :
-              <ComponentToPrint2 headers={getHeaders()} data={getData()} ref={componentRef} />
-
-
-            }
+              <ComponentToPrint2 headers={getHeaders()} data={getData()} ref={componentRef} title={"Teslim Tutanagi"}/>
         </div>
       </Dialog>
     </div>

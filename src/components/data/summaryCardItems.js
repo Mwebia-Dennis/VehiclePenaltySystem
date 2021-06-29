@@ -19,7 +19,7 @@ export const SummaryCardItems = [
         color: '#0066ff',
         title: 'Günümüzün yeni araçları',
         value: '0',
-        url: '/vehicle', 
+        url: '/arac', 
         icon: <CommuteOutlinedIcon style={SummaryIconsStyle} />
     },
     {
@@ -27,7 +27,7 @@ export const SummaryCardItems = [
         color: '#ff0000',
         title: 'Bugünün yeni cezaları',
         value: '0',
-        url: '/penalty', 
+        url: '/ceza', 
         icon: <GavelIcon style={SummaryIconsStyle}/>
     },
     {
@@ -35,7 +35,7 @@ export const SummaryCardItems = [
         color: '#009933',
         title: 'Toplam Cezalar',
         value: '0',
-        url: '/users', 
+        url: '/ceza', 
         icon: <GroupIcon style={SummaryIconsStyle} />
     },
     {
@@ -43,7 +43,7 @@ export const SummaryCardItems = [
         color: '#ffcc00',
         title: 'Toplam araç',
         value: '0',
-        url: '/vehicle', 
+        url: '/arac', 
         icon: <ReceiptIcon style={SummaryIconsStyle} />
     }
 

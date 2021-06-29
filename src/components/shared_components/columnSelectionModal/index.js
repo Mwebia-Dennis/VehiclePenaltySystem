@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,6 +7,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import ReactExport from "react-export-excel";
 import { Checkbox, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
+import { useReactToPrint } from 'react-to-print';
+import ComponentToPrint2 from '../PrintDataModal/componentToPrint2'
+import { penaltyTextFields } from '../../../utils/constants'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -15,10 +18,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertDialogSlide(props) {
 
     const { open, handleClose,dataSet} = props;
+    const componentRef = useRef()
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
     const dataSetHeadersIds = [];
+
+    
     for (const __data in dataSet["0"]) {
         //get data keys 
         dataSetHeadersIds.push(__data);
@@ -97,42 +103,101 @@ export default function AlertDialogSlide(props) {
         setSelectedData(selectedDataSetHeadersIds.join())
     }    
     
-
     
-    const ExportToExcelBtn = () => {
-        
-        const newDataSet = dataSet.map((data_item)=>{
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    })
+
+
+    const getData = ()=> {
+        return dataSet.map((data_item)=>{
             const __dataSet = {}
             let selected = selectedData.split(',')
             if(selected["0"] === "") {
                 selected.splice(0,1)
             }
-            selected.forEach((item) => {
+
+            //rearranging order of data columns 
+            const arrangedHeaders = penaltyTextFields.map((item)=>item.placeholder)
+            const newSelected = []
+            arrangedHeaders.forEach(item => {
+                selected.forEach(element => {
+                    if(item.trim().toLowerCase() === element.trim().toLowerCase()){
+                        
+                        newSelected.push(item)
+                    }
+                })
+            })
+
+            newSelected.forEach((item) => {
                 __dataSet[item] = data_item[item].toString()
             })
             return __dataSet
         })
+    }
+
+    const getMultiDataSet = ()=>{
+
+        const dataSet = getData()
+
+        //get columns from keys of data
+        const columns = []
+
+        if(dataSet.length > 0) {
+            for(const key in dataSet[0]) {
+                columns.push(key)
+            }
+        }
+
         
+        const multiDataSet = [{
+            columns: columns,
+            data: []
+        }]
+        
+        dataSet.forEach(item => {
+            const row = []
+            for (const key in item) {
+                row.push({value: item[key], style: {font: {sz: "12", bold: false}}})
+            }
+            
+            multiDataSet['0'].data.push(row)
+        });
+
+
+        return(multiDataSet)
+    }
+    
+    console.log( getMultiDataSet())
+    const ExportToExcelBtn = () => {
+        
+        const multiDataSet = getMultiDataSet()
+       
         return (
-            <ExcelFile
-                filename={"report"}
-                element={
-                    <Button variant="contained" color="primary" 
-                        disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}
-                        onClick={handleClose}
-                    > Excel Aktar</Button>
-                    }
-                >
-                <ExcelSheet data={newDataSet} name="Report">
+            <>
+            
+            
+                {
+                    (multiDataSet !== null && multiDataSet !== undefined && multiDataSet.length > 0)?
 
-                    {
-                        selectedData.split(',').map((item, index) => (
 
-                            <ExcelColumn label={item} value={item} key={index} style={{font: {bold: true}}}/>
-                        ))
-                    }
-                </ExcelSheet>
-            </ExcelFile>
+                        <ExcelFile
+                            filename={"report"}
+                            element={
+                                <Button variant="contained" color="primary" 
+                                    disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}
+                                    onClick={handleClose}
+                                > Excel Aktar</Button>
+                                }
+                            >
+                            <ExcelSheet dataSet={multiDataSet} name="Report" />
+                        </ExcelFile>
+
+                    :
+                    <></>
+                }
+            
+            </>
         );
     }
 
@@ -173,8 +238,17 @@ export default function AlertDialogSlide(props) {
           <Button onClick={handleClose} color="secondary" variant="contained">
             Kapat
           </Button>
+          <Button onClick={handlePrint} color="primary" variant="contained"
+            disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}>
+            Verileri Yazdır
+          </Button>
           <ExportToExcelBtn />
         </DialogActions>
+
+        
+        <div style={{display: 'none'}}>
+              <ComponentToPrint2 headers={selectedData.split(',')} data={getData()} ref={componentRef} title={"TRAFİK CEZA LİSTESİ"} />
+        </div>
       </Dialog>
     </div>
   );

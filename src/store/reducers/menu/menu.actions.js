@@ -131,7 +131,7 @@ export const setNewMenuEntries = (newData, user_id,navigate) => (dispatch) => {
         })
         dispatch(getAllMenus())
 
-        navigate('/auto/data/'+newData.menu_id)
+        navigate('/otomatik/veri/'+newData.menu_id)
 
 
     })

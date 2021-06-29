@@ -25,11 +25,11 @@ export default function NewMenuFields(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/category/data", 
+            url:"/kategori/veri", 
             name: "Menü Ekle"
         },
         

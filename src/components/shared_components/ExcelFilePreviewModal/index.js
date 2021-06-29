@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, DialogActions,
-    Dialog,DialogContent, DialogTitle, IconButton, MenuItem, Typography, Card, CardContent, CardActions, Avatar, Grid
+    Dialog,DialogContent, DialogTitle, IconButton, MenuItem, Typography, Card, CardContent, CardActions, Avatar, Grid, Link
 } from '@material-ui/core';
 import { Close, CloudDownload, Folder } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,8 +39,17 @@ export default function ExcelFileModal(props){
     const handleDownloadFile = (url)=> {
         //file_id
         // dispatch(downloadFile(file_id))
+        console.log("url")
+        console.log(url)
+      
+          const instance = axios.create({
+                headers: {
+                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                }
+          });
         const fileName = url.split("/storage/excel/")
-        axios.get(url, {
+        instance.get(url, {
             responseType: 'blob',
           }).then(res => {
             fileDownload(res.data, fileName["1"]);
@@ -88,13 +97,13 @@ export default function ExcelFileModal(props){
                 >
                 <Folder />
             </IconButton>
-            <p>All Excel Files</p>
+            <p>Tüm Excel Dosyaları</p>
 
         </MenuItem>
         <Dialog maxWidth="md" open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">
 
-                Excel Documents
+            Excel Belgeleri
                 
             </DialogTitle>
             <DialogContent>
@@ -116,17 +125,30 @@ export default function ExcelFileModal(props){
                                                 alignItems="center"
                                                 justify="center">
 
-                                                <Grid item xs={12} md={12}>
+                                                <Grid item xs={12} md={12} style={{marginBottom: '10px'}}>
 
-                                                    <Card>
+                                                    <Card style={{width: '98%', height: '150px'}}>
                                                         <CardContent>
-                                                            <Avatar alt="Remy Sharp" variant="square" src={excel} style={{width: '100px', height: '100px'}}/>
-                                                            <Typography variant="h6" style={{fontSize: '13px', fontWeight: 'bold'}}>{item.created_at}</Typography>
+
+
+                                                            
+
+                                                            <Grid container>
+                                                            <Grid item xs={5}>
+
+                                                                <Avatar alt="excel file" variant="square" src={excel} style={{width: '50px', height: '50px'}}/>
+                                                            </Grid>
+                                                            <Grid item xs={7}>
+                                                                <Typography variant="h6" style={{fontSize: '13px', fontWeight: 'bold'}}>{item.created_at}</Typography>
+                                                            </Grid>
+                                                            </Grid>
                                                         </CardContent>
                                                         <CardActions>
-                                                            <Button startIcon={<CloudDownload />} color="secondary" variant="outlined" onClick={()=>handleDownloadFile(item.file_url)}>
+
+
+                                                            <Link href={item.file_url} target="_blank">
                                                                 İndir
-                                                            </Button>
+                                                            </Link>
                                                         </CardActions>
                                                     </Card>
                                                 </Grid>
@@ -147,7 +169,7 @@ export default function ExcelFileModal(props){
             
             <DialogActions>
                     <Button startIcon={<Close />} color="primary" variant="contained" onClick={handleClose}>
-                        close
+                        Kapat
                     </Button>
             </DialogActions> 
         </Dialog>

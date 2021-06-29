@@ -55,7 +55,7 @@ export const setNewPenalty = (newData, user_id, navigate) => (dispatch) => {
             payload: res.data.message
         })
 
-        navigate('/penalty')
+        navigate('/ceza')
 
     })
     .catch((error)=> {

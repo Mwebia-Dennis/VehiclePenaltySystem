@@ -9,7 +9,7 @@ export default class ComponentToPrint extends React.PureComponent {
     return (
 
       <div style={{width: '100%', padding: '20px 0'}}>
-        <p style={{textAlign: 'center', fontSize: '24px'}}>birim-aktif-arac-list</p>
+        <p style={{textAlign: 'center', fontSize: '24px'}}>{this.props.title}</p>
       <table className={["table, table-striped"].join()} style={{width: '100%'}}>
 
         <thead>

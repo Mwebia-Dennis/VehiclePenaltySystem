@@ -7,7 +7,7 @@ import { pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllUsersData, searchUsersData } from '../../../store/reducers/users/user.actions';
 import { Avatar, Checkbox, FormControlLabel } from '@material-ui/core';
-import { getPlaceHolderName } from '../../../utils/functions'
+import { getPlaceHolderName,getTurkishDate } from '../../../utils/functions'
 import { signUpTextfields } from '../../../utils/constants'
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
@@ -58,11 +58,11 @@ export default (props) => {
     };
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/users", 
+            url:"/personel", 
             name: "kullanıcı ekle"
         }
         
@@ -88,6 +88,10 @@ export default (props) => {
                     }else if(header.trim().toLowerCase() === 'profile_img') {
                         const placeholder = isTurkish?'profil resmi':'profile_img'
                         formattedData[placeholder] = <Avatar alt={data[key]['name']} src={data[key][header]} />
+                    }else if(header.trim() === 'created_at' || header.trim() === 'updated_at'){
+                        
+                        const placeholder = isTurkish?getPlaceHolderName(header, signUpTextfields):header
+                        formattedData[placeholder] = getTurkishDate(data[key][header])
                     }else {
 
                         const placeholder = isTurkish?getPlaceHolderName(header, signUpTextfields):header

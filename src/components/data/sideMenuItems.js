@@ -2,37 +2,42 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import CommuteIcon from '@material-ui/icons/Commute';
 import GavelIcon from '@material-ui/icons/Gavel';
 import GroupIcon from '@material-ui/icons/Group';
-import { AccountCircle, LibraryAdd } from '@material-ui/icons';
+import { AccountCircle, LibraryAdd, Print } from '@material-ui/icons';
 
 export const SideMenuItems = [
     {
         item: 'Gösterge Paneli',
-        url: '/home',
+        url: '/ana-sayfa',
         icon: <BarChartIcon />
     },
     {
         item: 'Araç Ekle',
-        url: '/vehicle',
+        url: '/arac',
         icon: <CommuteIcon />
     },
     {
         item: 'Ceza Ekle',
-        url: '/penalty',
+        url: '/ceza',
         icon: <GavelIcon />
     },
     {
         item: 'Menü Ekle',
-        url: '/category/data',
+        url: '/kategori/veri',
         icon: <LibraryAdd />
     },
     {
         item: 'kullanıcı ekle',
-        url: '/users',
+        url: '/personel',
         icon: <GroupIcon />
     },
     {
         item: 'profili Düzenle',
-        url: '/profile/current-user',
+        url: '/profil/current-user',
         icon: <AccountCircle />
+    },
+    {
+        item: 'Verileri Yazdır',
+        url: '/yazdir',
+        icon: <Print />
     },
 ]

@@ -13,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
         borderRadius: '10px',
         backgroundColor: 'rgba(230, 245, 255, 0.5)',
         [theme.breakpoints.down('sm')]: {
-            width: '93%',
+            width: '100%',
             marginLeft: '0',
             padding: '10px',
             marginTop: '0',

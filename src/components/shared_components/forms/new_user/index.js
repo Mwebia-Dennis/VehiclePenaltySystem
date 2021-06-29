@@ -61,15 +61,15 @@ export default function NewUserForm(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/users", 
+            url:"/personel", 
             name: "Kullanıcılar"
         },
         {
-            url:"/new-user", 
+            url:"/personel-ekle", 
             name: "Yeni Kullanıcı Ekle"
         }
         

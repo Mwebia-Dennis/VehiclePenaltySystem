@@ -5,7 +5,7 @@ import BreadCrumb from '../../shared_components/BreadCrump';
 import EditDataModal from '../../shared_components/EditDataModal';
 import Paginator from '../../shared_components/Paginator';
 import { pageType, formTypes, vehicleTextFields }  from '../../../utils/constants'
-import { getPlaceHolderName } from '../../../utils/functions'
+import { getPlaceHolderName,getTurkishDate } from '../../../utils/functions'
 import { useDispatch,useSelector } from 'react-redux';
 import { deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
 import { Delete, Edit } from '@material-ui/icons';
@@ -89,11 +89,11 @@ export default (props) => {
         
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/vehicle", 
+            url:"/arac", 
             name: "Araç ekle"
         }
         
@@ -139,8 +139,16 @@ export default (props) => {
                 
 
                 if(header != 'id' && header != 'added_by') {
-                    const placeholder = isTurkish?getPlaceHolderName(header, vehicleTextFields):header
-                    formattedData[placeholder] = data[key][header]
+
+                    if(header.trim() === 'created_at' || header.trim() === 'updated_at'){
+                        
+                        const placeholder = isTurkish?getPlaceHolderName(header, vehicleTextFields):header
+                        formattedData[placeholder] = getTurkishDate(data[key][header])
+                    }else {
+
+                        const placeholder = isTurkish?getPlaceHolderName(header, vehicleTextFields):header
+                        formattedData[placeholder] = data[key][header]
+                    }
                 }
 
                 

@@ -56,7 +56,7 @@ export default function TemplateForm (props) {
     useEffect(() => {
         if(!menu_id) {
             showSnackBar('Sorry invalid data provided, contact admin for more info', 'error')
-            navigate('/home')
+            navigate('/ana-sayfa')
         }
     }, [true])
     
@@ -177,15 +177,15 @@ export default function TemplateForm (props) {
     }
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/auto/data/"+menu_id, 
+            url:"/otomatik/veri/"+menu_id, 
             name: reverseUrlName(title)
         },
         {
-            url:"/auto/form/"+title, 
+            url:"/otomatik/form/"+title, 
             name: "yeni ekle "+ reverseUrlName(title)
         }
         
@@ -246,52 +246,13 @@ export default function TemplateForm (props) {
                         container 
                         spacing={2}
                         style={{marginTop: '10px'}}
-                    >
-                        
-
-                        <Grid
-                            item
-                            xs={12}
-                            >
-                                {
-
-                                    vehicleReducer.loading?
-
-                                        <ProgressSpinner />
-
-                                    :
-                                        (vehicleReducer.allVehiclePlates.length > 0)?
-                                            <FormControl style={{ width: '100%' }}>
-                                                
-                                                <Autocomplete
-                                                    id="plate_number"
-                                                    options={vehicleReducer.allVehiclePlates}
-                                                    getOptionLabel={(option) => option.plate_number}                                                    
-                                                    value={plateNumber}
-                                                    disabled={isUpdate}
-                                                    onChange={(event, newValue) => {
-                                                    setPlateNumber(newValue);
-                                                    }}
-                                                    renderInput={(params) => <TextField 
-                                                        required {...params} label="Plaka No" margin="normal"
-                                                        fullWidth
-                                                    />}
-                                                />
-
-                                            </FormControl>
-                                        :
-                                        <div>O results found</div>
-
-                                }
-                        </Grid>
-
-                            
+                    >       
                         {
                             menuReducer.loading?<ProgressSpinner />
                             :
                             menuReducer.menuEntries.map((item)=>{
                             
-                                if(item.name !== "plate_number" && item.name !== "pdf") {
+                                if(item.name !== "pdf") {
                                     return (
 
                                         <Grid 

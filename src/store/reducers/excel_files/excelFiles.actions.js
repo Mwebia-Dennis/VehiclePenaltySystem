@@ -30,7 +30,7 @@ export const getAllFiles = (page_type, sort_by = 'created_at', page = 1, perPage
         dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
         dispatch({
             type: SET_EXCEL_FILE_DATA,
-            payload: res.data
+            payload: ("data" in res)?res.data:[]
         })
 
 
@@ -78,11 +78,11 @@ export const downloadFile = (file_id) => (dispatch) => {
     axios.get('excel-file/'+file_id)
     .then((res)=>{
         
-        // dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
-        // dispatch({
-        //     type: SET_EXCEL_FILE_DATA,
-        //     payload: res.data
-        // })
+        dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
+        dispatch({
+            type: SET_EXCEL_FILE_MESSAGE,
+            payload: res.data.message
+        })
 
 
     })

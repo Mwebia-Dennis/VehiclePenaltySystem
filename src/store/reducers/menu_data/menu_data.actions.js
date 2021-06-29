@@ -56,7 +56,7 @@ export const setNewMenuData = (newData, user_id, navigate) => (dispatch) => {
             payload: res.data
         })
 
-        navigate('/auto/data/'+newData.get('menu_id'))
+        navigate('/otomatik/veri/'+newData.get('menu_id'))
 
     })
     .catch((error)=> {

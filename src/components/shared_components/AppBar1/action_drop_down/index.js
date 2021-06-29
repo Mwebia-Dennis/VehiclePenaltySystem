@@ -19,7 +19,6 @@ export default function ActionMenus(props) {
     <>
       
         <PdfModal isNavBar={isNavBar}/>
-        <PrintDataModal isNavBar={isNavBar} />
     </>
   );
   

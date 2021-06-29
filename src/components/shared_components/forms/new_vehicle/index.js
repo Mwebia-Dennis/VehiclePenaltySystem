@@ -28,9 +28,6 @@ export default function NewVehicleForm(props) {
     const [equipments, setEquipments] = useState(
         ("equipment" in defaultInputData)?defaultInputData.equipment:""
     )
-    const [deliveryDate, setDeliveryDate] = useState(
-        ("delivery_date" in defaultInputData)?new Date(defaultInputData.delivery_date):new Date()
-    );
     const navigate = useNavigate()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
@@ -40,15 +37,15 @@ export default function NewVehicleForm(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/vehicle", 
+            url:"/arac", 
             name: "araç"
         },
         {
-            url:"/new-vehicle", 
+            url:"/arac-ekle", 
             name: "yeni araç ekle"
         }
         
@@ -125,10 +122,6 @@ export default function NewVehicleForm(props) {
             return
         }
 
-
-        if(deliveryDate !== "") {
-            data["delivery_date"] = formatDate(new Date(deliveryDate))
-        }
         if(equipments !== "") {
             data["equipment"] = equipments
         }
@@ -310,19 +303,6 @@ export default function NewVehicleForm(props) {
 
                             </Grid>
 
-                            <Grid
-                                item 
-                                xs={12} 
-                                >
-                                    <Typography variant="h6" className={classes.label}>Kuruma Teslim Tarihi ve Saati</Typography>
-                                    <DatePicker 
-                                        selected={deliveryDate}
-                                        customInput={<ExampleCustomInput />}
-                                        onChange={date => setDeliveryDate(date)}
-                                        label="CEZA TARİHİ"
-                                        name="delivery_date"
-                                    />
-                            </Grid>
                             
                             
 

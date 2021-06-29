@@ -26,11 +26,11 @@ export default function NewMenuForm(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/category/data", 
+            url:"/kategori/veri", 
             name: "Menü Ekle"
         },
         

@@ -8,6 +8,16 @@ export const useStyles = makeStyles((theme) => ({
 
     root: {
     },
+
+    card: {
+        
+        width: '88%',
+        [theme.breakpoints.down('sm')]: {
+             
+            width: '95%',
+            marginLeft: '20px'
+        }
+    },
     title: {
         fontSize: '15px',
         color: '#fff',
@@ -42,7 +52,6 @@ export const Card = styled(Paper)`
 
     border-radius: 20px;
     padding: 20px;
-    width: 85%;
 
 `
 export const IconBox = styled(Box)`

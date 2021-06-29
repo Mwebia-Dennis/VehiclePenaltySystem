@@ -80,7 +80,7 @@ export const setNewVehicle = (newData, user_id, navigate) => (dispatch) => {
             payload: res.data.message
         })
 
-        navigate('/vehicle')
+        navigate('/arac')
 
     })
     .catch((error)=> {

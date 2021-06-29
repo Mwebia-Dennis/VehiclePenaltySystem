@@ -11,8 +11,8 @@ export default function ProgressBarSpinner () {
             justify="center"
         >
 
-            <Grid item xs={3}>
-                <CircularProgress color="secondary"/>
+            <Grid item xs={12}>
+                <CircularProgress size={28} color="secondary"/>
             </Grid>
 
         </Grid>

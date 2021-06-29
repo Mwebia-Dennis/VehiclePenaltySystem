@@ -30,7 +30,7 @@ export default function LoginForm(props) {
     }
     
     if(parseInt(("verified" in authState.data) && authState.data.verified) === 1 && authState.authenticated) {
-        navigate('/home')
+        navigate('/ana-sayfa')
     }
     
     if(authState.message) {

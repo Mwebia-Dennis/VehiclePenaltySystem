@@ -6,7 +6,7 @@ import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
 import { penaltyTextFields, formTypes, pageType }  from '../../../utils/constants'
-import { getPlaceHolderName } from '../../../utils/functions'
+import { getPlaceHolderName, getTurkishDate } from '../../../utils/functions'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox,  FormControlLabel, IconButton } from "@material-ui/core";
 import { Delete, Edit } from '@material-ui/icons';
@@ -15,6 +15,7 @@ import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../st
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
+import ImageModal from '../../shared_components/ImageModal'
 
 export default function Penalty(props) {
 
@@ -117,11 +118,11 @@ export default function Penalty(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         },
         {
-            url:"/penalty", 
+            url:"/ceza", 
             name: "Ceza ekle"
         }
         
@@ -187,7 +188,7 @@ export default function Penalty(props) {
             for (const header in data[key]) {
 
                 
-                if(header !== 'id' && header !== 'added_by' && header !== 'vehicle' && header !== 'vehicle_id') {
+                if(header !== 'id' && header !== 'added_by') {
 
                     if(header.trim() === 'pdf_url') {
                     
@@ -206,11 +207,13 @@ export default function Penalty(props) {
                         if(data[key][header] === ''){
                             formattedData[placeholder] = ''
                         }else {
-                            formattedData[placeholder] = <IconButton > 
-                                    <Avatar alt="pdf logo" variant="square" src={data[key][header]} />
-                                </IconButton>
+                            formattedData[placeholder] = <ImageModal image={data[key][header]} />
 
                         }
+                    }else if(header.trim() === 'created_at' || header.trim() === 'updated_at'){
+                        
+                        const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
+                        formattedData[placeholder] = getTurkishDate(data[key][header])
                     }else {
 
                         
@@ -218,8 +221,6 @@ export default function Penalty(props) {
                         formattedData[placeholder] = data[key][header]
                     }
                 }
-                const placeholder = isTurkish?'Plaka No'.toUpperCase():"plate_number"
-                formattedData[placeholder] = data[key]['vehicle']['plate_number']
                 
                 
             }

@@ -16,7 +16,7 @@ import { Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
 import { formTypes }  from '../../../utils/constants'
-import { formatUrlName, getPlaceHolderName }  from '../../../utils/functions'
+import { formatUrlName, getPlaceHolderName, getTurkishDate }  from '../../../utils/functions'
 
 export default function AutoGenerateTable(props) {
 
@@ -147,7 +147,7 @@ export default function AutoGenerateTable(props) {
 
     const links = [
         {
-            url:"/home", 
+            url:"/ana-sayfa", 
             name: "Anasayfa"
         }
         
@@ -156,7 +156,7 @@ export default function AutoGenerateTable(props) {
     if(menuReducer.singleMenuData.name) {
         links.push(
             {
-                url:"/auto/data/"+menuReducer.singleMenuData.name, 
+                url:"/otomatik/veri/"+menuReducer.singleMenuData.name, 
                 name: menuReducer.singleMenuData.name
             }
         )
@@ -224,17 +224,14 @@ export default function AutoGenerateTable(props) {
                             </IconButton>
 
                     }
-                }else if(header.trim() === 'plate_number') {
-                    continue
                 }else {
                     formattedData[header] = __data[header]
                 }
 
                 
             }
-            formattedData['Plaka No'.toUpperCase()] = data[key].vehicle.plate_number
-            formattedData[getPlaceHolderName("created_at", [])] = data[key].created_at
-            formattedData[getPlaceHolderName("updated_at", [])] = data[key].updated_at
+            formattedData[getPlaceHolderName("created_at", [])] = getTurkishDate(data[key].created_at)
+            formattedData[getPlaceHolderName("updated_at", [])] = getTurkishDate(data[key].updated_at)
             
             formattedData["Tarafından eklendi"] = data[key]['added_by']['name'] + " " + data[key]['added_by']['surname']
             
