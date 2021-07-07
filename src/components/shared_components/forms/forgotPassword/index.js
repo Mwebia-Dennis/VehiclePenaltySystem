@@ -24,7 +24,7 @@ export default function ForgotPassword (props) {
         
         {
             
-            placeholder: "Email",
+            placeholder: "E-posta",
             name: "email",
             type: "email"
 
@@ -39,11 +39,12 @@ export default function ForgotPassword (props) {
     const handleSubmit = (e) => {
         e.preventDefault()
         if(emailInput === '') {
-            showSnackBar("Email field is required", "error")
+            showSnackBar("E-posta alanı gerekli", "error")
             return
         }
 
         //checking email
+        localStorage.setItem("email", emailInput )
         dispatch(checkEmail(emailInput, navigate))
 
     }
@@ -92,9 +93,9 @@ export default function ForgotPassword (props) {
             
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
+                <Typography className={classes.header}>OGZ CEZA SISTEMI</Typography>
                 <Typography variant="h6" className={classes.header2}  color="primary">
-                    Enter Email To Continue
+                    Devam etmek için E-posta Girin
                 </Typography>
 
                 <form onSubmit={handleSubmit}>

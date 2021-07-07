@@ -21,7 +21,7 @@ export default (props) => {
     const userData = useSelector((state) => state.userReducer.data)
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
-        limitEntries:25,
+        limitEntries:100,
         page: 1
     })
 

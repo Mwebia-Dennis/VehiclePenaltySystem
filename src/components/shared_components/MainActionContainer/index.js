@@ -33,7 +33,7 @@ export default function MainActionContainer(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [columnSelectionOpen, setColumnSelectionOpen] = useState(false);
     const [searchQueryValue, setSearchQueryValue] = useState('')
-    const limitEntriesData = ["10", "25", "50", "100"];
+    const limitEntriesData = ["100", "300", "500", "1000"];
     const sortByData = data.sortByOptions;
     const isMenuOpen = Boolean(anchorEl);
 

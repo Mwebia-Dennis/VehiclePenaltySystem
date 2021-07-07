@@ -22,7 +22,7 @@ export default function NewPassword(props) {
     const email = localStorage.getItem("email")
 
     if(token === "" || token === null || token === undefined || email === '' || email === null || email === undefined) {
-        showSnackBar('invalid token and email provided', 'error')
+        showSnackBar('geçersiz belirteç ve e-posta sağlandı', 'error')
         navigate('/auth/forgot-password')
     }
 
@@ -31,14 +31,14 @@ export default function NewPassword(props) {
         
         
         {
-            placeholder: "password",
+            placeholder: "parola",
             name: "password",
             type: "password"
 
         },
         
         {
-            placeholder: "confirm password",
+            placeholder: "Şifreyi Onayla",
             name: "password_confirmation",
             type: "password"
 
@@ -56,7 +56,7 @@ export default function NewPassword(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
         if(setFormInput === {}) {
-            showSnackBar("Email field is required", "error")
+            showSnackBar("E-posta alanı gerekli", "error")
             return
         }
 
@@ -113,8 +113,8 @@ export default function NewPassword(props) {
             
             <Paper className={classes.root} >
 
-                <Typography className={classes.header}>Vehicle Penalty</Typography>
-                <Typography variant="h6" className={classes.header2}  color="primary">Enter New Password</Typography>
+                <Typography className={classes.header}>OGZ CEZA SISTEMI</Typography>
+                <Typography variant="h6" className={classes.header2}  color="primary">Yeni Şifreyi Girin</Typography>
 
                 
                 <form onSubmit={handleSubmit}>

@@ -9,7 +9,7 @@ import ReactExport from "react-export-excel";
 import { Checkbox, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
 import { useReactToPrint } from 'react-to-print';
 import ComponentToPrint2 from '../PrintDataModal/componentToPrint2'
-import { penaltyTextFields } from '../../../utils/constants'
+import { pageType, penaltyTextFields } from '../../../utils/constants'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -17,7 +17,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function AlertDialogSlide(props) {
 
-    const { open, handleClose,dataSet} = props;
+    const { open, handleClose,dataSet, dataType} = props;
     const componentRef = useRef()
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -108,26 +108,41 @@ export default function AlertDialogSlide(props) {
         content: () => componentRef.current,
     })
 
-
+    const getArrangedTextFields = ()=> {
+        if(dataType === pageType.penalty ) {
+            const fieldds = penaltyTextFields.map((item)=>item.placeholder)
+            fieldds.push("OLUŞTURULMA TARIHI")
+            fieldds.push("GÜNCELLENDI")
+            fieldds.push("TARAFINDAN EKLENDI")
+            return fieldds
+        }
+        return null
+    }
     const getData = ()=> {
         return dataSet.map((data_item)=>{
             const __dataSet = {}
             let selected = selectedData.split(',')
-            if(selected["0"] === "") {
+            if(selected[0] === "") {
                 selected.splice(0,1)
             }
 
             //rearranging order of data columns 
-            const arrangedHeaders = penaltyTextFields.map((item)=>item.placeholder)
-            const newSelected = []
-            arrangedHeaders.forEach(item => {
-                selected.forEach(element => {
-                    if(item.trim().toLowerCase() === element.trim().toLowerCase()){
-                        
-                        newSelected.push(item)
-                    }
+            const arrangedHeaders = getArrangedTextFields()
+            let newSelected = []
+            if(arrangedHeaders !== null) {
+                
+                arrangedHeaders.forEach(item => {
+                    selected.forEach(element => {
+                        if(item.toString().trim() === element.toString().trim()){
+                            
+                            newSelected.push(item)
+                        }
+                    })
                 })
-            })
+            }else {
+                newSelected = selected
+            }
+
 
             newSelected.forEach((item) => {
                 __dataSet[item] = data_item[item].toString()
@@ -135,6 +150,7 @@ export default function AlertDialogSlide(props) {
             return __dataSet
         })
     }
+    console.log(getData()["0"])
 
     const getMultiDataSet = ()=>{
 
@@ -167,8 +183,8 @@ export default function AlertDialogSlide(props) {
 
         return(multiDataSet)
     }
-    
-    console.log( getMultiDataSet())
+    console.log(getMultiDataSet()["0"])
+
     const ExportToExcelBtn = () => {
         
         const multiDataSet = getMultiDataSet()

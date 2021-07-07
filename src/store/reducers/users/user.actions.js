@@ -41,7 +41,7 @@ export const getUserData = (id) => (dispatch) => {
 
 }
 
-export const getAllUsersData = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const getAllUsersData = (sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER_DATA })
@@ -66,7 +66,7 @@ export const getAllUsersData = (sort_by = 'created_at', page = 1, perPage = 25) 
 
 }
 
-export const searchUsersData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const searchUsersData = (data,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_USER_DATA })

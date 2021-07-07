@@ -18,7 +18,7 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getMenuData = (menu_id,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const getMenuData = (menu_id,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_MENU_DATA_DATA })
@@ -93,7 +93,7 @@ export const updateMenuData = (newData, user_id,menuData_id, menu_id) => (dispat
 
 }
 
-export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_MENU_DATA_DATA })

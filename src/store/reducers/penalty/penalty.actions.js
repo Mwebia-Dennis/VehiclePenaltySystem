@@ -92,7 +92,7 @@ export const updatePenalty = (newData, user_id, penalty_id) => (dispatch) => {
 }
 
 
-export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const searchPenaltiesData = (data,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PENALTY_DATA })

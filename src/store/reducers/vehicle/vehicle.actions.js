@@ -18,7 +18,7 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getAllVehicles = (sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const getAllVehicles = (sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_VEHICLE_DATA })
@@ -119,7 +119,7 @@ export const updateVehicle = (newData, user_id,vehicle_id) => (dispatch) => {
 
 
 
-export const searchVehiclesData = (data,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const searchVehiclesData = (data,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_VEHICLE_DATA })

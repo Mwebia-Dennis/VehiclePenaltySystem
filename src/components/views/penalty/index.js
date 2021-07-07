@@ -31,7 +31,7 @@ export default function Penalty(props) {
     const authReducer = useSelector((state) => state.authReducer)
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
-        limitEntries:25,
+        limitEntries:100,
         page: 1
     })
     const [editModalOpen, setEditModalOpen] = useState({

@@ -72,7 +72,7 @@ export const setPdfFiles = (data, user_id) => (dispatch) => {
 
 
 
-export const searchPdf = (file_name,sort_by = 'created_at', page = 1, perPage = 25) => (dispatch) => {
+export const searchPdf = (file_name,sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PDF_FILE_DATA })

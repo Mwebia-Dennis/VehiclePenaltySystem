@@ -38,7 +38,7 @@ export default function AutoGenerateTable(props) {
     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
-        limitEntries:25,
+        limitEntries:100,
         page: 1
     })
 
@@ -219,7 +219,9 @@ export default function AutoGenerateTable(props) {
                     if(__data[header.trim()] === ''){
                         formattedData['pdf'.toUpperCase()] = ''
                     }else {
-                        formattedData['pdf'.toUpperCase()] = <IconButton onClick={()=>handleModalOpen(data[header.trim()])}> 
+
+                        console.log(data['pdf_url'])
+                        formattedData['pdf'.toUpperCase()] = <IconButton onClick={()=>handleModalOpen(__data[header.trim()])}> 
                                 <Avatar alt="pdf logo" variant="square" src={pdf_logo} />
                             </IconButton>
 

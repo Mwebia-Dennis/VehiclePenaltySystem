@@ -197,7 +197,7 @@ export const vehicleSelectFields = [
                 value: "kiralik"
             },
             {
-                value: "resmi"
+                value: "Ö.MAKBUZ"
             },
             {
                 value: "ihale yolu"
@@ -487,6 +487,12 @@ export const printData = [
     {
         name: "TESLİM_ALAN",
         placeholder: "TESLİM ALAN",
+        type: "text",
+        
+    },
+    {
+        name: "TALEP_NO",
+        placeholder: "TALEP NO",
         type: "text",
         
     },

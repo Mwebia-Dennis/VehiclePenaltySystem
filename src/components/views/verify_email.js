@@ -1,4 +1,4 @@
-import { Avatar, Button, Grid, IconButton, Typography } from '@material-ui/core'
+import { Button, Grid, IconButton, Typography } from '@material-ui/core'
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack';
@@ -33,7 +33,7 @@ export default (props) => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const authState = useSelector((state) => state.authReducer)
 
-    if(email == '' || email == null || email == undefined) {
+    if(email === '' || email === null || email === undefined) {
         navigate('/auth/login')
     }
 
