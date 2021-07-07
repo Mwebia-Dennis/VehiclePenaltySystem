@@ -9,12 +9,13 @@ import { penaltyTextFields, formTypes, pageType }  from '../../../utils/constant
 import { getPlaceHolderName, getTurkishDate } from '../../../utils/functions'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox,  FormControlLabel, IconButton } from "@material-ui/core";
-import { Delete, Edit } from '@material-ui/icons';
+import { Delete, Edit, Info } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
 import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
+import MoreDetailsModal from '../../shared_components/MoreDetailsModal';
 import ImageModal from '../../shared_components/ImageModal'
 
 export default function Penalty(props) {
@@ -176,7 +177,7 @@ export default function Penalty(props) {
     function checkIfDataExists(data) {
         return selectedData.split(',').includes(data.toString())
     }
-    function formatData(data, isTurkish = true){
+    function formatData(data, isTurkish = true,isTableData = false){
         const allData = []
         let formattedData = {}
         for(const key in data) { 
@@ -203,7 +204,7 @@ export default function Penalty(props) {
                         }
                     }else if(header.trim() === 'image_url') {
                     
-                        const placeholder = isTurkish?'resmi'.toUpperCase():'image'
+                        const placeholder = isTurkish?'Ö.MAKBUZ'.toUpperCase():'image'
                         if(data[key][header] === ''){
                             formattedData[placeholder] = ''
                         }else {
@@ -214,11 +215,26 @@ export default function Penalty(props) {
                         
                         const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
                         formattedData[placeholder] = getTurkishDate(data[key][header])
-                    }else {
+                    }else if(header.trim() ===  'plate_number') {
 
                         
                         const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
                         formattedData[placeholder] = data[key][header]
+                    }else if(header.trim() ===  'name') {
+
+                        
+                        const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
+                        formattedData[placeholder] = data[key][header]
+                    }else if(header.trim() ===  'receipt_number') {
+                    
+                        const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
+                        formattedData[placeholder] = data[key][header]
+                    }else {
+
+                        if(!isTableData){
+                            const placeholder = isTurkish?getPlaceHolderName(header, penaltyTextFields):header
+                            formattedData[placeholder] = data[key][header]
+                        }
                     }
                 }
                 
@@ -232,6 +248,7 @@ export default function Penalty(props) {
 
             const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
             formattedData[placeholder] = <>
+                    <MoreDetailsModal data={data[key]} textfields={penaltyTextFields}/>
                     <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
                     <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
                 </>
@@ -349,8 +366,8 @@ export default function Penalty(props) {
                 :
                     ("data" in penaltyData)?
                     <>
-                        <Table rows= {formatData( penaltyData.data)} 
-                            tableHeader ={ getTableHeaders(formatData( penaltyData.data)) }/>
+                        <Table rows= {formatData( penaltyData.data,true, true)} 
+                            tableHeader ={ getTableHeaders(formatData( penaltyData.data,true, true)) }/>
                         <Paginator paginationCount={penaltyData.last_page} 
                             handlePagination={handlePagination} 
                             page={ penaltyData.current_page }
