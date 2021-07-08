@@ -19,6 +19,7 @@ export default function AlertDialogSlide(props) {
 
     const { open, handleClose,dataSet, dataType} = props;
     const componentRef = useRef()
+    const componentRef2 = useRef()
     const ExcelFile = ReactExport.ExcelFile;
     const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
     const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
@@ -106,6 +107,9 @@ export default function AlertDialogSlide(props) {
     
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
+    })
+    const handlePrint2 = useReactToPrint({
+        content: () => componentRef2.current,
     })
 
     const getArrangedTextFields = ()=> {
@@ -256,14 +260,26 @@ export default function AlertDialogSlide(props) {
           </Button>
           <Button onClick={handlePrint} color="primary" variant="contained"
             disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}>
-            Verileri Yazdır
+            YAZDIR TRAFİK CEZA LİSTESİ
           </Button>
+
+          {
+              dataType === pageType.penalty?
+              
+              
+                <Button onClick={handlePrint2} color="primary" variant="contained"
+                    disabled={(selectedData.split(',').length === 1 && selectedData.split(',')["0"] === "" )}>
+                    YAZDIR TESLİM TUTANAĞI
+                </Button>
+              :<></>
+          }
           <ExportToExcelBtn />
         </DialogActions>
 
         
         <div style={{display: 'none'}}>
               <ComponentToPrint2 headers={selectedData.split(',')} data={getData()} ref={componentRef} title={"TRAFİK CEZA LİSTESİ"} />
+              <ComponentToPrint2 headers={selectedData.split(',')} data={getData()} ref={componentRef2} title={"TESLİM TUTANAĞ"} />
         </div>
       </Dialog>
     </div>

@@ -79,7 +79,7 @@ export default function MoreDetailsModal(props) {
                         tRows.map((item, index)=>(                                    
                             <tr key={index}> 
                             
-                                <td scope="row" style={{padding: '15px 20px', fontWeight: 'bold', fontSize: '17px'}}> {item} </td>
+                                <td scope="row" style={{padding: '15px 20px', fontWeight: 'bold', fontSize: '17px', color:'#000'}}> {item} </td>
                                 <td >{ newData[index] }</td>
                             </tr>
                         
@@ -92,7 +92,7 @@ export default function MoreDetailsModal(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handlePrint} color="secondary">
-            Print
+            Yazdir
           </Button>
           <Button onClick={handleClose} color="primary">
             Kapat

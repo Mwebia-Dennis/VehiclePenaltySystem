@@ -16,7 +16,7 @@ export default class ComponentToPrint extends React.PureComponent {
           
           {
             this.props.headers.map((item, index)=>
-                <th style={{backgroundColor: '#0275d8', padding: '1px', color: '#fff', fontSize: '9px'}} key={index} scope="col">{item}</th>)
+                <th style={{backgroundColor: '#0275d8', padding: '1px', color: '#fff', fontSize: '13px'}} key={index} scope="col">{item}</th>)
           }
         </thead>
         <tbody>
@@ -25,7 +25,7 @@ export default class ComponentToPrint extends React.PureComponent {
                 <tr key={index}>
                     {this.props.headers.map((header, index1)=>{
                       const scope = (index1 == 0)?"row":""
-                      return <td scope={scope} key={index1}  style={{padding: '1px', fontSize: '8px'}}>{ item[header] }</td>
+                      return <td scope={scope} key={index1}  style={{padding: '1px', fontSize: '12px', color:'#000'}}>{ item[header] }</td>
                     })}
                 </tr>
               ))
