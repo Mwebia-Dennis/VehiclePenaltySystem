@@ -6,10 +6,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { IconButton } from '@material-ui/core';
 import { Info } from '@material-ui/icons';
 import { getPlaceHolderName, getTurkishDate } from '../../../utils/functions';
 import { useReactToPrint } from 'react-to-print';
+import { IconButton } from '@material-ui/core';
 
 export default function MoreDetailsModal(props) {
 

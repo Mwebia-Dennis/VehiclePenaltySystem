@@ -172,4 +172,19 @@ export const deleteVehicle = (user_id, vehicle_id) => (dispatch) => {
 }
 
 
+export const deleteMultipleVehicles = (user_id, vehicle_ids) => new Promise((successFun, errorFun) => {
+
+    setAuthorizationHeader()
+    vehicle_ids.split(",").forEach(vehicle_id => {
+        
+        axios.delete('users/'+parseInt(user_id)+'/vehicle/'+parseInt(vehicle_id))
+        .then((res)=>{
+            successFun(res)
+        })
+        .catch(errorFun)
+    });
+
+})
+
+
 

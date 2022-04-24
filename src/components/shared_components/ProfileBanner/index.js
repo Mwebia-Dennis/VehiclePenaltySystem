@@ -167,7 +167,7 @@ export default function ProfileBanner (props) {
                                                 <Button 
                                                     className={classes.button} 
                                                     variant="contained" 
-                                                    color="secondary"
+                                                    // color="secondary"
                                                     component="span"
                                                     startIcon={<PhotoCamera className={classes.icon} />}
                                                 >
@@ -199,13 +199,15 @@ export default function ProfileBanner (props) {
                                     </Typography>
                                     <Divider  className={classes.editDivider} />
                                     
-                                    <Grid container spacing={2}>
+                                    <Grid container spacing={2} style={{margin: "40px 0"}}>
+                                        <Grid item xs={0} md={1}></Grid>
                                         <Grid item xs={12} md={4}>
                                             <Typography className={classes.editContent}>
                                                 Hesap bilgilerinizi girin. Kullanıcı adınız ve e-postanız herkese açık olarak görüntülenecektir.
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={12} md={6}>
+                                        <Grid item xs={0} md={1}></Grid>
+                                        <Grid item xs={12} md={5}>
 
                                             <form  onSubmit={handleSubmit(onSubmit)}>
                                             

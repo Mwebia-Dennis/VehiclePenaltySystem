@@ -12,12 +12,16 @@ import Alert from '@material-ui/lab/Alert';
 import excel from '../../../images/excel.png'
 import axios from 'axios';
 import fileDownload from 'js-file-download';
+import readXlsxFile from 'read-excel-file'
+import { useRef } from 'react';
 
 
 export default function ExcelFileModal(props){
 
     const { excelFileType } = props
+    const fileValue = useRef(null)
     const [open, setOpen] = useState(false)
+    const [excelFile, setExcelFile] = useState(null)
     const dispatch = useDispatch()
     const excelFileReducer = useSelector((state) => state.excelFileReducer)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -36,24 +40,31 @@ export default function ExcelFileModal(props){
 
     }, [open])
 
-    const handleDownloadFile = (url)=> {
+    const handlePreviewExcel = (file)=>{
+        readXlsxFile(file).then((rows) => {
+            console.log(rows)
+            // `rows` is an array of rows
+            // each row being an array of cells.
+        })
+    }
+
+    const handleExcelFileChange = (e)=>{
+        handlePreviewExcel(e.target.value)
+        console.log("vvghjvg")
+    }
+
+    const handleDownloadFile = (file_id)=> {
         //file_id
-        // dispatch(downloadFile(file_id))
-        console.log("url")
-        console.log(url)
-      
-          const instance = axios.create({
-                headers: {
-                    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                }
-          });
-        const fileName = url.split("/storage/excel/")
-        instance.get(url, {
-            responseType: 'blob',
-          }).then(res => {
-            fileDownload(res.data, fileName["1"]);
-          });
+        downloadFile(file_id).then((blob)=>{
+            console.log(blob)
+            handlePreviewExcel(blob)
+            
+            //const url = window.URL.createObjectURL(blob);
+            // setExcelFile(blob)
+            // fileValue.current.dispatchEvent(
+            //     new Event("change", {bubbles: true,})
+            // );
+        }).catch(console.log)
     }
 
     if(excelFileReducer.message) {
@@ -62,17 +73,17 @@ export default function ExcelFileModal(props){
     }
 
     if(excelFileReducer.error) {
-        if("errors" in excelFileReducer.error) {
-            for (const key in excelFileReducer.error.errors) {
+        // if("errors" in excelFileReducer.error) {
+        //     for (const key in excelFileReducer.error.errors) {
 
-                showSnackBar(excelFileReducer.error.errors[key]["0"], 'error');
+        //         showSnackBar(excelFileReducer.error.errors[key]["0"], 'error');
                 
-            }
-        }else if("error" in excelFileReducer.error) {
+        //     }
+        // }else if("error" in excelFileReducer.error) {
 
-            showSnackBar(excelFileReducer.error.error, 'error');
-        }
-         dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
+        //     showSnackBar(excelFileReducer.error.error, 'error');
+        // }
+        //  dispatch({ type: CLEAR_EXCEL_FILE_ERROR})
     }
 
       function showSnackBar(msg, variant = 'info'){
@@ -149,6 +160,12 @@ export default function ExcelFileModal(props){
                                                             <Link href={item.file_url} target="_blank">
                                                                 İndir
                                                             </Link>
+                                                            <Button 
+                                                                value={item.file_url}
+                                                                onClick={()=>handleDownloadFile(item.id)}
+                                                            >
+                                                                Preview file
+                                                            </Button>
                                                         </CardActions>
                                                     </Card>
                                                 </Grid>
@@ -172,6 +189,8 @@ export default function ExcelFileModal(props){
                         Kapat
                     </Button>
             </DialogActions> 
+
+            <input type="file" ref={fileValue} value={excelFile} className="d-none" onChange={handleExcelFileChange}/>
         </Dialog>
     </div>)
 

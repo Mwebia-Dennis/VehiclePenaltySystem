@@ -18,7 +18,7 @@ const setAuthorizationHeader = () => {
     }
 };
 
-export const getAllPenalties = (sort_by = 'created_at', page = 1, perPage = 2) => (dispatch) => {
+export const getAllPenalties = (sort_by = 'created_at', page = 1, perPage = 100) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_PENALTY_DATA })
@@ -143,6 +143,21 @@ export const deletePenalty = (user_id, penalty_id) => (dispatch) => {
     })
 
 }
+
+
+export const deleteMultiplePenalty = (user_id, penalty_ids) => new Promise((successFun, errorFun) => {
+
+    setAuthorizationHeader()
+    penalty_ids.split(",").forEach(id => {
+        
+        axios.delete('users/'+parseInt(user_id)+'/penalty/'+parseInt(id))
+        .then((res)=>{
+            successFun(res)
+        })
+        .catch(errorFun)
+    });
+
+})
 
 
 

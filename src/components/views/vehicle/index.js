@@ -4,24 +4,30 @@ import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import EditDataModal from '../../shared_components/EditDataModal';
 import Paginator from '../../shared_components/Paginator';
-import { pageType, formTypes, vehicleTextFields }  from '../../../utils/constants'
+import { pageType, formTypes, vehicleTextFields, excelFileType }  from '../../../utils/constants'
 import { getPlaceHolderName,getTurkishDate } from '../../../utils/functions'
 import { useDispatch,useSelector } from 'react-redux';
-import { deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
-import { Delete, Edit } from '@material-ui/icons';
-import { Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
+import { deleteMultipleVehicles, deleteVehicle, getAllVehicles, searchVehiclesData } from '../../../store/reducers/vehicle/vehicle.actions';
+import { Close, Delete, Edit } from '@material-ui/icons';
+import { Checkbox, FormControlLabel, IconButton, MenuItem } from '@material-ui/core';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
+import { useSnackbar } from 'notistack';
+import PenaltyMenu from '../penalty/actionBtns';
+import TabPanel from '../../shared_components/TabPanel';
+import ExcelFilePreview from '../../shared_components/ExcelFilePreview';
 
 export default (props) => { 
     
     
     
     const dispatch = useDispatch()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const vehicleReducer = useSelector((state) => state.vehicleReducer)
     const vehicleData = useSelector((state) => state.vehicleReducer.data)
     const authReducer = useSelector((state) => state.authReducer)
     const [selectedData, setSelectedData] = useState('')
+    const [tabValue, setTabValue] = React.useState(0);
     const [editModalOpen, setEditModalOpen] = useState({
         open: false,
         data: {},
@@ -45,6 +51,11 @@ export default (props) => {
 
     }, [vehicleReducer.data])
 
+
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+    
 
     const handleEditDataModalOpen = (data) => {
         setEditModalOpen({
@@ -85,6 +96,20 @@ export default (props) => {
             }
         );
     };
+
+    const getExcelFileType = (data) => {
+
+        //data
+
+        if(data === pageType.vehicle ) {
+            return excelFileType.vehicle
+        }else if(data === pageType.penalty ) {
+            return excelFileType.penalty
+        }else {
+
+            return data.type.toLowerCase()
+        }
+    }
     
         
     const links = [
@@ -113,6 +138,24 @@ export default (props) => {
             dispatch(searchVehiclesData(formData))
         }else {
             handleRefreshPage()
+        }
+    }
+
+    
+
+    const handleMultipleDelete = ()=>{
+        showSnackBar("deleting data please wait..", "info")
+        if('id' in authReducer.data) {
+            let counter = 1
+            deleteMultipleVehicles(authReducer.data.id, selectedData).then((data)=>{
+                counter++
+                if(counter == selectedData.split(",").length){
+                    showSnackBar("data deleted successfully", "success")
+                    dispatch(getAllVehicles())
+                }
+            }).catch((err)=>{
+                showSnackBar("could not delete all data", "error")
+            })
         }
     }
 
@@ -158,8 +201,11 @@ export default (props) => {
             
             const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
             formattedData[placeholder] = <>
-                    <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
+            
+                <PenaltyMenu>
+                    <MenuItem><IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton></MenuItem>
+                    <MenuItem><IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton></MenuItem>
+                </PenaltyMenu>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -277,6 +323,17 @@ export default (props) => {
             }
         })
     }
+    
+    function showSnackBar(msg, variant = 'info'){
+        enqueueSnackbar(msg, {
+            variant: variant,            
+            action: (key) => (
+                <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                    <Close />
+                </IconButton>
+            ),
+        })
+    }
 
     return (
 
@@ -294,30 +351,39 @@ export default (props) => {
                     handleLimitEntriesChange={handleLimitEntriesChange}
                     handleSortByChange={handleSortByChange}
                     toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+                    handleMultipleDelete={handleMultipleDelete}
+                    handleTabChange={handleTabChange}
+                    tabValue={tabValue}
                 />
-                {
-                    vehicleReducer.loading?
-                        <ProgressBarSpinner />
-                    :("data" in vehicleData)?
-                    <>
-                        
-    
-                        <Table rows= {formatData( vehicleData.data)} 
-                            tableHeader ={ getTableHeaders(formatData( vehicleData.data)) }/>
-                        <Paginator paginationCount={vehicleData.last_page} 
-                            handlePagination={handlePagination} 
-                            page={ vehicleData.current_page }
-                        />
-                        <EditDataModal 
-                            editModalOpen={editModalOpen}
-                            handleEditDataModalClose={handleEditDataModalClose}
-                            formType={formTypes.newVehicle}
-                        />
+                
+                    <TabPanel value={tabValue} index={0}>
+                        {
+                            vehicleReducer.loading?
+                                <ProgressBarSpinner />
+                            :("data" in vehicleData)?
+                            <>
+                                
+            
+                                <Table rows= {formatData( vehicleData.data)} 
+                                    tableHeader ={ getTableHeaders(formatData( vehicleData.data)) }/>
+                                <Paginator paginationCount={vehicleData.last_page} 
+                                    handlePagination={handlePagination} 
+                                    page={ vehicleData.current_page }
+                                />
+                                <EditDataModal 
+                                    editModalOpen={editModalOpen}
+                                    handleEditDataModalClose={handleEditDataModalClose}
+                                    formType={formTypes.newVehicle}
+                                />
 
-                    </>
-                    :
-                    <Alert severity="info">0 results found</Alert>
-                }
+                            </>
+                            :
+                            <Alert severity="info">0 results found</Alert>
+                        }
+                    </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                    <ExcelFilePreview counter={tabValue} excelFileType={getExcelFileType(formatMainActionData(pageType.vehicle))} />
+                </TabPanel>
 
             </div>
 

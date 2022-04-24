@@ -11,7 +11,8 @@ export const useStyles = makeStyles((theme) => ({
         padding: '20px 50px 50px 50px',
         marginTop: '7%',
         borderRadius: '10px',
-        backgroundColor: 'rgba(230, 245, 255, 0.5)',
+        // backgroundColor: 'rgba(230, 245, 255, 0.5)',
+        border: "1px solid #d3d3d3",
         [theme.breakpoints.down('sm')]: {
             width: '100%',
             marginLeft: '0',

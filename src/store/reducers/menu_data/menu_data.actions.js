@@ -120,7 +120,7 @@ export const searchMenuData_data = (data,sort_by = 'created_at', page = 1, perPa
 
 
 
-export const deleteMenuData = (user_id, menuData_id, menu_id) => (dispatch) => {
+export const  deleteMenuData = (user_id, menuData_id, menu_id) => (dispatch) => {
 
     setAuthorizationHeader()
     dispatch({ type: LOADING_MENU_DATA_DATA })
@@ -145,6 +145,21 @@ export const deleteMenuData = (user_id, menuData_id, menu_id) => (dispatch) => {
     })
 
 }
+
+
+export const deleteMultipleMenuData = (user_id, menuData_ids) => new Promise((successFun, errorFun) => {
+
+    setAuthorizationHeader()
+    menuData_ids.split(",").forEach(menuData_id => {
+        
+        axios.delete('users/'+parseInt(user_id)+'/menu-data/'+parseInt(menuData_id))
+        .then((res)=>{
+            successFun(res)
+        })
+        .catch(errorFun)
+    });
+
+})
 
 
 

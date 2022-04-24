@@ -10,19 +10,23 @@ import { useNavigate, useParams } from 'react-router';
 import { useDispatch,useSelector } from 'react-redux';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import { getMenuInfo } from '../../../store/reducers/menu/menu.actions';
-import { deleteMenuData, getMenuData, searchMenuData_data } from '../../../store/reducers/menu_data/menu_data.actions';
+import { deleteMenuData, deleteMultipleMenuData, getMenuData, searchMenuData_data } from '../../../store/reducers/menu_data/menu_data.actions';
 import { Avatar, Checkbox, FormControlLabel, IconButton } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { Close, Delete, Edit } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
-import { formTypes }  from '../../../utils/constants'
+import { excelFileType, formTypes, pageType }  from '../../../utils/constants'
 import { formatUrlName, getPlaceHolderName, getTurkishDate }  from '../../../utils/functions'
+import { useSnackbar } from 'notistack';
+import TabPanel from '../../shared_components/TabPanel';
+import ExcelFilePreview from '../../shared_components/ExcelFilePreview';
 
 export default function AutoGenerateTable(props) {
 
 
     
     const { menu_id } = useParams();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     
     const [pdfOpen, setPdfOpen] = useState({
         open: false,
@@ -35,6 +39,7 @@ export default function AutoGenerateTable(props) {
     const menuDataReducer = useSelector((state) => state.menuDataReducer)
     const menuData = useSelector((state) => state.menuDataReducer.data)
     const authReducer = useSelector((state) => state.authReducer)
+    const [tabValue, setTabValue] = React.useState(0);
     
     const [sortingValues, setSortingValues] = useState({
         sortBy: 'created_at',
@@ -54,7 +59,26 @@ export default function AutoGenerateTable(props) {
     }
 
 
+    const getExcelFileType = (data) => {
 
+        //data
+
+        if(data === pageType.vehicle ) {
+            return excelFileType.vehicle
+        }else if(data === pageType.penalty ) {
+            return excelFileType.penalty
+        }else {
+
+            return data.type.toLowerCase()
+        }
+    }
+
+    
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+      };
+      
+    
     
     const handleEditDataModalOpen = (data) => {
         setEditModalOpen({
@@ -124,12 +148,43 @@ export default function AutoGenerateTable(props) {
             handleRefreshPage()
         }
     }
+
+    
+    const handleMultipleDelete = ()=>{
+        showSnackBar("deleting data please wait..", "info")
+        if('id' in authReducer.data) {
+            let counter = 1
+            deleteMultipleMenuData(authReducer.data.id, selectedData).then((data)=>{
+                counter++
+                if(counter == selectedData.split(",").length){
+                    showSnackBar("data deleted successfully", "success")
+                    dispatch(getMenuData(menu_id))
+                }
+            }).catch((err)=>{
+                showSnackBar("could not delete all data", "error")
+            })
+        }
+    }
+
+    
+
     const handleDelete = (menuData_id)=> {
         if('id' in authReducer.data) {
 
             dispatch(deleteMenuData(authReducer.data.id, menuData_id, menu_id))
         }
 
+    }
+    
+    function showSnackBar(msg, variant = 'info'){
+        enqueueSnackbar(msg, {
+            variant: variant,            
+            action: (key) => (
+                <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                    <Close />
+                </IconButton>
+            ),
+        })
     }
 
     function handleModalOpen(pdf){
@@ -290,47 +345,63 @@ export default function AutoGenerateTable(props) {
                         handleLimitEntriesChange={handleLimitEntriesChange}
                         handleSortByChange={handleSortByChange}
                         toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+                        handleMultipleDelete={handleMultipleDelete}
+                        handleTabChange={handleTabChange}
+                        tabValue={tabValue}
                     />
                 :<></>
             }
             
+            <TabPanel value={tabValue} index={0}>
+                {
+                    menuDataReducer.loading?
+                        <ProgressBarSpinner />
+                    :
 
-            {
-                menuDataReducer.loading?
-                    <ProgressBarSpinner />
-                :
-
-                (!Array.isArray(menuReducer.singleMenuData))?
-                    <>
+                    (!Array.isArray(menuReducer.singleMenuData))?
+                        <>
 
 
-                        {
-                            ("data" in menuData)?
-                            <>
-                                <Table rows= {formatData( menuData.data)} 
-                                    tableHeader ={ getTableHeaders(formatData( menuData.data)) }/>
-                                <Paginator paginationCount={menuData.last_page} 
-                                    handlePagination={handlePagination} 
-                                    page={ menuData.current_page }
-                                />
-                                <EditDataModal 
-                                    editModalOpen={editModalOpen}
-                                    handleEditDataModalClose={handleEditDataModalClose}
-                                    formType={formTypes.autoGenerateForm}
-                                    page_type={formatUrlName(menuReducer.singleMenuData.name)}
-                                />
+                            {
+                                ("data" in menuData)?
+                                <>
+                                    <Table rows= {formatData( menuData.data)} 
+                                        tableHeader ={ getTableHeaders(formatData( menuData.data)) }/>
+                                    <Paginator paginationCount={menuData.last_page} 
+                                        handlePagination={handlePagination} 
+                                        page={ menuData.current_page }
+                                    />
+                                    <EditDataModal 
+                                        editModalOpen={editModalOpen}
+                                        handleEditDataModalClose={handleEditDataModalClose}
+                                        formType={formTypes.autoGenerateForm}
+                                        page_type={formatUrlName(menuReducer.singleMenuData.name)}
+                                    />
 
-                            </>
-                            :
-                            <Alert severity="info">0 results found</Alert>
-                        }
-                        <Modal handleClose={handleModalClose} open={pdfOpen.open} pdf={pdfOpen.pdf} />
+                                </>
+                                :
+                                <Alert severity="info">0 results found</Alert>
+                            }
+                            <Modal handleClose={handleModalClose} open={pdfOpen.open} pdf={pdfOpen.pdf} />
 
-                    </>
-                :
-                <></>
+                        </>
+                    :
+                    <></>
 
-            }
+                }
+            </TabPanel>
+
+            
+            <TabPanel value={tabValue} index={1}>
+                <ExcelFilePreview counter={tabValue} excelFileType={getExcelFileType({
+                            type: menuReducer.singleMenuData.name,
+                            menu_id: menuReducer.singleMenuData.id,
+                            sortByOptions: [
+                                "created_at",
+                                "updated_at"
+                            ]
+                        })} />
+            </TabPanel>
 
             
         </div>

@@ -1,5 +1,8 @@
-import {  FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Select, Tooltip, Typography } from '@material-ui/core'
-import { Add, CheckBox, Print,  Refresh } from '@material-ui/icons';
+import {  FormControl, Grid, IconButton, InputLabel, Menu, MenuItem, Paper, 
+    Select, Tooltip, Typography, Divider, Box,
+    Tabs, Tab
+} from '@material-ui/core'
+import { Add, CheckBox, Delete, Print,  Refresh } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { useStyles,BootstrapInput } from './style';
 import { pageType } from '../../../utils/constants'
@@ -14,6 +17,14 @@ import AllExcelFiles from '../ExcelFilePreviewModal'
 import MoreVert from '@material-ui/icons/MoreVert';
 
 
+  
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+  
 
 export default function MainActionContainer(props) {
 
@@ -26,7 +37,10 @@ export default function MainActionContainer(props) {
         handleRefreshPage, 
         handleSortByChange,
         handleLimitEntriesChange,
-        toggleCheckingAllCheckboxes
+        toggleCheckingAllCheckboxes,
+        handleMultipleDelete,
+        tabValue,
+        handleTabChange
     } = props;
     const classes = useStyles();
     const navigate = useNavigate();
@@ -36,6 +50,7 @@ export default function MainActionContainer(props) {
     const limitEntriesData = ["100", "300", "500", "1000"];
     const sortByData = data.sortByOptions;
     const isMenuOpen = Boolean(anchorEl);
+  
 
 
     const handleFormOpen = () => {
@@ -105,14 +120,14 @@ export default function MainActionContainer(props) {
     >
       
       <ImportExcelData excelFileType={getExcelFileType()} />
-      <AllExcelFiles excelFileType={getExcelFileType()} />
+      {/* <AllExcelFiles excelFileType={getExcelFileType()} /> */}
     </Menu>
   );
 
 
     return (
 
-        <div className={classes.root}>
+        <Paper className={classes.root} style={{marginBottom: "20px"}}>
 
 
             <Grid container spacing={1}>
@@ -166,6 +181,21 @@ export default function MainActionContainer(props) {
                     </Tooltip>
                   
                   </Grid>
+                { handleMultipleDelete?
+                    <Grid item xs={2} md={1}>
+                        
+                        <Tooltip title="silmek" aria-label="Delete" placement="top">   
+                            <IconButton variant="contained" 
+                                color="primary" 
+                                onClick={handleMultipleDelete}
+                            >
+                                <Delete />
+                            </IconButton>
+                        </Tooltip>
+                    
+                    </Grid>
+                    :""
+                }
                 <Grid item xs={2} md={1}>
                     
                     <Tooltip title="Upload Excel" aria-label="Import Excel Data" placement="top"> 
@@ -221,9 +251,10 @@ export default function MainActionContainer(props) {
 
                     
                 </Grid>
-                <Grid item xs={12} md={2}>
-                    <div className={classes.entries}>
-                    
+                <Grid item xs={12} md={1}>
+                    <div className={classes.entries} style={{display: 'block', width: '120px'}}>
+            
+                        <Typography variant="body2" style={{fontSize: '13px'}}>Giriş Gösteriliyor</Typography> 
                         <Select
                             labelId="demo-customized-select-label"
                             id="demo-customized-select"
@@ -238,10 +269,9 @@ export default function MainActionContainer(props) {
                                 
                                 }
                         </Select>
-                        <Typography variant="small">Giriş Gösteriliyor</Typography> 
                     </div> 
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid item xs={12} md={1}>
                 
                     <FormControl className={classes.formControl}>
                         <InputLabel id="demo-simple-select-label">Göre Sırala:</InputLabel>
@@ -264,6 +294,23 @@ export default function MainActionContainer(props) {
 
                     
                 </Grid>
+
+                <Grid item md={12} xs={12}>
+                    <Divider style={{margin: "5px 0"}} />
+
+                    <Box>
+                        <Tabs value={tabValue} onChange={handleTabChange} 
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            aria-label="simple tabs example"
+                        >
+                            <Tab label="Listeler" {...a11yProps(0)} />
+                            <Tab label="Excel Belgeleri" {...a11yProps(1)} />
+                        </Tabs>
+                    </Box>
+                </Grid>
             </Grid>
 
             <ColumnSelectionModal 
@@ -277,7 +324,7 @@ export default function MainActionContainer(props) {
                             
             {renderMenu}
 
-        </div>
+        </Paper>
     );
     
 }

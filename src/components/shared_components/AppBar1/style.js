@@ -26,13 +26,13 @@ export const useStyles = makeStyles((theme) => ({
       },
     },
     button: {
-        marginLeft: '5px',
-        color: '#fff !important',
+        marginLeft: '15px',
+        color: '#000 !important',
         '&:hover': {
-          backgroundColor: 'transparent',
+          backgroundColor: '#f2f2f2',
           border: 'none',
           boxShadow: 'none',
-          textDecoration: 'underline'
+          textDecoration: 'none'
         },
     },
     sectionDesktop: {

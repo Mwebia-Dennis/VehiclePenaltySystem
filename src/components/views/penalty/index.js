@@ -5,22 +5,29 @@ import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
 import Modal from '../../shared_components/modal';
-import { penaltyTextFields, formTypes, pageType }  from '../../../utils/constants'
+import { penaltyTextFields, formTypes, pageType, excelFileType }  from '../../../utils/constants'
 import { getPlaceHolderName, getTurkishDate } from '../../../utils/functions'
 import pdf_logo from '../../../images/pdf_logo.jpg'
 import { Avatar, Checkbox,  FormControlLabel, IconButton } from "@material-ui/core";
-import { Delete, Edit, Info } from '@material-ui/icons';
+import { Close, Delete, Edit, Info } from '@material-ui/icons';
 import { useDispatch,useSelector } from 'react-redux';
-import { deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
+import { deleteMultiplePenalty, deletePenalty, getAllPenalties, searchPenaltiesData } from '../../../store/reducers/penalty/penalty.actions';
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
 import EditDataModal from '../../shared_components/EditDataModal';
 import MoreDetailsModal from '../../shared_components/MoreDetailsModal';
 import ImageModal from '../../shared_components/ImageModal'
+import { useSnackbar } from 'notistack';
+import PenaltyMenu from './actionBtns'
+import MenuItem from '@mui/material/MenuItem';
+import TabPanel from '../../shared_components/TabPanel';
+import ExcelFilePreview from '../../shared_components/ExcelFilePreview';
 
 export default function Penalty(props) {
 
     
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const [tabValue, setTabValue] = React.useState(0);
     const [pdfOpen, setPdfOpen] = useState({
         open: false,
         pdf: null,
@@ -53,6 +60,12 @@ export default function Penalty(props) {
           ...pdfOpen,
           open: false
       });
+    };
+
+    
+  
+    const handleTabChange = (event, newValue) => {
+      setTabValue(newValue);
     };
     
     
@@ -109,6 +122,35 @@ export default function Penalty(props) {
             }
         );
     };
+
+    const handleMultipleDelete = ()=>{
+        showSnackBar("deleting data please wait..", "info")
+        if('id' in authReducer.data) {
+            let counter = 1
+            deleteMultiplePenalty(authReducer.data.id, selectedData).then((data)=>{
+                counter++
+                if(counter == selectedData.split(",").length){
+                    showSnackBar("data deleted successfully", "success")
+                    dispatch(getAllPenalties())
+                }
+            }).catch((err)=>{
+                showSnackBar("could not delete all data", "error")
+            })
+        }
+    }
+
+    
+    function showSnackBar(msg, variant = 'info'){
+        enqueueSnackbar(msg, {
+            variant: variant,            
+            action: (key) => (
+                <IconButton style={{color: '#fff'}} size="small" onClick={() => closeSnackbar(key)}>
+                    <Close />
+                </IconButton>
+            ),
+        })
+    }
+
     const handleDelete = (penalty_id)=> {
         if('id' in authReducer.data) {
 
@@ -248,9 +290,11 @@ export default function Penalty(props) {
 
             const placeholder = isTurkish?'AKSİYON'.toUpperCase():"action"
             formattedData[placeholder] = <>
-                    <MoreDetailsModal data={data[key]} textfields={penaltyTextFields}/>
-                    <IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton>
-                    <IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton>
+                    <PenaltyMenu>
+                        <MenuItem><MoreDetailsModal data={data[key]} textfields={penaltyTextFields}/></MenuItem>
+                        <MenuItem><IconButton color="primary" onClick={()=>handleEditDataModalOpen(data[key])}> <Edit /> </IconButton></MenuItem>
+                        <MenuItem><IconButton style={{color: '#ff0000'}} onClick={()=>handleDelete(data[key].id)}> <Delete /> </IconButton></MenuItem>
+                    </PenaltyMenu>
                 </>
             allData.push(formattedData)
             formattedData = {}
@@ -343,6 +387,21 @@ export default function Penalty(props) {
         return data.filter((item)=> (selected.includes(item.id.toString())))
     }
 
+    const getExcelFileType = (data) => {
+
+        //data
+
+        if(data === pageType.vehicle ) {
+            return excelFileType.vehicle
+        }else if(data === pageType.penalty ) {
+            return excelFileType.penalty
+        }else {
+
+            return data.type.toLowerCase()
+        }
+    }
+    
+
 
     return (
 
@@ -358,30 +417,41 @@ export default function Penalty(props) {
                 handleLimitEntriesChange={handleLimitEntriesChange}
                 handleSortByChange={handleSortByChange}
                 toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+                handleMultipleDelete={handleMultipleDelete}
+                handleTabChange={handleTabChange}
+                tabValue={tabValue}
             />
 
-            {
-                penaltyReducer.loading?
-                    <ProgressBarSpinner />
-                :
-                    ("data" in penaltyData)?
-                    <>
-                        <Table rows= {formatData( penaltyData.data,true, true)} 
-                            tableHeader ={ getTableHeaders(formatData( penaltyData.data,true, true)) }/>
-                        <Paginator paginationCount={penaltyData.last_page} 
-                            handlePagination={handlePagination} 
-                            page={ penaltyData.current_page }
-                        />
-                        <EditDataModal 
-                            editModalOpen={editModalOpen}
-                            handleEditDataModalClose={handleEditDataModalClose}
-                            formType={formTypes.newPenalty}
-                        />
-
-                    </>
+            
+            <TabPanel value={tabValue} index={0}>
+                    
+                {
+                    penaltyReducer.loading?
+                        <ProgressBarSpinner />
                     :
-                    <Alert severity="info">0 results found</Alert>
-            }
+                        ("data" in penaltyData)?
+                        <>
+                            <Table rows= {formatData( penaltyData.data,true, true)} 
+                                tableHeader ={ getTableHeaders(formatData( penaltyData.data,true, true)) }/>
+                            <Paginator paginationCount={penaltyData.last_page} 
+                                handlePagination={handlePagination} 
+                                page={ penaltyData.current_page }
+                            />
+                            <EditDataModal 
+                                editModalOpen={editModalOpen}
+                                handleEditDataModalClose={handleEditDataModalClose}
+                                formType={formTypes.newPenalty}
+                            />
+
+                        </>
+                        :
+                        <Alert severity="info">0 results found</Alert>
+                }
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+                <ExcelFilePreview counter={tabValue} excelFileType={getExcelFileType(formatMainActionData(pageType.penalty))} />
+            </TabPanel>
+
 
             <Modal handleClose={handleModalClose} open={pdfOpen.open} pdf={pdfOpen.pdf} />
         </div>

@@ -11,11 +11,12 @@ export const useStyles = makeStyles((theme) => ({
 
   btn: {
     
+    color: "#000 !important",
     '&:hover': {
       backgroundColor: 'transparent',
       border: 'none',
       boxShadow: 'none',
-      textDecoration: 'underline'
+      backgroundColor: '#f2f2f2',
     },
 
   },

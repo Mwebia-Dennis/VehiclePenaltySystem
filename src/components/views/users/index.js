@@ -3,7 +3,7 @@ import Table from '../../shared_components/table';
 import MainActionContainer from '../../shared_components/MainActionContainer';
 import BreadCrumb from '../../shared_components/BreadCrump';
 import Paginator from '../../shared_components/Paginator';
-import { pageType }  from '../../../utils/constants'
+import { excelFileType, pageType }  from '../../../utils/constants'
 import { useDispatch,useSelector } from 'react-redux';
 import { getAllUsersData, searchUsersData } from '../../../store/reducers/users/user.actions';
 import { Avatar, Checkbox, FormControlLabel } from '@material-ui/core';
@@ -11,12 +11,15 @@ import { getPlaceHolderName,getTurkishDate } from '../../../utils/functions'
 import { signUpTextfields } from '../../../utils/constants'
 import ProgressBarSpinner from '../../shared_components/ProgressBarSpinner'
 import Alert from '@material-ui/lab/Alert';
+import TabPanel from '../../shared_components/TabPanel';
+import ExcelFilePreview from '../../shared_components/ExcelFilePreview';
 
 export default (props) => {
     
     
     const dispatch = useDispatch()
     const userReducer = useSelector((state) => state.userReducer)
+    const [tabValue, setTabValue] = React.useState(0);
     const [selectedData, setSelectedData] = useState('')
     const userData = useSelector((state) => state.userReducer.data)
     const [sortingValues, setSortingValues] = useState({
@@ -24,6 +27,14 @@ export default (props) => {
         limitEntries:100,
         page: 1
     })
+
+
+  
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+      
+      
 
     useEffect(() => {
 
@@ -236,6 +247,19 @@ export default (props) => {
             }
         })
     }
+    const getExcelFileType = (data) => {
+
+        //data
+
+        if(data === pageType.vehicle ) {
+            return excelFileType.vehicle
+        }else if(data === pageType.penalty ) {
+            return excelFileType.penalty
+        }else {
+
+            return data.type.toLowerCase()
+        }
+    }
     return (
 
         <>
@@ -251,26 +275,36 @@ export default (props) => {
                     handleLimitEntriesChange={handleLimitEntriesChange}
                     handleSortByChange={handleSortByChange}
                     toggleCheckingAllCheckboxes={toggleCheckingAllCheckboxes}
+                    handleTabChange={handleTabChange}
+                    tabValue={tabValue}
                 />
 
-                {
-                    userReducer.loading?
-                        <ProgressBarSpinner />
-                    :
-                    ("data" in userData)?
-                    <>
-                        <Table rows= {formatData( userData.data)} 
-                            tableHeader ={ getTableHeaders(formatData( userData.data)) }
-                        />
-                        <Paginator paginationCount={userData.last_page} 
-                            handlePagination={handlePagination} 
-                            page={ userData.current_page }
-                        />
+                <TabPanel value={tabValue} index={0}>
+                    {
+                        userReducer.loading?
+                            <ProgressBarSpinner />
+                        :
+                        ("data" in userData)?
+                        <>
+                            <Table rows= {formatData( userData.data)} 
+                                tableHeader ={ getTableHeaders(formatData( userData.data)) }
+                            />
+                            <Paginator paginationCount={userData.last_page} 
+                                handlePagination={handlePagination} 
+                                page={ userData.current_page }
+                            />
 
-                    </>
-                    :
-                    <Alert severity="info">0 results found</Alert>
-                }
+                        </>
+                        :
+                        <Alert severity="info">0 results found</Alert>
+                    }
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                    <ExcelFilePreview counter={tabValue} excelFileType={getExcelFileType(formatMainActionData(pageType.users))} />
+                </TabPanel>
+
+
+                
             </div>
 
         </>

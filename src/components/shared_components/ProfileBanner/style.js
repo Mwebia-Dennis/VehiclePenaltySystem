@@ -8,7 +8,8 @@ import Bg from '../../../images/bg.jpg';
 export const useStyles = makeStyles((theme) => ({
 
     root: {
-        width: '100%',
+        width: '80%',
+        marginLeft: '10%',
         height: '400px',
         backgroundImage: `url(${Bg})`,
         position : 'relative',
@@ -19,11 +20,18 @@ export const useStyles = makeStyles((theme) => ({
         paddingTop: '70px',
         [theme.breakpoints.down('sm')]: {
             height: '480px',
+            width: '100%',
+            marginLeft: '0',
         },
     },
     root2: {
-        width: '100%',
         marginTop: '10px',
+        width: '80%',
+        marginLeft: '10%',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            marginLeft: '0',
+        },
     },
     overlay: {
         position : 'absolute',
@@ -74,6 +82,7 @@ export const useStyles = makeStyles((theme) => ({
         textDecoration: 'none',
         textTransform: 'capitalize',
     },
+
     icon: {
         fontSize: '30px',
     },
@@ -81,7 +90,7 @@ export const useStyles = makeStyles((theme) => ({
         display: 'none',
     },
     editContainer: {
-        padding: '20px'
+        padding: '20px 50px'
     },
     editTitle: {
         padding: '5px 0',
@@ -93,7 +102,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '10px 0'
     },
     formControl: {
-        margin: '5px',
+        margin: '10px 5px',
     },
     editBtn: {
         marginTop: '10px',

@@ -14,8 +14,11 @@ export default function CustomizedTables(props) {
   const classes = useStyles();
   const { rows, tableHeader } = props;
 
+  console.log(rows)
+  console.log(tableHeader)
+
   return (
-    
+    // <div></div>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
@@ -36,15 +39,27 @@ export default function CustomizedTables(props) {
 
                 const cellsData = [];
                 let i = 0
-                for (const key in item) {
-                  
-                  if(i === 1) {
+                if(Array.isArray(item)) {
+                  // item.forEach((__item)=>{
+                  //   if(i === 1) {
+                      
+                  //     cellsData.push(<StyledTableCell  component="th" scope="row" align="center">{index + 1}</StyledTableCell>)
+                  //   }
                     
-                    cellsData.push(<StyledTableCell  component="th" scope="row" align="center">{index + 1}</StyledTableCell>)
+                  //   cellsData.push(<StyledTableCell align="center">{__item}</StyledTableCell>)
+                  //   i++
+                  // })
+                }else {
+                  for (const key in item) {
+                    
+                    if(i === 1) {
+                      
+                      cellsData.push(<StyledTableCell  component="th" scope="row" align="center">{index + 1}</StyledTableCell>)
+                    }
+                    
+                    cellsData.push(<StyledTableCell align="center">{item[key]}</StyledTableCell>)
+                    i++
                   }
-                  
-                  cellsData.push(<StyledTableCell align="center">{item[key]}</StyledTableCell>)
-                  i++
                 }
                 return (
                     <StyledTableRow key={index}>
